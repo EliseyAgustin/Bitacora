@@ -203,7 +203,7 @@ export function Tablero() {
               {items.length === 0 ? (
                 <div className="flex-1 overflow-y-auto p-sm space-y-sm flex flex-col items-center justify-center text-outline-variant custom-scrollbar">
                   <Inbox className="w-12 h-12 mb-1" />
-                  <p className="text-xs font-medium">Sin tarjetas</p>
+                  <p className="text-xs font-medium text-on-surface-variant">Sin tarjetas</p>
                 </div>
               ) : (
                 <div className="flex-1 overflow-y-auto p-sm space-y-sm custom-scrollbar">
