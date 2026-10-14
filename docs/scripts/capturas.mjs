@@ -155,9 +155,10 @@ try {
   await page.getByRole('link', { name: '¿Olvidaste tu contraseña?' }).click();
   await page.getByRole('button', { name: 'Enviar enlace' }).waitFor(); // la ruta cambia antes de que se pinte la pantalla nueva
   await page.getByLabel('Email').fill('camila.ejemplo@correo.com');
+  await shot(page, '02b-recuperar-contrasena');
   await page.getByRole('button', { name: 'Enviar enlace' }).click();
   await page.getByText(/Si el email existe/).waitFor();
-  await shot(page, '02b-recuperar-contrasena');
+  await shot(page, '02c-recuperar-enviado');
   await page.unroute('**/auth/v1/recover*');
 
   // Registro, con el medidor de fortaleza.
@@ -180,6 +181,12 @@ try {
   await page.waitForURL(/\/ofertas$/);
   await page.getByText('Todavía no hay ofertas cargadas.').waitFor();
   await shot(page, '04f-ofertas-vacio');
+
+  // Pantalla de nueva contraseña (con una sesión abierta se puede ver el formulario sin pasar por el mail).
+  await page.goto(`${BASE}/nueva-contrasena`, { waitUntil: 'networkidle' });
+  await page.getByLabel('Contraseña nueva').fill('Una-clave9');
+  await shot(page, '02d-nueva-contrasena');
+  await page.goto(`${BASE}/ofertas`, { waitUntil: 'networkidle' });
 
   const sb = nuevoSb();
   const { data: sesion, error: loginError } = await sb.auth.signInWithPassword(camila);
@@ -311,7 +318,9 @@ try {
 
   await pa.getByRole('link').filter({ hasText: 'Camila Ejemplo' }).click();
   await pa.getByRole('heading', { name: 'Camila Ejemplo', level: 1 }).waitFor();
-  await pa.getByLabel('Mensaje', { exact: true }).fill('Hola Camila, te falta indicar tu disponibilidad horaria. Con ese dato tenemos en cuenta tu solicitud.');
+  await pa.getByRole('button', { name: 'Falta un dato' }).click();
+  const textoPlantilla = await pa.getByLabel('Mensaje', { exact: true }).inputValue();
+  await pa.getByLabel('Mensaje', { exact: true }).fill(textoPlantilla.replace('[indicá cuál]', 'tu disponibilidad horaria'));
   await pa.getByRole('button', { name: 'Enviar mensaje' }).click();
   await pa.getByText('Mensaje enviado.').waitFor();
   await pa.setViewportSize({ width: 1600, height: 1250 }); // más alto para que entre también el historial de enviados
@@ -324,6 +333,11 @@ try {
   await pm.goto(`${BASE}/mensajes`, { waitUntil: 'networkidle' });
   await pm.getByText('Hola Camila').waitFor();
   await shot(pm, '11b-mensajes-mobile');
+
+  // Página "No encontramos esa página" (con la sesión de Camila, el botón lleva a su inicio).
+  await page.goto(`${BASE}/ruta-que-no-existe`, { waitUntil: 'networkidle' });
+  await page.getByRole('heading', { name: 'No encontramos esa página' }).waitFor();
+  await shot(page, '14-no-encontrada', { clip: { x: 440, y: 230, width: 720, height: 420 } });
 
   await browser.close();
 } finally {
