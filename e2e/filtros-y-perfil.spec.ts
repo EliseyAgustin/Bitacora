@@ -111,3 +111,42 @@ test.describe('Sin perfil de búsqueda (el usuario omitió el Onboarding)', () =
     );
   });
 });
+
+test('la tarjeta de filtros se acomoda en pantallas angostas: sin desborde y con controles táctiles', async ({ page, api }) => {
+  await api.sembrarOfertas(OFERTAS);
+  await page.goto('/ofertas');
+  await expect(page.getByRole('heading', { level: 3 })).toHaveCount(3);
+
+  for (const ancho of [320, 375, 768, 1280]) {
+    await page.setViewportSize({ width: ancho, height: 800 });
+    const tarjeta = page.locator('form', { has: page.locator('#filtro-ubicacion') });
+    await expect(tarjeta).toBeVisible();
+
+    const caja = (await tarjeta.boundingBox())!;
+    // La tarjeta no se sale de la pantalla ni tiene scroll horizontal propio.
+    expect(caja.x, `${ancho}px: la tarjeta empieza dentro de la pantalla`).toBeGreaterThanOrEqual(0);
+    expect(caja.x + caja.width, `${ancho}px: la tarjeta termina dentro de la pantalla`).toBeLessThanOrEqual(ancho + 0.5);
+    expect(await tarjeta.evaluate((el) => el.scrollWidth <= el.clientWidth), `${ancho}px: sin scroll horizontal`).toBe(true);
+
+    // Cada control queda completo dentro de la tarjeta.
+    const controles = ['#filtro-fuente', '#filtro-ubicacion', '#filtro-score'];
+    const cajas = [];
+    for (const selector of controles) {
+      const c = (await page.locator(selector).boundingBox())!;
+      cajas.push(c);
+      expect(c.x, `${ancho}px ${selector}: borde izquierdo`).toBeGreaterThanOrEqual(caja.x);
+      expect(c.x + c.width, `${ancho}px ${selector}: borde derecho`).toBeLessThanOrEqual(caja.x + caja.width + 0.5);
+    }
+    const aplicar = (await page.getByRole('button', { name: 'Aplicar' }).boundingBox())!;
+    expect(aplicar.x + aplicar.width, `${ancho}px Aplicar: borde derecho`).toBeLessThanOrEqual(caja.x + caja.width + 0.5);
+
+    if (ancho < 768) {
+      // En mobile: un control debajo del otro, a todo el ancho, y con al menos 44 px de alto para el dedo.
+      expect(cajas[1].y, `${ancho}px: Ubicación va debajo de Fuente`).toBeGreaterThan(cajas[0].y + cajas[0].height - 1);
+      expect(cajas[1].width, `${ancho}px: Ubicación ocupa todo el ancho`).toBeGreaterThan(caja.width * 0.85);
+      expect(cajas[0].height, `${ancho}px: Fuente con altura táctil`).toBeGreaterThanOrEqual(44);
+      expect(cajas[1].height, `${ancho}px: Ubicación con altura táctil`).toBeGreaterThanOrEqual(44);
+      expect(aplicar.height, `${ancho}px: Aplicar con altura táctil`).toBeGreaterThanOrEqual(44);
+    }
+  }
+});

@@ -330,15 +330,15 @@ export function Offers() {
         {/* Filters Row */}
         <form
           onSubmit={handleAplicarFiltros}
-          className="flex flex-wrap items-center gap-md mb-xl p-4 bg-surface rounded-xl border border-outline-variant shadow-sm"
+          className="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-center md:gap-md mb-xl p-4 bg-surface rounded-xl border border-outline-variant shadow-sm"
         >
-          <div className="flex-1 min-w-37.5">
+          <div className="w-full min-w-0 md:flex-1 md:min-w-37.5">
             <label htmlFor="filtro-fuente" className="block text-[11px] font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Fuente</label>
             <select
               id="filtro-fuente"
               value={fuenteDraft}
               onChange={(e) => setFuenteDraft(e.target.value)}
-              className="w-full bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg p-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer"
+              className="w-full min-h-11 md:min-h-0 bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg p-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer"
             >
               <option value="">Todas las fuentes</option>
               {FUENTES_OFERTA.map((fuente) => (
@@ -349,10 +349,10 @@ export function Offers() {
             </select>
           </div>
 
-          <div className="flex-1 min-w-37.5">
+          <div className="w-full min-w-0 md:flex-1 md:min-w-37.5">
             <label htmlFor="filtro-ubicacion" className="block text-[11px] font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Ubicación (ciudad o país)</label>
             <div className="relative">
-              <MapPin className="absolute left-2 top-2 text-on-surface-variant w-4.5 h-4.5" />
+              <MapPin className="absolute left-2 top-3 md:top-2 text-on-surface-variant w-4.5 h-4.5" />
               <input
                 id="filtro-ubicacion"
                 type="text"
@@ -362,7 +362,7 @@ export function Offers() {
                 list="ubicaciones-sugeridas"
                 aria-describedby="ayuda-ubicacion"
                 placeholder="Ej: Argentina, Madrid, Remoto"
-                className="w-full bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg py-2 pl-8 pr-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                className="w-full min-h-11 md:min-h-0 bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg py-2 pl-8 pr-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
               />
               <datalist id="ubicaciones-sugeridas">
                 {ubicacionesSugeridas.map((u) => (
@@ -375,7 +375,7 @@ export function Offers() {
             </p>
           </div>
 
-          <div className="w-full md:w-64">
+          <div className="w-full min-w-0 md:w-64">
             <label htmlFor="filtro-score" className="text-[11px] font-semibold text-on-surface-variant mb-1 uppercase tracking-wider flex justify-between">
               <span>Puntaje mínimo</span>
               <span className="text-primary font-bold">{scoreDraft}+</span>
@@ -389,7 +389,7 @@ export function Offers() {
               value={scoreDraft}
               aria-describedby="ayuda-puntaje"
               onChange={(e) => setScoreDraft(Number(e.target.value))}
-              className="w-full accent-primary"
+              className="w-full h-6 md:h-auto accent-primary"
             />
             <p id="ayuda-puntaje" className="text-xs text-on-surface-variant mt-1">
               Muestra solo las ofertas con este puntaje o más. El puntaje suma los pesos de tu perfil que cada oferta cumple.
@@ -399,10 +399,10 @@ export function Offers() {
             </p>
           </div>
 
-          <div className="mt-5">
+          <div className="w-full md:w-auto md:mt-5">
             <button
               type="submit"
-              className="bg-surface-container-high text-on-surface text-xs font-medium px-4 py-2 rounded-lg border border-outline-variant flex items-center gap-2 hover:bg-surface-variant transition-colors cursor-pointer"
+              className="w-full md:w-auto min-h-11 md:min-h-0 justify-center bg-surface-container-high text-on-surface text-xs font-medium px-4 py-2 rounded-lg border border-outline-variant flex items-center gap-2 hover:bg-surface-variant transition-colors cursor-pointer"
             >
               <Filter className="w-4.5 h-4.5" />
               Aplicar
