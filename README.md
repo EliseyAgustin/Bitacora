@@ -34,7 +34,7 @@ React 19 · TypeScript 5.8 · Vite 6 · Tailwind CSS 4 · React Router 7 · Rech
 Requisitos: Node.js y un proyecto de Supabase propio. Se probó únicamente con Node.js 25; las dependencias declaran como mínimo Node.js 22.
 
 1. `npm install`
-2. Copiar `.env.example` a `.env` y completar `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` (Project Settings → API del proyecto de Supabase).
+2. Crear un archivo `.env` en la raíz (no se versiona) con dos variables, `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`, con los valores de Project Settings → API del proyecto de Supabase. Se usa solo la clave pública (anon): los datos los protege RLS, y nunca hay que poner una service role key.
 3. Aplicar las migraciones (ver la sección siguiente).
 4. `npm run dev` y abrir http://localhost:3000
 
@@ -67,7 +67,7 @@ on conflict (user_id) do update set rol = 'administrador';
 | `npm run test` | **Vitest:** 244 tests unitarios (22 archivos) de la lógica pura: scoring, recordatorios, métricas, paginación y lotes, importación, tags, utilidades, validaciones y errores de autenticación, validaciones del onboarding, roles, candidatos, mensajes y ubicaciones. No toca la base. |
 | `npm run test:e2e` | **Playwright** (Chromium) en desktop (1280x800) y mobile (375x812): 93 tests en total. Son 2 de preparación de sesión, 51 en desktop y 40 en mobile. De los de desktop, 13 son las pruebas adversariales de seguridad, que hablan directo con la API (sin navegador) y por eso corren una sola vez. El test del teclado virtual solo corre en mobile. |
 
-Para los E2E: `npx playwright install chromium` y copiar `.env.e2e.example` a `.env.e2e`. Corren contra la base configurada en `.env`, **crean cuentas de prueba** por el flujo de registro de la app y **borran sus datos al terminar** (los usuarios de Auth quedan). Las pruebas de roles y mensajes necesitan además una cuenta de administrador de pruebas (`E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`), registrada desde la app y con el rol asignado una sola vez con el SQL de arriba; los tests solo inician sesión con ella. Conviene usar un proyecto de desarrollo, no uno con datos reales. Más detalle y zonas ciegas en [`e2e/README.md`](e2e/README.md).
+Para los E2E: `npx playwright install chromium` y crear un archivo `.env.e2e` (no se versiona) con las variables que lista [`e2e/README.md`](e2e/README.md). Corren contra la base configurada en `.env`, **crean cuentas de prueba** por el flujo de registro de la app y **borran sus datos al terminar** (los usuarios de Auth quedan). Las pruebas de roles y mensajes necesitan además una cuenta de administrador de pruebas (`E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`), registrada desde la app y con el rol asignado una sola vez con el SQL de arriba; los tests solo inician sesión con ella. Conviene usar un proyecto de desarrollo, no uno con datos reales. Más detalle y zonas ciegas en [`e2e/README.md`](e2e/README.md).
 
 ## Documentación
 

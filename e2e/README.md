@@ -6,9 +6,10 @@ Navegador real (Chromium) contra la app levantada con Vite y la base real de Sup
 ## Puesta en marcha
 
 1. `npm install` y `npx playwright install chromium`.
-2. Copiar `.env.e2e.example` a `.env.e2e` y completar `E2E_EMAIL`, `E2E_EMAIL_MOBILE` y `E2E_PASSWORD`
-   (no se commitea; `.env.e2e` está en `.gitignore`). `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` se leen de `.env`.
-3. Para las pruebas de roles y mensajes, agregar también `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`: una cuenta de
+2. Crear un archivo `.env.e2e` en la raíz con `E2E_EMAIL`, `E2E_EMAIL_MOBILE` y `E2E_PASSWORD` (los emails de dos cuentas
+   de prueba y una contraseña de al menos 8 caracteres; no se commitea: `.env.e2e` está en `.gitignore`).
+   `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` se leen de `.env`.
+3. Para las pruebas de roles y mensajes, agregar también a `.env.e2e` `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`: una cuenta de
    administrador de pruebas, registrada desde la app y con el rol asignado **una sola vez** por SQL (el comando está
    en el README principal, sección "Base de datos"). Los tests solo inician sesión con ella: nunca la modifican.
 4. `npm run test:e2e` (todo) o `npx playwright test --project=desktop registro` (una spec).

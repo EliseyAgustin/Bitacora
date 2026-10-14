@@ -16,7 +16,7 @@ export function proyectoDe(info: Pick<TestInfo, 'project'>): Proyecto {
 
 function requerida(nombre: string): string {
   const valor = process.env[nombre];
-  if (!valor) throw new Error(`Falta ${nombre}. Copiá .env.e2e.example a .env.e2e y completalo.`);
+  if (!valor) throw new Error(`Falta ${nombre}. Definila en .env.e2e (ver e2e/README.md).`);
   return valor;
 }
 
