@@ -55,7 +55,7 @@ test('Ubicación: explica qué escribir, sugiere las que hay y, sin resultados, 
   await expect(page.getByRole('heading', { level: 3 })).toHaveCount(3);
 
   const ubicacion = page.getByLabel('Ubicación');
-  await expect(ubicacion).toHaveAttribute('placeholder', 'Ej: Argentina, Madrid, Remoto');
+  await expect(ubicacion).toHaveAttribute('placeholder', 'Ej: Argentina, Madrid');
   await expect(page.getByText(/Escribí una ciudad o un país/)).toBeVisible();
   await expect(page.getByText(/«Remoto» o «Worldwide»/)).toBeVisible();
 
@@ -70,9 +70,12 @@ test('Ubicación: explica qué escribir, sugiere las que hay y, sin resultados, 
   await page.getByRole('button', { name: 'Aplicar' }).click();
   await expect(page.getByText('Ninguna oferta coincide con los filtros aplicados.')).toBeVisible();
   await expect(page.getByText(/Probá aflojar un filtro/)).toBeVisible();
+  // Con un filtro aplicado, la tarjeta ofrece también "Quitar filtros" (y sin filtros no aparece).
+  await expect(page.getByRole('button', { name: 'Quitar filtros', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Quitar todos los filtros' }).click();
   await expect(page.getByRole('heading', { level: 3 })).toHaveCount(3);
   await expect(ubicacion).toHaveValue('');
+  await expect(page.getByRole('button', { name: 'Quitar filtros', exact: true })).toHaveCount(0);
 });
 
 test.describe('Sin perfil de búsqueda (el usuario omitió el Onboarding)', () => {

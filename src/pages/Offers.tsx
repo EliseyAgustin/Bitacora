@@ -330,15 +330,20 @@ export function Offers() {
         {/* Filters Row */}
         <form
           onSubmit={handleAplicarFiltros}
-          className="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-center md:gap-md mb-xl p-4 bg-surface rounded-xl border border-outline-variant shadow-sm"
+          aria-label="Filtros de ofertas"
+          className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-3 mb-xl p-4 md:p-5 bg-surface rounded-xl border border-outline-variant shadow-sm"
         >
-          <div className="w-full min-w-0 md:flex-1 md:min-w-37.5">
-            <label htmlFor="filtro-fuente" className="block text-[11px] font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Fuente</label>
+          {/* Los tres campos comparten la misma estructura (etiqueta, control de 44 px, ayuda) para que queden alineados. */}
+          <div className="flex flex-col gap-1.5 min-w-0">
+            <label htmlFor="filtro-fuente" className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">
+              Fuente
+            </label>
             <select
               id="filtro-fuente"
               value={fuenteDraft}
               onChange={(e) => setFuenteDraft(e.target.value)}
-              className="w-full min-h-11 md:min-h-0 bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg p-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer"
+              aria-describedby="ayuda-fuente"
+              className="w-full h-11 bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg px-3 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer"
             >
               <option value="">Todas las fuentes</option>
               {FUENTES_OFERTA.map((fuente) => (
@@ -347,12 +352,17 @@ export function Offers() {
                 </option>
               ))}
             </select>
+            <p id="ayuda-fuente" className="text-xs text-on-surface-variant">
+              De dónde salió la oferta: un portal de empleo o una carga manual.
+            </p>
           </div>
 
-          <div className="w-full min-w-0 md:flex-1 md:min-w-37.5">
-            <label htmlFor="filtro-ubicacion" className="block text-[11px] font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Ubicación (ciudad o país)</label>
+          <div className="flex flex-col gap-1.5 min-w-0">
+            <label htmlFor="filtro-ubicacion" className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">
+              Ubicación (ciudad o país)
+            </label>
             <div className="relative">
-              <MapPin className="absolute left-2 top-3 md:top-2 text-on-surface-variant w-4.5 h-4.5" />
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant w-4.5 h-4.5 pointer-events-none" aria-hidden="true" />
               <input
                 id="filtro-ubicacion"
                 type="text"
@@ -361,8 +371,8 @@ export function Offers() {
                 onChange={(e) => setUbicacionDraft(e.target.value)}
                 list="ubicaciones-sugeridas"
                 aria-describedby="ayuda-ubicacion"
-                placeholder="Ej: Argentina, Madrid, Remoto"
-                className="w-full min-h-11 md:min-h-0 bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg py-2 pl-8 pr-2 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                placeholder="Ej: Argentina, Madrid"
+                className="w-full h-11 bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg pl-10 pr-3 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
               />
               <datalist id="ubicaciones-sugeridas">
                 {ubicacionesSugeridas.map((u) => (
@@ -370,41 +380,50 @@ export function Offers() {
                 ))}
               </datalist>
             </div>
-            <p id="ayuda-ubicacion" className="text-xs text-on-surface-variant mt-1">
+            <p id="ayuda-ubicacion" className="text-xs text-on-surface-variant">
               Escribí una ciudad o un país. Muchas ofertas remotas figuran solo por país o como «Remoto» o «Worldwide».
             </p>
           </div>
 
-          <div className="w-full min-w-0 md:w-64">
-            <label htmlFor="filtro-score" className="text-[11px] font-semibold text-on-surface-variant mb-1 uppercase tracking-wider flex justify-between">
+          <div className="flex flex-col gap-1.5 min-w-0">
+            <label htmlFor="filtro-score" className="flex items-baseline justify-between text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">
               <span>Puntaje mínimo</span>
-              <span className="text-primary font-bold">{scoreDraft}+</span>
+              <span className="text-primary font-bold text-xs">{scoreDraft}+</span>
             </label>
-            <input
-              id="filtro-score"
-              type="range"
-              min="0"
-              max={puntajeMaximo}
-              step="1"
-              value={scoreDraft}
-              aria-describedby="ayuda-puntaje"
-              onChange={(e) => setScoreDraft(Number(e.target.value))}
-              className="w-full h-6 md:h-auto accent-primary"
-            />
-            <p id="ayuda-puntaje" className="text-xs text-on-surface-variant mt-1">
-              Muestra solo las ofertas con este puntaje o más. El puntaje suma los pesos de tu perfil que cada oferta cumple.
-            </p>
-            <p className="text-xs font-medium text-on-surface-variant mt-0.5">
-              Máximo posible con tu perfil: {puntajeMaximo} puntos
+            <div className="h-11 flex items-center">
+              <input
+                id="filtro-score"
+                type="range"
+                min="0"
+                max={puntajeMaximo}
+                step="1"
+                value={scoreDraft}
+                aria-describedby="ayuda-puntaje"
+                onChange={(e) => setScoreDraft(Number(e.target.value))}
+                className="w-full accent-primary cursor-pointer"
+              />
+            </div>
+            <p id="ayuda-puntaje" className="text-xs text-on-surface-variant">
+              Muestra solo las ofertas con este puntaje o más. El puntaje suma los pesos de tu perfil que cada oferta cumple.{' '}
+              <span className="font-medium text-on-surface">Máximo posible con tu perfil: {puntajeMaximo} puntos</span>
             </p>
           </div>
 
-          <div className="w-full md:w-auto md:mt-5">
+          <div className="md:col-span-3 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end pt-4 border-t border-outline-variant">
+            {hayFiltros && (
+              <button
+                type="button"
+                onClick={handleLimpiarFiltros}
+                className="h-11 sm:h-10 shrink-0 px-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+              >
+                Quitar filtros
+              </button>
+            )}
             <button
               type="submit"
-              className="w-full md:w-auto min-h-11 md:min-h-0 justify-center bg-surface-container-high text-on-surface text-xs font-medium px-4 py-2 rounded-lg border border-outline-variant flex items-center gap-2 hover:bg-surface-variant transition-colors cursor-pointer"
+              className="h-11 sm:h-10 shrink-0 w-full sm:w-auto justify-center bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer"
             >
-              <Filter className="w-4.5 h-4.5" />
+              <Filter className="w-4.5 h-4.5" aria-hidden="true" />
               Aplicar
             </button>
           </div>
