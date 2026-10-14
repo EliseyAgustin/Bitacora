@@ -13,3 +13,6 @@ e2e/.auth/
 e2e/.cuentas-temporales.json
 playwright-report/
 test-results/
+
+# Demostración (credenciales de las cuentas ficticias, solo para borrar sus datos)
+.demo-cuentas.json

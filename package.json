@@ -14,7 +14,9 @@
     "docs:generar": "node docs/scripts/memoria-tecnica.mjs && node docs/scripts/manual-usuario.mjs",
     "docs:capturas": "node docs/scripts/capturas.mjs",
     "docs:der": "node docs/scripts/render-der.mjs",
-    "docs:pdf": "node docs/scripts/docx-a-pdf.mjs"
+    "docs:pdf": "node docs/scripts/docx-a-pdf.mjs",
+    "demo:datos": "node docs/scripts/demo-datos.mjs",
+    "demo:borrar": "node docs/scripts/demo-datos.mjs --borrar"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.115.0",
