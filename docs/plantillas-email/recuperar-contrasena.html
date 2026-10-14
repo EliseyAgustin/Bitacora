@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Cambiá tu contraseña de Laburin</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f2f4fa;">
+  <!-- Texto que se ve en la vista previa de la bandeja de entrada -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+    Pediste cambiar tu contraseña. Tocá el botón para elegir una nueva.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f2f4fa; padding:32px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background-color:#ffffff; border:1px solid #dfe3ee; border-radius:14px;">
+          <tr>
+            <td align="center" style="padding:32px 32px 8px 32px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
+              <div style="font-size:28px; font-weight:700; letter-spacing:-0.5px; color:#1e4fd8;">Laburin</div>
+              <div style="font-size:13px; color:#6b7386; padding-top:2px;">Tu búsqueda de empleo, en un solo lugar</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 32px 0 32px; font-family:Segoe UI, Helvetica, Arial, sans-serif; color:#12172b;">
+              <h1 style="margin:0 0 12px 0; font-size:22px; line-height:1.3; font-weight:700; color:#12172b;">Cambiá tu contraseña</h1>
+              <p style="margin:0 0 12px 0; font-size:15px; line-height:1.6; color:#2b3144;">
+                Hola. Recibimos un pedido para cambiar la contraseña de tu cuenta de Laburin.
+                Tocá el botón para elegir una nueva.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:12px 32px 8px 32px;">
+              <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ .ConfirmationURL }}" style="height:46px;v-text-anchor:middle;width:260px;" arcsize="20%" stroke="f" fillcolor="#1e4fd8"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Elegir una contraseña nueva</center></v:roundrect><![endif]-->
+              <!--[if !mso]><!-- -->
+              <a href="{{ .ConfirmationURL }}" style="display:inline-block; background-color:#1e4fd8; color:#ffffff; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:15px; font-weight:600; text-decoration:none; padding:14px 28px; border-radius:10px;">
+                Elegir una contraseña nueva
+              </a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 32px 0 32px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
+              <p style="margin:0 0 8px 0; font-size:13px; line-height:1.6; color:#2b3144;">
+                <strong>El enlace vence al rato y solo se puede usar una vez.</strong>
+                Si ya no sirve, pedí otro desde la pantalla de inicio de sesión, en «¿Olvidaste tu contraseña?».
+              </p>
+              <p style="margin:0 0 8px 0; font-size:13px; line-height:1.6; color:#6b7386;">
+                Si el botón no funciona, copiá y pegá esta dirección en tu navegador:
+              </p>
+              <p style="margin:0 0 16px 0; font-size:12px; line-height:1.5; color:#1e4fd8; word-break:break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color:#1e4fd8;">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 28px 32px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
+              <div style="border-top:1px solid #e6e9f2; padding-top:16px;">
+                <p style="margin:0; font-size:13px; line-height:1.6; color:#6b7386;">
+                  <strong style="color:#2b3144;">Si no fuiste vos</strong>, ignorá este mensaje: tu contraseña actual
+                  sigue siendo la misma y nadie puede entrar a tu cuenta con este correo.
+                </p>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <p style="max-width:520px; margin:16px 0 0 0; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:12px; line-height:1.5; color:#8b93a7; text-align:center;">
+          Este mensaje se envió automáticamente: no hace falta que lo respondas.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

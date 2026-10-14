@@ -3,12 +3,14 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import logoTexto from '@/assets/logo/laburin-logo-texto.svg';
 
 interface AuthLayoutProps {
-  subtitulo: string;
+  subtitulo?: string;
+  // Logo más chico para las pantallas con más contenido (recuperación de contraseña).
+  compacto?: boolean;
   children: ReactNode;
 }
 
 // Marco común de Login, Registro y recuperación de contraseña: mismo fondo, logo y tarjeta.
-export function AuthLayout({ subtitulo, children }: AuthLayoutProps) {
+export function AuthLayout({ subtitulo, compacto = false, children }: AuthLayoutProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface p-margin relative">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -20,8 +22,8 @@ export function AuthLayout({ subtitulo, children }: AuthLayoutProps) {
       <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-96 bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm flex flex-col gap-5 relative">
         <div className="flex flex-col items-center text-center">
-          <img src={logoTexto} alt="Laburin" className="h-28 w-auto" />
-          <p className="text-sm text-on-surface-variant mt-1">{subtitulo}</p>
+          <img src={logoTexto} alt="Laburin" className={compacto ? 'h-20 w-auto' : 'h-28 w-auto'} />
+          {subtitulo && <p className="text-sm text-on-surface-variant mt-1">{subtitulo}</p>}
         </div>
         {children}
       </div>

@@ -159,6 +159,20 @@ test.describe('Recuperar contraseña', () => {
 
     // No se puede reenviar enseguida: el servicio permite un envío por minuto.
     await expect(page.getByRole('button', { name: /Podés pedir otro enlace en \d+ s/ })).toBeDisabled();
+
+    // La pantalla pasa a "Revisá tu correo": paso 2 de 3, el email al que se pidió, consejos y salidas claras.
+    await expect(page.getByRole('heading', { name: 'Revisá tu correo', level: 1 })).toBeVisible();
+    await expect(page.getByRole('listitem').filter({ hasText: 'Pedí el enlace' })).not.toHaveAttribute('aria-current', 'step');
+    await expect(page.getByRole('listitem').filter({ hasText: 'Revisá tu correo' })).toHaveAttribute('aria-current', 'step');
+    await expect(page.getByText('alguien@correo.com')).toBeVisible();
+    await expect(page.getByText(/carpeta de spam/)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Volver a iniciar sesión' })).toBeVisible();
+
+    // "Usar otro email" vuelve al formulario sin perder lo escrito.
+    await page.getByRole('button', { name: 'Usar otro email' }).click();
+    await expect(page.getByRole('heading', { name: '¿Olvidaste tu contraseña?', level: 1 })).toBeVisible();
+    await expect(page.getByLabel('Email')).toHaveValue('alguien@correo.com');
+    await expect(page.getByRole('listitem').filter({ hasText: 'Pedí el enlace' })).toHaveAttribute('aria-current', 'step');
   });
 
   test('si se superó el límite de envíos, lo dice en español', async ({ page }) => {
@@ -220,13 +234,22 @@ test.describe('Nueva contraseña con sesión de recuperación', () => {
     await page.getByRole('button', { name: 'Guardar contraseña nueva' }).click();
     await expect(page.getByText('Elegí una contraseña.')).toBeVisible();
 
+    // La lista de requisitos se tilda en vivo: con "abc" falta todo; con una contraseña completa están los cuatro.
+    const requisito = (id: string) => page.locator(`[data-requisito="${id}"]`);
+    await expect(requisito('largo')).toHaveAttribute('data-cumplido', 'false');
     await page.getByLabel('Contraseña nueva').fill('abc');
+    await expect(requisito('largo')).toHaveAttribute('data-cumplido', 'false');
+    await expect(requisito('mayusculas')).toHaveAttribute('data-cumplido', 'false');
     await expect(page.getByText('Contraseña débil')).toBeVisible();
     await page.getByRole('button', { name: 'Guardar contraseña nueva' }).click();
     await expect(page.getByText('La contraseña tiene que tener al menos 8 caracteres.')).toBeVisible();
 
     await page.getByLabel('Contraseña nueva').fill('Una-clave-larga-9!');
     await expect(page.getByText('Contraseña fuerte')).toBeVisible();
+    for (const id of ['largo', 'mayusculas', 'numero', 'simbolo']) {
+      await expect(requisito(id), id).toHaveAttribute('data-cumplido', 'true');
+    }
+    await expect(page.getByRole('listitem').filter({ hasText: 'Elegí tu contraseña' })).toHaveAttribute('aria-current', 'step');
     await page.getByRole('button', { name: 'Guardar contraseña nueva' }).click();
     await expect(page.getByText('Repetí la contraseña para confirmarla.')).toBeVisible();
 

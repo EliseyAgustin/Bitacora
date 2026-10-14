@@ -1,10 +1,13 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { CheckCircle2, Loader2, LockKeyhole, TriangleAlert } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { CampoPassword } from '@/components/auth/CampoPassword';
+import { ChecklistPassword } from '@/components/auth/ChecklistPassword';
+import { EncabezadoAuth } from '@/components/auth/EncabezadoAuth';
 import { MedidorPassword } from '@/components/auth/MedidorPassword';
+import { PasosRecuperacion } from '@/components/auth/PasosRecuperacion';
 import { traducirErrorAuth, type ErrorAuthTraducido } from '@/lib/authErrores';
 import { RUTAS } from '@/lib/rutas';
 import { validarConfirmacion, validarPasswordNueva } from '@/lib/validacionAuth';
@@ -58,33 +61,36 @@ export function NuevaPassword() {
   // Sin sesión de recuperación no hay a quién cambiarle la contraseña: el enlace venció, ya se usó o se abrió a mano.
   if (!session || enlaceConError()) {
     return (
-      <AuthLayout subtitulo="No pudimos validar el enlace.">
-        <p role="alert" className="text-sm text-error">
-          {traducirErrorAuth({ code: 'otp_expired' }, 'nueva-password').mensaje}
-        </p>
-        <Link
-          to="/recuperar"
-          className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all text-center"
-        >
-          Pedir un enlace nuevo
-        </Link>
-        <Link to="/" className="text-center text-sm text-on-surface-variant hover:text-primary transition-colors">
-          Volver a iniciar sesión
-        </Link>
+      <AuthLayout compacto>
+        <PasosRecuperacion actual={3} />
+        <EncabezadoAuth icono={TriangleAlert} titulo="No pudimos validar el enlace" tono="alerta">
+          <p role="alert">{traducirErrorAuth({ code: 'otp_expired' }, 'nueva-password').mensaje}</p>
+        </EncabezadoAuth>
+        <div className="flex flex-col gap-3">
+          <Link
+            to="/recuperar"
+            className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center"
+          >
+            Pedir un enlace nuevo
+          </Link>
+          <Link to="/" className="text-center text-sm text-on-surface-variant hover:text-primary transition-colors">
+            Volver a iniciar sesión
+          </Link>
+        </div>
       </AuthLayout>
     );
   }
 
   if (listo) {
     return (
-      <AuthLayout subtitulo="Tu contraseña quedó actualizada.">
-        <p role="status" className="text-sm text-primary">
-          Listo, ya podés usar tu nueva contraseña la próxima vez que inicies sesión.
-        </p>
+      <AuthLayout compacto>
+        <EncabezadoAuth icono={CheckCircle2} titulo="Tu contraseña quedó actualizada" tono="exito">
+          <p role="status">Listo, ya podés usar tu nueva contraseña la próxima vez que inicies sesión.</p>
+        </EncabezadoAuth>
         <button
           type="button"
           onClick={() => navigate(RUTAS.postulaciones, { replace: true })}
-          className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all cursor-pointer"
+          className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
           Continuar
         </button>
@@ -93,8 +99,13 @@ export function NuevaPassword() {
   }
 
   return (
-    <AuthLayout subtitulo="Elegí una contraseña nueva para tu cuenta.">
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+    <AuthLayout compacto>
+      <PasosRecuperacion actual={3} />
+      <EncabezadoAuth icono={LockKeyhole} titulo="Elegí tu contraseña nueva">
+        <p>Escribila dos veces para asegurarte de que no hay errores.</p>
+      </EncabezadoAuth>
+
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <CampoPassword
           etiqueta="Contraseña nueva"
           value={password}
@@ -106,9 +117,8 @@ export function NuevaPassword() {
           error={errorPassword}
           idError="error-password-nueva"
         />
-        <div className="-mt-3">
-          <MedidorPassword password={password} />
-        </div>
+        <MedidorPassword password={password} />
+        <ChecklistPassword password={password} />
         <CampoPassword
           etiqueta="Repetí la contraseña"
           value={confirmacion}
@@ -130,7 +140,7 @@ export function NuevaPassword() {
         <button
           type="submit"
           disabled={guardando}
-          className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50"
+          className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
         >
           {guardando ? 'Guardando…' : 'Guardar contraseña nueva'}
         </button>
