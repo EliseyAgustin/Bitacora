@@ -30,7 +30,7 @@ del proyecto desktop en `playwright.config.ts` (el teclado virtual solo existe e
 "salteado" en cada corrida; las especs `seguridad-*` se excluyen de mobile porque hablan directo con la API y una
 sola corrida alcanza.
 
-Corrida completa de referencia: **93 tests** (2 sesiones de preparación, 51 en desktop —13 de seguridad— y 40 en mobile),
+Corrida completa de referencia: **112 tests** (2 sesiones de preparación, 61 en desktop —13 de seguridad contra la base— y 49 en mobile),
 todos en verde.
 
 ## Especificaciones
@@ -42,8 +42,11 @@ todos en verde.
 | `navegacion` | Nombres de las secciones, ayuda por pantalla, redirecciones de las URLs anteriores |
 | `filtros-y-perfil` | Filtros de Ofertas (ubicación, puntaje mínimo según el perfil, sin resultados) y aviso de perfil vacío |
 | `recorrido-usuario-nuevo` | Registro con errores a propósito, perfil, "Primeros pasos", importar, postularse, recordatorio, salir, recuperar y volver a entrar |
-| `mensajes-administrador` | Candidato y administrador: bienvenida, listado, envío, no leído, marcado como leído, acceso por rol |
+| `mensajes-administrador` | Candidato y administrador: bienvenida, listado, envío, plantillas, no leído, marcado como leído, acceso por rol y página "No encontramos esa página" |
 | `seguridad-roles-mensajes` | Pruebas adversariales contra la base real (13): candidato contra candidato, escalada de rol, vista `candidatos`, mensajes, administrador, sin sesión |
+| `seguridad-xss` | Código malicioso en nombre, rol, ubicación, tecnologías, mensajes y ofertas importadas: todo se ve como texto y nada se ejecuta |
+| `accesibilidad` | axe-core (WCAG A y AA) en todas las pantallas y modales, en tema claro y oscuro |
+| `responsive-pantallas` | Ninguna pantalla se sale del ancho de un celular (320 y 375 px) |
 | `oferta-ciclo-de-vida`, `tablero-carrera`, `import-filtros-borrado`, `import-real`, `paginacion-mas-de-1000`, `configuracion-scoring`, `umbral-inactividad`, `cuenta-y-sesion`, `mobile-teclado` | Las del pase anterior: ciclo de la oferta, Tablero, importación, paginación, scoring, recordatorios, sesión y teclado |
 
 ## Datos de prueba
