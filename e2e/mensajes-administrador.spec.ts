@@ -65,6 +65,10 @@ test('candidato se registra y recibe la bienvenida; el administrador lo ve, le e
     await page.goto(ruta);
     await expect(page).toHaveURL(/\/candidatos$/);
   }
+  // Una dirección que no existe lleva al inicio del administrador, no a las pantallas del candidato.
+  await page.goto('/ruta-que-no-existe');
+  await page.getByRole('link', { name: 'Ir a mi inicio' }).click();
+  await expect(page).toHaveURL(/\/candidatos$/);
 
   await page.getByLabel('Buscar candidatos').fill(nombre);
   const tarjeta = page.getByRole('link').filter({ hasText: nombre });

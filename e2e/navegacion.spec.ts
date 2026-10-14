@@ -49,3 +49,22 @@ test('textos aclarados: sin siglas ni jerga en el menú, en Mi progreso y en Mi 
   await page.goto('/mi-progreso');
   await expect(page.getByText(/pts/)).toHaveCount(0);
 });
+
+test('una dirección que no existe muestra "No encontramos esa página" y lleva al inicio del candidato', async ({ page }) => {
+  await page.goto('/ruta-que-no-existe');
+  await expect(page.getByRole('heading', { name: 'No encontramos esa página', level: 1 })).toBeVisible();
+  await page.getByRole('link', { name: 'Ir a mi inicio' }).click();
+  await expect(page).toHaveURL(/\/mis-postulaciones$/);
+});
+
+test.describe('sin sesión', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test('una dirección que no existe lleva a iniciar sesión', async ({ page }) => {
+    await page.goto('/otra/ruta/inexistente');
+    await expect(page.getByRole('heading', { name: 'No encontramos esa página', level: 1 })).toBeVisible();
+    await page.getByRole('link', { name: 'Ir a iniciar sesión' }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('button', { name: 'Ingresar' })).toBeVisible();
+  });
+});

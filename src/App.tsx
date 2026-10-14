@@ -22,6 +22,7 @@ import { Settings } from './pages/Settings';
 import { Mensajes } from './pages/Mensajes';
 import { Candidatos } from './pages/Candidatos';
 import { CandidatoDetalle } from './pages/CandidatoDetalle';
+import { NoEncontrada } from './pages/NoEncontrada';
 import { REDIRECCIONES_LEGACY, RUTAS } from './lib/rutas';
 
 export default function App() {
@@ -73,8 +74,8 @@ export default function App() {
                 <Route key={desde} path={desde} element={<Navigate to={hacia} replace />} />
               ))}
 
-              {/* Fallback */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* Dirección que no existe */}
+              <Route path="*" element={<NoEncontrada />} />
             </Routes>
           </BrowserRouter>
         </OnboardingProvider>
