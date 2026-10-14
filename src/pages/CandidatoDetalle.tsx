@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
@@ -6,6 +6,7 @@ import { nombreParaMostrar, type Candidato } from '@/lib/candidatos';
 import { mensajeDeError } from '@/lib/errores';
 import { MODALIDAD_ETIQUETA, NIVEL_EXPERIENCIA_ETIQUETA, formatearFecha, formatearFechaHora } from '@/lib/etiquetas';
 import { MENSAJE_MAX, validarMensaje, type Mensaje } from '@/lib/mensajes';
+import { armarMensaje, hayCamposSinCompletar, PLANTILLAS_MENSAJE, primerCampoPendiente, type PlantillaMensaje } from '@/lib/plantillasMensaje';
 import { RUTAS } from '@/lib/rutas';
 import { scrollFieldIntoView } from '@/lib/utils';
 import { obtenerCandidato } from '@/services/candidatos';
@@ -30,6 +31,9 @@ export function CandidatoDetalle() {
   const [errorTexto, setErrorTexto] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [confirmacion, setConfirmacion] = useState(false);
+  // Texto que había antes de aplicar una plantilla, para poder deshacerlo.
+  const [textoAnterior, setTextoAnterior] = useState<string | null>(null);
+  const areaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     let cancelado = false;
@@ -55,7 +59,7 @@ export function CandidatoDetalle() {
     setConfirmacion(false);
     setError(null);
 
-    const invalido = validarMensaje(texto);
+    const invalido = validarMensaje(texto) ?? (hayCamposSinCompletar(texto) ? 'Completá lo que está entre corchetes antes de enviar el mensaje.' : null);
     setErrorTexto(invalido);
     if (invalido) return;
 
@@ -63,6 +67,7 @@ export function CandidatoDetalle() {
     try {
       await enviarMensaje(id, texto);
       setTexto('');
+      setTextoAnterior(null);
       setConfirmacion(true);
       setEnviados(await listarMensajesEnviadosA(id));
     } catch (err) {
@@ -70,6 +75,30 @@ export function CandidatoDetalle() {
     } finally {
       setEnviando(false);
     }
+  }
+
+  function aplicarPlantilla(plantilla: PlantillaMensaje) {
+    if (!candidato) return;
+    const nuevo = armarMensaje(plantilla, candidato.nombre);
+    setTextoAnterior(texto.trim() && texto !== nuevo ? texto : null);
+    setTexto(nuevo);
+    setErrorTexto(null);
+    setConfirmacion(false);
+    // Si la plantilla deja un dato por completar, queda seleccionado para escribir encima.
+    const pendiente = primerCampoPendiente(nuevo);
+    requestAnimationFrame(() => {
+      const area = areaRef.current;
+      if (!area) return;
+      area.focus();
+      if (pendiente) area.setSelectionRange(pendiente.inicio, pendiente.fin);
+    });
+  }
+
+  function deshacerPlantilla() {
+    if (textoAnterior === null) return;
+    setTexto(textoAnterior);
+    setTextoAnterior(null);
+    setErrorTexto(null);
   }
 
   const volver = (
@@ -146,23 +175,55 @@ export function CandidatoDetalle() {
           </p>
 
           <form onSubmit={handleEnviar} noValidate className="flex flex-col gap-3">
-            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
-              Mensaje
+            <div role="group" aria-labelledby="plantillas-titulo" className="flex flex-col gap-2">
+              <p id="plantillas-titulo" className="text-sm text-on-surface-variant">
+                Usar una plantilla <span className="text-xs">(después podés editarla)</span>
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {PLANTILLAS_MENSAJE.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    title={p.descripcion}
+                    onClick={() => aplicarPlantilla(p)}
+                    className="min-h-11 md:min-h-9 px-3 rounded-full border border-outline-variant bg-surface text-on-surface text-xs font-medium hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                  >
+                    {p.titulo}
+                  </button>
+                ))}
+              </div>
+              {textoAnterior !== null && (
+                <p role="status" className="text-xs text-on-surface-variant">
+                  Plantilla aplicada.{' '}
+                  <button type="button" onClick={deshacerPlantilla} className="font-medium text-primary underline underline-offset-2 cursor-pointer">
+                    Deshacer
+                  </button>
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              {/* Etiqueta asociada por id (no envolviendo el campo): así su nombre accesible es siempre "Mensaje", tenga o no texto. */}
+              <label htmlFor="texto-mensaje" className="text-sm text-on-surface-variant">
+                Mensaje
+              </label>
               <textarea
+                id="texto-mensaje"
+                ref={areaRef}
                 value={texto}
-                rows={4}
+                rows={5}
                 aria-invalid={Boolean(errorTexto)}
                 aria-describedby={errorTexto ? 'error-mensaje' : undefined}
                 onChange={(e) => {
                   setTexto(e.target.value);
                   setErrorTexto(null);
                   setConfirmacion(false);
+                  setTextoAnterior(null);
                 }}
                 onFocus={scrollFieldIntoView}
                 placeholder="Ej: Hola, nos falta tu ubicación exacta para tener en cuenta tu solicitud."
                 className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all aria-invalid:border-error"
               />
-            </label>
+            </div>
             <div className="flex justify-between gap-3 text-xs text-on-surface-variant">
               <span>
                 {texto.trim().length} / {MENSAJE_MAX}

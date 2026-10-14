@@ -35,8 +35,11 @@ export async function omitirOnboarding(page: Page) {
 export async function abrirMenuSiHaceFalta(page: Page) {
   // Con el menú ya abierto (mobile) el botón sigue en pantalla pero tapado por el menú: no hay que volver a tocarlo.
   if ((await page.locator('aside.translate-x-0').count()) > 0) return;
-  const abrir = page.getByRole('button', { name: 'Abrir menú' });
-  if (await abrir.isVisible()) await abrir.click();
+  // Desde 768 px el menú es fijo y no hay botón. En pantallas más angostas el botón aparece apenas se pinta el layout:
+  // se lo espera (click espera solo) en lugar de mirar una sola vez, que fallaba si el layout todavía no se había montado.
+  const ancho = page.viewportSize()?.width ?? 1280;
+  if (ancho >= 768) return;
+  await page.getByRole('button', { name: 'Abrir menú' }).click();
 }
 
 // En mobile, con el menú abierto el contenido queda tapado: se cierra antes de seguir usando la pantalla.

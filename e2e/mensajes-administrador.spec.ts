@@ -142,3 +142,51 @@ test('quien omitió el Onboarding no aparece en Candidatos y su bandeja vacía l
   await page.getByRole('button', { name: 'Borrar la búsqueda' }).click();
   await expect(page.getByLabel('Buscar candidatos')).toHaveValue('');
 });
+
+test('plantillas de mensaje: se aplican con el nombre, se pueden deshacer y no se envían con datos sin completar', async ({ page }) => {
+  const primerNombre = `Pruebita${unico()}`;
+  const nombre = `${primerNombre} Ejemplo`;
+
+  await registrarPorUI(page);
+  await completarOnboarding(page, nombre);
+  await page.getByRole('button', { name: 'Ir a Mis postulaciones' }).click();
+  await expect(page).toHaveURL(/\/mis-postulaciones$/);
+  await cerrarSesion(page);
+  await entrarComoAdministrador(page);
+
+  await page.getByLabel('Buscar candidatos').fill(nombre);
+  await page.getByRole('link').filter({ hasText: nombre }).click();
+  const area = page.getByLabel('Mensaje', { exact: true });
+  const grupo = page.getByRole('group', { name: /Usar una plantilla/ });
+  for (const titulo of ['Solicitud recibida', 'Falta un dato', 'Pedir la ubicación', 'Sumar tecnologías', 'Datos completos']) {
+    await expect(grupo.getByRole('button', { name: titulo })).toBeVisible();
+  }
+
+  // La plantilla saluda por el primer nombre y trae el texto que pidió la docente.
+  await grupo.getByRole('button', { name: 'Solicitud recibida' }).click();
+  await expect(area).toHaveValue(new RegExp(`^Hola ${primerNombre}, tu perfil quedó registrado y vamos a tener en cuenta tu solicitud`));
+
+  // Si ya había texto escrito, se puede volver atrás.
+  await area.fill('borrador a mano');
+  await grupo.getByRole('button', { name: 'Datos completos' }).click();
+  await expect(area).toHaveValue(/gracias por completar tu perfil/);
+  await page.getByRole('button', { name: 'Deshacer' }).click();
+  await expect(area).toHaveValue('borrador a mano');
+
+  // "Falta un dato" deja el campo pendiente seleccionado para escribir encima, y no se puede enviar sin completarlo.
+  await grupo.getByRole('button', { name: 'Falta un dato' }).click();
+  await expect(area).toHaveValue(/\[indicá cuál\]/);
+  await expect
+    .poll(() => area.evaluate((el: HTMLTextAreaElement) => el.value.slice(el.selectionStart, el.selectionEnd)))
+    .toBe('[indicá cuál]');
+  await page.getByRole('button', { name: 'Enviar mensaje' }).click();
+  await expect(page.getByText('Completá lo que está entre corchetes antes de enviar el mensaje.')).toBeVisible();
+  await expect(page.getByText('Mensaje enviado.')).toHaveCount(0);
+
+  // Completado el dato, se envía y queda en el historial.
+  const completo = (await area.inputValue()).replace('[indicá cuál]', 'tu nivel de experiencia');
+  await area.fill(completo);
+  await page.getByRole('button', { name: 'Enviar mensaje' }).click();
+  await expect(page.getByText('Mensaje enviado.')).toBeVisible();
+  await expect(page.getByRole('listitem').filter({ hasText: 'tu nivel de experiencia' })).toContainText('Sin leer');
+});
