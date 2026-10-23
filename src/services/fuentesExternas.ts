@@ -2,7 +2,7 @@ import { claveDedupeOferta } from '@/lib/fuentes';
 import { textoPlano, urlSegura } from '@/lib/ofertaDetalle';
 import {
   completarEnlaceOferta,
-  crearOferta,
+  crearOfertas,
   listarClavesOfertasExistentes,
   listarOfertasSinEnlace,
 } from '@/services/ofertas';
@@ -200,16 +200,7 @@ export async function importarOfertasRemotas(): Promise<ResultadoImportacion> {
   const existentes = await listarClavesOfertasExistentes(fuentes);
   const { nuevas, omitidasPorDuplicado } = separarNuevas(candidatos, existentes);
 
-  const insertadas: Oferta[] = [];
-  let erroresInsercion = 0;
-
-  for (const oferta of nuevas) {
-    try {
-      insertadas.push(await crearOferta(oferta));
-    } catch {
-      erroresInsercion++;
-    }
-  }
+  const { insertadas, erroresInsercion } = await crearOfertas(nuevas);
 
   // Completar enlaces es un extra: si falla, la importación sigue valiendo.
   let enlacesCompletados = 0;

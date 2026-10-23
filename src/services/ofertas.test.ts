@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { eliminarEnLotes } from '@/services/ofertas';
+import { eliminarEnLotes, insertarEnLotes } from '@/services/ofertas';
 
 const ids = (n: number) => Array.from({ length: n }, (_, i) => `id${i}`);
 
@@ -63,5 +63,48 @@ describe('eliminarEnLotes', () => {
     expect(r.eliminadas).toEqual([]);
     expect(r.fallidas).toEqual(['a', 'b', 'c']);
     expect(r.motivo).toBe('sin conexión');
+  });
+});
+
+describe('insertarEnLotes', () => {
+  const filas = (n: number) => Array.from({ length: n }, (_, i) => ({ n: i }));
+
+  it('no llama a la base cuando no hay filas', async () => {
+    let llamadas = 0;
+    const r = await insertarEnLotes([], async () => {
+      llamadas++;
+      return [];
+    });
+    expect(llamadas).toBe(0);
+    expect(r).toEqual({ insertadas: [], erroresInsercion: 0 });
+  });
+
+  it('inserta de a tandas en lugar de una request por fila y devuelve todo en orden', async () => {
+    const tamanos: number[] = [];
+    const r = await insertarEnLotes(
+      filas(250),
+      async (lote) => {
+        tamanos.push(lote.length);
+        return lote.map((f) => ({ ...f, id: `id${f.n}` }));
+      },
+      100
+    );
+    expect(tamanos).toEqual([100, 100, 50]);
+    expect(r.insertadas).toHaveLength(250);
+    expect(r.insertadas.map((f) => f.n)).toEqual(Array.from({ length: 250 }, (_, i) => i));
+    expect(r.erroresInsercion).toBe(0);
+  });
+
+  it('si una tanda falla, reintenta fila por fila: guarda las buenas y cuenta solo las que fallan', async () => {
+    const insertar = async (lote: { n: number }[]) => {
+      if (lote.some((f) => f.n === 3)) {
+        if (lote.length > 1) throw new Error('una fila mala rompe la tanda');
+        throw new Error('fila mala');
+      }
+      return lote;
+    };
+    const r = await insertarEnLotes(filas(6), insertar, 4);
+    expect(r.insertadas.map((f) => f.n)).toEqual([0, 1, 2, 4, 5]);
+    expect(r.erroresInsercion).toBe(1);
   });
 });

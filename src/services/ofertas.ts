@@ -148,6 +148,58 @@ export async function crearOferta(input: OfertaInput): Promise<Oferta> {
   return data as Oferta;
 }
 
+const TAMANO_LOTE_INSERCION = 100;
+
+// Inserta por tandas para no hacer varias requests por fila (importar ~300 ofertas una por una tardaba minutos);
+// si una tanda falla, reintenta fila por fila: guarda las buenas y cuenta solo las que fallan.
+export async function insertarEnLotes<T, R>(
+  filas: T[],
+  insertar: (lote: T[]) => Promise<R[]>,
+  tamanoLote = TAMANO_LOTE_INSERCION
+): Promise<{ insertadas: R[]; erroresInsercion: number }> {
+  const insertadas: R[] = [];
+  let erroresInsercion = 0;
+
+  for (let i = 0; i < filas.length; i += tamanoLote) {
+    const lote = filas.slice(i, i + tamanoLote);
+
+    try {
+      insertadas.push(...(await insertar(lote)));
+    } catch {
+      for (const fila of lote) {
+        try {
+          insertadas.push(...(await insertar([fila])));
+        } catch {
+          erroresInsercion++;
+        }
+      }
+    }
+  }
+
+  return { insertadas, erroresInsercion };
+}
+
+// Varias ofertas de una vez (la importación): el usuario y los criterios se leen una sola vez y el puntaje se calcula acá.
+export async function crearOfertas(inputs: OfertaInput[]): Promise<{ insertadas: Oferta[]; erroresInsercion: number }> {
+  if (inputs.length === 0) return { insertadas: [], erroresInsercion: 0 };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('No hay sesión activa.');
+
+  const criterios = await obtenerCriteriosActivos(user.id);
+
+  return insertarEnLotes(inputs, async (lote) => {
+    const { data, error } = await supabase
+      .from('ofertas')
+      .insert(lote.map((input) => ({ ...input, user_id: user.id, puntaje_scoring: calcularScoring(input, criterios) })))
+      .select();
+    if (error) throw error;
+    return data as Oferta[];
+  });
+}
+
 export async function actualizarOferta(id: string, input: Partial<OfertaInput>): Promise<Oferta> {
   const {
     data: { user },
