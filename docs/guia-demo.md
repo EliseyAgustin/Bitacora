@@ -5,7 +5,8 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 ## Antes de empezar (10 minutos antes)
 - [ ] **Producción al día:** https://laburin.vercel.app abre y el último commit está desplegado.
 - [ ] **Supabase configurado** según [`guia-supabase.md`](guia-supabase.md): sobre todo el correo propio, para que la recuperación de contraseña funcione con el email de quien la pruebe.
-- [ ] **Datos de ejemplo:** `npm run demo:datos` crea tres candidatos ficticios (Camila, Tomás y Lucía Ejemplo) y deja a Camila con ofertas, postulaciones y un recordatorio. Necesita `DEMO_EMAIL` y `DEMO_PASSWORD` en `.env.e2e`. Al terminar: `npm run demo:borrar`.
+- [ ] **Cuenta DEMO al día:** `npm run demo:datos` deja a **Camila Ejemplo** como alguien que usa Laburin hace ocho semanas y suma a Tomás y Lucía Ejemplo para la vista del administrador. Conviene correrlo **el mismo día**: las fechas se arman respecto de hoy, y es repetible (reinicia la cuenta). Necesita `DEMO_EMAIL` y `DEMO_PASSWORD` en `.env.e2e`; los mensajes del administrador usan `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`. Al terminar: `npm run demo:borrar`.
+- [ ] **Qué trae la cuenta DEMO:** 36 ofertas (Remotive, Arbeitnow y carga manual) con puntajes altos, medios y bajos; 15 postulaciones en los seis estados, con su historial; 33 interacciones de los cuatro tipos; **2 recordatorios activos** («Sin novedades hace 15 y 9 días») y 2 resueltos; un criterio de scoring apagado; y 4 mensajes (la bienvenida y tres del administrador, **uno sin leer**: el menú muestra el 1). Mi progreso entra con datos en todas las tarjetas y gráficos.
 - [ ] **Dos ventanas listas:** una con la cuenta de candidato (Camila) y otra con la de administrador, ya con la sesión iniciada. Una más en un celular o en el modo móvil del navegador.
 - [ ] **Plan B si falla internet:** el [Manual de Usuario](../Laburin-Manual-de-Usuario.pdf) y las capturas de [`docs/scripts/capturas/`](scripts/capturas/).
 
@@ -20,7 +21,7 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 - Señalar el **aviso de privacidad** del primer paso y la frase del resumen: *"Podés cambiarlos cuando quieras en Mi perfil de búsqueda"*. Terminar: "Tu perfil quedó listo".
 
 ### 3. Ofertas y puntaje (1 min 30 s)
-- **Ofertas**: la línea de ayuda bajo el título y la tarjeta **Primeros pasos**. *Importar ofertas remotas*.
+- **Ofertas**: la línea de ayuda bajo el título. *Importar ofertas remotas*. La tarjeta **Primeros pasos** solo se ve en una cuenta nueva: con la cuenta DEMO ya no aparece, porque ya se postuló. Mostrarla registrando una persona nueva (paso 2).
 - Cada oferta trae un **puntaje** según el perfil. Filtrar: **Ubicación** (las sugerencias son las que existen en las ofertas) y **Puntaje mínimo** (el control llega hasta el máximo posible del perfil). Probar un filtro que no devuelve nada y mostrar el mensaje que sugiere aflojarlo.
 - **Postularme** en una oferta.
 
@@ -28,7 +29,7 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 - **Mis postulaciones**: las seis columnas. Arrastrar una tarjeta (en el celular, el selector "Mover a…").
 - Abrir la **ficha**: la línea de tiempo de interacciones. Mostrar el **recordatorio** "Sin novedades hace N días" y aclarar: *"es solo un aviso, no se borra nada"*.
 - **Mi perfil de búsqueda**: cambiar el peso de una tecnología y volver a Ofertas: los puntajes se recalcularon solos. Mostrar los **Avisos de seguimiento** (los días del recordatorio).
-- **Mi progreso**: el embudo y las métricas.
+- **Mi progreso**: ya viene con datos: tasa de respuesta (67%), el embudo (15 → 12 → 7 → 4 → 1), la distribución de puntajes, las ofertas por fuente, la actividad de las últimas 8 semanas y los recordatorios activos y resueltos.
 
 ### 5. El lado del administrador (1 min 30 s)
 - En la otra ventana: iniciar sesión como administrador → **cae directo en Candidatos**. Buscar por nombre, rol o tecnología.
