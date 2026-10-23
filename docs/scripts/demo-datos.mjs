@@ -1,17 +1,24 @@
 // Datos de demostración (ficticios) para la presentación, sin pasar por la interfaz.
 //
-//   npm run demo:datos     crea 3 candidatos de ejemplo (Camila, Tomás y Lucía Ejemplo)
+//   npm run demo:datos     crea (o reinicia) la cuenta DEMO y suma dos candidatos más (Tomás y Lucía Ejemplo)
 //   npm run demo:borrar    borra los datos que creó (perfiles, ofertas, criterios y mensajes)
 //   node docs/scripts/demo-datos.mjs --probar    crea y borra enseguida (para comprobar que el script anda)
 //
 // Qué se crea:
-//  - 3 cuentas por el registro público de Supabase (clave anon, sin service role key), con perfil de búsqueda completo.
-//    Cada una recibe sola el mensaje de bienvenida (lo manda el trigger de la base). El administrador las ve en Candidatos.
-//  - Camila Ejemplo, además, es la cuenta "de demostración" del lado del candidato: 12 ofertas con puntaje, postulaciones
-//    en distintos estados, interacciones y un recordatorio. Entrás con DEMO_EMAIL y DEMO_PASSWORD (ver abajo).
+//  - La cuenta DEMO (Camila Ejemplo): el recorrido de alguien que usa Laburin hace ocho semanas. 36 ofertas con puntaje,
+//    15 postulaciones en los seis estados con su historial, interacciones de los cuatro tipos, dos avisos de seguimiento
+//    activos y dos resueltos, un criterio de scoring apagado y tres mensajes del administrador (uno sin leer).
+//    Los datos están definidos en docs/scripts/demo-dataset.mjs y un test los compara con el motor real de la aplicación.
+//    Es repetible: si la cuenta ya existe, se reinicia (borra su actividad y la vuelve a cargar con fechas actuales).
+//    Entrás con DEMO_EMAIL y DEMO_PASSWORD (ver abajo).
+//  - Tomás y Lucía Ejemplo: dos candidatos con perfil completo y sin actividad, para ver en Candidatos del administrador.
+//  - Cada cuenta nueva recibe sola el mensaje de bienvenida (lo manda el trigger de la base).
+//  - Los mensajes de la cuenta DEMO los envía la cuenta de administrador de pruebas (E2E_ADMIN_EMAIL y E2E_ADMIN_PASSWORD).
+//    Sin ellas, todo lo demás se carga igual y los mensajes se omiten.
 //
-// Variables (en .env y .env.e2e, que no se versionan): VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY y, para la cuenta de
-// Camila, DEMO_EMAIL y DEMO_PASSWORD (un email que vos controles y una contraseña de al menos 8 caracteres).
+// Todo se hace con la clave anon y el inicio de sesión de cada cuenta (sin service role key).
+// Variables (en .env y .env.e2e, que no se versionan): VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, DEMO_EMAIL y DEMO_PASSWORD
+// (un email que vos controles y una contraseña de al menos 8 caracteres).
 // Las contraseñas de Tomás y Lucía se generan al azar y quedan en .demo-cuentas.json (ignorado por git) solo para poder
 // borrar sus datos después. Los usuarios de Auth no se pueden borrar sin una service role key: quedan, sin datos.
 import { createClient } from '@supabase/supabase-js';
@@ -19,6 +26,7 @@ import dotenv from 'dotenv';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { construirDataset } from './demo-dataset.mjs';
 
 dotenv.config();
 dotenv.config({ path: '.env.e2e' });
@@ -45,37 +53,24 @@ function criteriosDe(userId, p) {
 }
 
 const PERFILES = [
-  { nombre: 'Camila Ejemplo', rol: 'Frontend Developer', techs: ['React', 'TypeScript', 'Node.js'], modalidad: 'remoto', modalidadEtiqueta: 'Remoto', ubicacion: 'Buenos Aires, Argentina', nivel: 'semi_senior', principal: true },
+  { principal: true },
   { nombre: 'Tomás Ejemplo', rol: 'Data Analyst', techs: ['SQL', 'Python'], modalidad: 'hibrido', modalidadEtiqueta: 'Híbrido', ubicacion: 'Rosario, Argentina', nivel: 'junior' },
   { nombre: 'Lucía Ejemplo', rol: 'QA Automation', techs: ['Selenium', 'Docker'], modalidad: 'remoto', modalidadEtiqueta: 'Remoto', ubicacion: 'Córdoba, Argentina', nivel: 'senior' },
 ];
 
-const EMPRESAS = ['Mercado Norte', 'Nubia Labs', 'Orbita Soft', 'Plano Digital', 'Kappa Systems', 'Lumen Tech', 'Andes Software', 'Pampa Cloud'];
-const ROLES = [
-  ['Frontend Developer', ['React', 'TypeScript']],
-  ['Full Stack Developer', ['React', 'Node.js']],
-  ['Backend Developer', ['Node.js', 'PostgreSQL']],
-  ['QA Automation Engineer', ['Selenium', 'Cypress']],
-  ['Data Analyst', ['SQL', 'Power BI']],
-  ['DevOps Engineer', ['AWS', 'Docker']],
-];
+const claveOferta = (o) => [o.empresa, o.rol, o.fuente ?? ''].map((x) => x.trim().toLowerCase()).join('|');
 
-function puntaje(oferta) {
-  const stack = oferta.stack_tecnologico.map((s) => s.toLowerCase());
-  let total = 0;
-  for (const tech of ['react', 'typescript', 'node.js']) if (stack.some((s) => s.includes(tech))) total += 15;
-  if (oferta.modalidad === 'remoto') total += 10;
-  if ((oferta.ubicacion ?? '').toLowerCase().includes('buenos aires, argentina')) total += 5;
-  return total;
-}
-
-async function registrar(email, password) {
+// Si la cuenta ya existe se inicia sesión (y se reinicia); si no, se registra.
+async function abrirCuenta(email, password) {
   const sb = cliente();
+  const { data: ingreso } = await sb.auth.signInWithPassword({ email, password });
+  if (ingreso?.user) return { sb, userId: ingreso.user.id, existia: true };
+
   const { data, error } = await sb.auth.signUp({ email, password });
   if (error || !data.user || !data.session) {
     throw new Error(`No se pudo registrar ${email}: ${error?.message ?? 'sin sesión (¿el proyecto pide confirmar el email?)'}`);
   }
-  return { sb, userId: data.user.id };
+  return { sb, userId: data.user.id, existia: false };
 }
 
 async function crearPerfil({ sb, userId }, p) {
@@ -94,49 +89,92 @@ async function crearPerfil({ sb, userId }, p) {
   if (errorCriterios) throw errorCriterios;
 }
 
-async function cargarActividad({ sb, userId }) {
-  const ahora = Date.now();
-  const filas = Array.from({ length: 12 }, (_, i) => {
-    const [rol, stack] = ROLES[i % ROLES.length];
-    const oferta = {
-      user_id: userId,
-      empresa: EMPRESAS[(i * 3) % EMPRESAS.length],
-      rol,
-      ubicacion: ['Buenos Aires, Argentina', 'Worldwide', 'LATAM', 'Córdoba, Argentina'][i % 4],
-      modalidad: i % 4 === 3 ? 'hibrido' : 'remoto',
-      stack_tecnologico: stack,
-      fuente: ['Remotive', 'Arbeitnow', 'Carga manual'][i % 3],
-      created_at: new Date(ahora - i * 3600000).toISOString(),
-    };
-    return { ...oferta, puntaje_scoring: puntaje(oferta) };
-  });
-  const { error } = await sb.from('ofertas').insert(filas);
-  if (error) throw error;
+const comprobar = (error, que) => {
+  if (error) throw new Error(`${que}: ${error.message}`);
+};
 
-  const { data: ofertas } = await sb.from('ofertas').select('id').order('created_at', { ascending: false }).limit(6);
-  const estados = ['por_aplicar', 'aplicado', 'aplicado', 'en_proceso', 'entrevista', 'rechazado'];
-  const hoy = new Date().toISOString().slice(0, 10);
-  const ids = [];
-  for (let i = 0; i < estados.length; i++) {
-    const { data, error: e } = await sb
+// Borra la actividad de la cuenta (las postulaciones, interacciones, avisos e historial se van con las ofertas).
+// Se conserva el mensaje de bienvenida: lo escribe el trigger al registrarse y no se puede volver a crear.
+async function borrarActividad(sb, userId) {
+  comprobar((await sb.from('ofertas').delete().eq('user_id', userId)).error, 'borrar ofertas');
+  comprobar((await sb.from('criterios_scoring').delete().eq('user_id', userId)).error, 'borrar criterios');
+  comprobar((await sb.from('mensajes').delete().eq('destinatario_id', userId).eq('tipo', 'admin')).error, 'borrar mensajes');
+}
+
+// Carga la cuenta DEMO completa. Todo lo que se escribe pasa por las reglas de acceso de cada tabla, como en la aplicación.
+async function cargarCuentaDemo({ sb, userId }, dataset) {
+  await borrarActividad(sb, userId);
+
+  const { perfil, criterios, ofertas, postulaciones, recordatorios } = dataset;
+  const { registrado_el: registradoEl, ...datosPerfil } = perfil;
+  const { data: existente } = await sb.from('perfil_usuario').select('user_id').eq('user_id', userId).maybeSingle();
+  comprobar(
+    (existente
+      ? await sb.from('perfil_usuario').update(datosPerfil).eq('user_id', userId)
+      : await sb.from('perfil_usuario').insert({ user_id: userId, ...datosPerfil })
+    ).error,
+    'guardar el perfil'
+  );
+  // "Registrado el" (lo que ve el administrador): si la base no deja cambiarlo, queda la fecha real.
+  await sb.from('perfil_usuario').update({ created_at: registradoEl }).eq('user_id', userId);
+
+  comprobar((await sb.from('criterios_scoring').insert(criterios.map((c) => ({ ...c, user_id: userId })))).error, 'cargar criterios');
+
+  const { data: ofertasCreadas, error: errorOfertas } = await sb
+    .from('ofertas')
+    .insert(ofertas.map((o) => ({ ...o, user_id: userId })))
+    .select('id, empresa, rol, fuente');
+  comprobar(errorOfertas, 'cargar ofertas');
+  const idDeOferta = new Map(ofertasCreadas.map((o) => [claveOferta(o), o.id]));
+
+  // Cada postulación se crea como "por aplicar" y recorre sus estados uno a uno: así el trigger de la base arma el historial
+  // que usa el embudo de Mi progreso.
+  const idsPostulacion = [];
+  for (const p of postulaciones) {
+    const o = ofertas[p.oferta];
+    const { data, error } = await sb
       .from('postulaciones')
-      .insert({ oferta_id: ofertas[i].id, estado: estados[i], fecha_postulacion: estados[i] === 'por_aplicar' ? null : hoy })
+      .insert({ oferta_id: idDeOferta.get(claveOferta(o)), estado: 'por_aplicar', created_at: p.created_at })
       .select('id')
       .single();
-    if (e) throw e;
-    ids.push(data.id);
+    comprobar(error, 'crear una postulación');
+    for (const estado of p.recorrido) comprobar((await sb.from('postulaciones').update({ estado }).eq('id', data.id)).error, `mover a ${estado}`);
+    if (p.fecha_postulacion) comprobar((await sb.from('postulaciones').update({ fecha_postulacion: p.fecha_postulacion }).eq('id', data.id)).error, 'fecha de postulación');
+    idsPostulacion.push(data.id);
   }
-  await sb.from('interacciones').insert([
-    { postulacion_id: ids[4], tipo: 'mail', notas: 'Me escribieron para coordinar una charla.' },
-    { postulacion_id: ids[4], tipo: 'entrevista', notas: 'Entrevista técnica el jueves a las 15.' },
-  ]);
-  // Una postulación abierta hace 10 días sin novedades: genera el recordatorio al abrir Mis postulaciones.
-  await sb.from('postulaciones').update({ created_at: new Date(ahora - 10 * 86400000).toISOString() }).eq('id', ids[1]);
+
+  const interacciones = postulaciones.flatMap((p, i) => p.interacciones.map((x) => ({ ...x, postulacion_id: idsPostulacion[i] })));
+  comprobar((await sb.from('interacciones').insert(interacciones)).error, 'cargar interacciones');
+
+  const avisos = recordatorios.map(({ postulacion, ...r }) => ({ ...r, postulacion_id: idsPostulacion[postulacion] }));
+  comprobar((await sb.from('recordatorios').insert(avisos)).error, 'cargar avisos de seguimiento');
+
+  return { ofertas: ofertas.length, postulaciones: postulaciones.length, interacciones: interacciones.length, avisos: avisos.length };
+}
+
+// Los mensajes del administrador los envía la cuenta de administrador de pruebas; después la cuenta DEMO marca como leídos los que corresponde.
+async function enviarMensajesDemo({ sb, userId }, mensajes) {
+  const { E2E_ADMIN_EMAIL: email, E2E_ADMIN_PASSWORD: password } = process.env;
+  if (!email || !password) return 'omitidos (faltan E2E_ADMIN_EMAIL y E2E_ADMIN_PASSWORD en .env.e2e)';
+
+  const admin = cliente();
+  const { data: sesion, error: errorSesion } = await admin.auth.signInWithPassword({ email, password });
+  if (errorSesion || !sesion.user) return `omitidos (no se pudo iniciar sesión como administrador: ${errorSesion?.message ?? 'sin sesión'})`;
+
+  const { data, error } = await admin
+    .from('mensajes')
+    .insert(mensajes.map((m) => ({ remitente_id: sesion.user.id, destinatario_id: userId, tipo: 'admin', texto: m.texto, created_at: m.created_at })))
+    .select('id, texto');
+  if (error) return `omitidos (${error.message})`;
+
+  const leidos = data.filter((m) => mensajes.find((x) => x.texto === m.texto)?.leido).map((m) => m.id);
+  if (leidos.length) comprobar((await sb.from('mensajes').update({ leido: true }).in('id', leidos)).error, 'marcar mensajes como leídos');
+  return `${data.length} enviados (${data.length - leidos.length} sin leer)`;
 }
 
 async function borrarDatos(sb, userId) {
   for (const tabla of ['ofertas', 'criterios_scoring', 'perfil_usuario']) await sb.from(tabla).delete().eq('user_id', userId);
-  await sb.from('mensajes').delete().eq('destinatario_id', userId);
+  await sb.from('mensajes').delete().eq('destinatario_id', userId).eq('tipo', 'admin');
 }
 
 async function borrarTodo(cuentas) {
@@ -161,37 +199,53 @@ if (MODO === 'borrar') {
   process.exit(0);
 }
 
-if (leerCuentas().length && MODO === 'crear') {
-  console.log('Ya hay datos de demostración. Corré antes: npm run demo:borrar');
-  process.exit(1);
-}
-
-const creadas = [];
 const emailDemo = process.env.DEMO_EMAIL;
 const passwordDemo = process.env.DEMO_PASSWORD;
 if (MODO === 'crear' && (!emailDemo || !passwordDemo)) {
-  throw new Error('Faltan DEMO_EMAIL y DEMO_PASSWORD (para la cuenta de Camila Ejemplo). Definilos en .env.e2e.');
+  throw new Error('Faltan DEMO_EMAIL y DEMO_PASSWORD (para la cuenta DEMO). Definilos en .env.e2e.');
 }
+
+const previas = leerCuentas();
+const creadas = [];
+const dataset = construirDataset(new Date());
 
 try {
   for (const p of PERFILES) {
-    // Camila usa la cuenta que elegís vos; las otras, cuentas inventadas con contraseña al azar.
+    const nombre = p.principal ? dataset.perfil.nombre : p.nombre;
+
+    // Tomás y Lucía se crean una sola vez; si ya están registrados en .demo-cuentas.json se dejan como están.
+    if (!p.principal && MODO === 'crear' && previas.some((c) => c.nombre === nombre)) {
+      console.log(`  ya existe: ${nombre}`);
+      continue;
+    }
+
+    // La cuenta DEMO usa la que elegís vos; las otras, cuentas inventadas con contraseña al azar.
     const cuenta = p.principal && MODO === 'crear'
       ? { email: emailDemo, password: passwordDemo }
-      : { email: `demo.laburin.${p.nombre.split(' ')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}.${azar()}${azar()}@gmail.com`, password: `${crypto.randomBytes(9).toString('base64url')}-Lb9!` };
-    const sesion = await registrar(cuenta.email, cuenta.password);
-    creadas.push({ nombre: p.nombre, email: cuenta.email, password: p.principal && MODO === 'crear' ? null : cuenta.password, sb: sesion.sb, userId: sesion.userId });
-    await crearPerfil(sesion, p);
-    if (p.principal) await cargarActividad(sesion);
-    console.log(`  creado: ${p.nombre}${p.principal ? ' (con ofertas, postulaciones y un recordatorio)' : ''}`);
+      : { email: `demo.laburin.${nombre.split(' ')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}.${azar()}${azar()}@gmail.com`, password: `${crypto.randomBytes(9).toString('base64url')}-Lb9!` };
+    const sesion = await abrirCuenta(cuenta.email, cuenta.password);
+    creadas.push({ nombre, email: cuenta.email, password: cuenta.password, sb: sesion.sb, userId: sesion.userId });
+
+    if (p.principal) {
+      const resumen = await cargarCuentaDemo(sesion, dataset);
+      const mensajes = await enviarMensajesDemo(sesion, dataset.mensajes);
+      console.log(`  ${sesion.existia ? 'reiniciada' : 'creada'}: ${nombre} (cuenta DEMO)`);
+      console.log(`    ${resumen.ofertas} ofertas, ${resumen.postulaciones} postulaciones, ${resumen.interacciones} interacciones, ${resumen.avisos} avisos de seguimiento`);
+      console.log(`    mensajes del administrador: ${mensajes}`);
+    } else {
+      await crearPerfil(sesion, p);
+      console.log(`  creado: ${nombre}`);
+    }
   }
+
   if (MODO === 'crear') {
-    // Se guardan solo las credenciales de las cuentas con contraseña al azar (para poder borrarlas); la de Camila es la tuya.
-    const guardar = creadas.map((c) => ({ nombre: c.nombre, email: c.email, password: c.password ?? passwordDemo }));
-    fs.writeFileSync(ARCHIVO, JSON.stringify(guardar, null, 2));
+    // Se guardan las credenciales de las cuentas con contraseña al azar (para poder borrarlas) y la de la cuenta DEMO.
+    const nuevas = creadas.map((c) => ({ nombre: c.nombre, email: c.email, password: c.password }));
+    const conservadas = previas.filter((c) => !nuevas.some((n) => n.nombre === c.nombre));
+    fs.writeFileSync(ARCHIVO, JSON.stringify([...conservadas, ...nuevas], null, 2));
     console.log('\nListo. Entrá como administrador y mirá Candidatos: aparecen las tres cuentas "Ejemplo".');
     console.log(`Para ver el lado del candidato, iniciá sesión con DEMO_EMAIL (${emailDemo}).`);
-    console.log('Para borrar todo después: npm run demo:borrar');
+    console.log('Para reiniciar la cuenta DEMO con fechas actuales: npm run demo:datos. Para borrar todo: npm run demo:borrar');
   } else {
     console.log('\nPrueba terminada: se borran los datos creados…');
     for (const c of creadas) await borrarDatos(c.sb, c.userId);
