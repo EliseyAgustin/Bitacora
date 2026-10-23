@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { claveDedupeOferta, normalizarArbeitnow, normalizarRemotive, resumenImportacion, separarNuevas } from '@/services/fuentesExternas';
+import {
+  claveDedupeOferta,
+  emparejarEnlaces,
+  normalizarArbeitnow,
+  normalizarRemoteOK,
+  normalizarRemotive,
+  resumenImportacion,
+  separarNuevas,
+} from '@/services/fuentesExternas';
 import type { Oferta } from '@/types/oferta';
 
 describe('normalizarRemotive', () => {
@@ -14,6 +22,7 @@ describe('normalizarRemotive', () => {
       publication_date: '2026-09-16T12:35:28',
       candidate_required_location: 'Northern America, LATAM, Europe, APAC',
       salary: '',
+      description: '<p>Buscamos <strong>perfil de datos</strong></p><ul><li>Python</li></ul>',
     };
 
     expect(normalizarRemotive(job)).toEqual({
@@ -24,7 +33,28 @@ describe('normalizarRemotive', () => {
       stack_tecnologico: ['python', 'AI/ML', 'react'],
       fuente: 'Remotive',
       fecha_publicacion: '2026-09-16',
+      url: 'https://remotive.com/remote-jobs/data/senior-data-scientist-2091129',
+      descripcion: 'Buscamos perfil de datos\n\n• Python',
     });
+  });
+
+  it('descarta un enlace que no sea http(s) y deja la descripción como texto plano', () => {
+    const job = {
+      id: 3,
+      url: 'javascript:alert(1)',
+      title: 'Dev',
+      company_name: 'Acme',
+      tags: [],
+      job_type: 'full_time',
+      publication_date: '2026-09-16T12:35:28',
+      candidate_required_location: '',
+      salary: '',
+      description: '<script>alert(1)</script><img src=x onerror=alert(1)>Texto',
+    };
+
+    const oferta = normalizarRemotive(job);
+    expect(oferta.url).toBeNull();
+    expect(oferta.descripcion).toBe('Texto');
   });
 
   it('usa null en ubicacion y fecha_publicacion cuando el job no los trae', () => {
@@ -58,6 +88,7 @@ describe('normalizarArbeitnow', () => {
       job_types: ['Freelance'],
       location: 'Berlin',
       created_at: 1789732849,
+      description: '<p>Diseñá <em>animaciones</em> &amp; piezas</p>',
     };
 
     expect(normalizarArbeitnow(job)).toEqual({
@@ -68,6 +99,8 @@ describe('normalizarArbeitnow', () => {
       stack_tecnologico: ['Remote', 'Graphic Arts and Communication Design'],
       fuente: 'Arbeitnow',
       fecha_publicacion: '2026-09-18',
+      url: 'https://www.arbeitnow.com/jobs/companies/paintgun/motion-designer-berlin-209101',
+      descripcion: 'Diseñá animaciones & piezas',
     });
   });
 
@@ -99,12 +132,87 @@ function ofertaFixture(overrides: Partial<Oferta> = {}): Oferta {
     stack_tecnologico: [],
     fuente: 'Remotive',
     fecha_publicacion: null,
+    url: null,
+    descripcion: null,
     puntaje_scoring: null,
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
     ...overrides,
   };
 }
+
+describe('normalizarRemoteOK', () => {
+  it('mapea un job de RemoteOK al shape de OfertaInput', () => {
+    const job = {
+      slug: 'remote-senior-devops-engineer-lemon-io-1137557',
+      company: 'Lemon.io',
+      position: 'Senior DevOps Engineer',
+      location: 'Worldwide',
+      tags: ['devops', 'aws', 'python'],
+      date: '2026-10-22T12:58:28+00:00',
+      url: 'https://remoteOK.com/remote-jobs/remote-senior-devops-engineer-lemon-io-1137557',
+      description: '<p>Operá la <b>infraestructura</b></p>',
+    };
+
+    expect(normalizarRemoteOK(job)).toEqual({
+      empresa: 'Lemon.io',
+      rol: 'Senior DevOps Engineer',
+      ubicacion: 'Worldwide',
+      modalidad: 'remoto',
+      stack_tecnologico: ['devops', 'aws', 'python'],
+      fuente: 'RemoteOK',
+      fecha_publicacion: '2026-10-22',
+      url: 'https://remoteok.com/remote-jobs/remote-senior-devops-engineer-lemon-io-1137557',
+      descripcion: 'Operá la infraestructura',
+    });
+  });
+
+  it('usa null en lo que el job no trae y tolera etiquetas ausentes', () => {
+    const oferta = normalizarRemoteOK({ company: 'Acme', position: 'Dev', location: '', date: '', url: '' } as never);
+    expect(oferta.ubicacion).toBeNull();
+    expect(oferta.fecha_publicacion).toBeNull();
+    expect(oferta.stack_tecnologico).toEqual([]);
+    expect(oferta.url).toBeNull();
+    expect(oferta.descripcion).toBeNull();
+  });
+});
+
+describe('emparejarEnlaces', () => {
+  const candidata = (overrides: Record<string, unknown> = {}) => ({
+    empresa: 'Acme',
+    rol: 'QA Analyst',
+    ubicacion: null,
+    modalidad: 'remoto' as const,
+    stack_tecnologico: [],
+    fuente: 'Remotive',
+    fecha_publicacion: null,
+    url: 'https://remotive.com/acme-qa',
+    descripcion: 'Descripción',
+    ...overrides,
+  });
+
+  it('completa el enlace y la descripción de las ofertas ya guardadas que no los tenían', () => {
+    const sinEnlace = [{ id: 'o1', empresa: ' acme ', rol: 'QA ANALYST', fuente: 'remotive' }];
+    expect(emparejarEnlaces([candidata()], sinEnlace)).toEqual([
+      { id: 'o1', url: 'https://remotive.com/acme-qa', descripcion: 'Descripción' },
+    ]);
+  });
+
+  it('ignora lo que no coincide por empresa, rol y fuente y a las candidatas sin enlace', () => {
+    const sinEnlace = [
+      { id: 'o1', empresa: 'Acme', rol: 'QA Analyst', fuente: 'Arbeitnow' },
+      { id: 'o2', empresa: 'Otra', rol: 'QA Analyst', fuente: 'Remotive' },
+      { id: 'o3', empresa: 'Sin', rol: 'Enlace', fuente: 'Remotive' },
+    ];
+    const candidatas = [candidata(), candidata({ empresa: 'Sin', rol: 'Enlace', url: null })];
+    expect(emparejarEnlaces(candidatas, sinEnlace)).toEqual([]);
+  });
+
+  it('no repite una oferta aunque la fuente la traiga dos veces', () => {
+    const sinEnlace = [{ id: 'o1', empresa: 'Acme', rol: 'QA Analyst', fuente: 'Remotive' }];
+    expect(emparejarEnlaces([candidata(), candidata()], sinEnlace)).toHaveLength(1);
+  });
+});
 
 describe('claveDedupeOferta', () => {
   it('genera la misma clave para empresa+rol+fuente iguales ignorando mayúsculas y espacios', () => {
@@ -157,7 +265,7 @@ describe('separarNuevas', () => {
 });
 
 describe('resumenImportacion', () => {
-  const base = { insertadas: [], omitidasPorDuplicado: 0, erroresInsercion: 0, fuentesFallidas: [] as string[] };
+  const base = { insertadas: [], omitidasPorDuplicado: 0, erroresInsercion: 0, fuentesFallidas: [] as string[], enlacesCompletados: 0 };
   const nuevas = (n: number) => Array.from({ length: n }, () => ({}) as Oferta);
 
   it('concuerda en plural con cero y con varias', () => {
@@ -179,7 +287,17 @@ describe('resumenImportacion', () => {
         omitidasPorDuplicado: 3,
         erroresInsercion: 1,
         fuentesFallidas: ['Remotive'],
+        enlacesCompletados: 0,
       })
     ).toBe('2 ofertas nuevas importadas · 3 duplicadas omitidas · 1 falló al guardar · no se pudo consultar: Remotive');
+  });
+
+  it('avisa cuántas ofertas ya guardadas recibieron su enlace', () => {
+    expect(resumenImportacion({ ...base, omitidasPorDuplicado: 5, enlacesCompletados: 1 })).toBe(
+      '0 ofertas nuevas importadas · 5 duplicadas omitidas · 1 con enlace agregado'
+    );
+    expect(resumenImportacion({ ...base, enlacesCompletados: 12 })).toBe(
+      '0 ofertas nuevas importadas · 12 con enlace agregado'
+    );
   });
 });

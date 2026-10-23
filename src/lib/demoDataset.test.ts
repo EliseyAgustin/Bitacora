@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 // El script de la demostración (npm run demo:datos) arma los datos de la cuenta DEMO con esta función pura.
 import { construirDataset } from '../../docs/scripts/demo-dataset.mjs';
 import { claveDedupeOferta, FUENTES_OFERTA } from '@/lib/fuentes';
+import { urlSegura } from '@/lib/ofertaDetalle';
 import { armarMensaje, PLANTILLAS_MENSAJE } from '@/lib/plantillasMensaje';
 import { calcularMetricas } from '@/services/metricas';
 import { calcularRecordatoriosPendientes } from '@/services/recordatorios';
@@ -47,7 +48,7 @@ describe('datos de la cuenta DEMO', () => {
     }
   });
 
-  it('muestra todos los casos: seis estados, cuatro tipos de interacción, tres modalidades y tres fuentes', () => {
+  it('muestra todos los casos: seis estados, cuatro tipos de interacción, tres modalidades y todas las fuentes', () => {
     expect(new Set(dataset.postulaciones.map((p) => p.estado))).toEqual(
       new Set(['por_aplicar', 'aplicado', 'en_proceso', 'entrevista', 'oferta', 'rechazado'])
     );
@@ -56,6 +57,18 @@ describe('datos de la cuenta DEMO', () => {
     expect(new Set(dataset.ofertas.map((o) => o.fuente))).toEqual(new Set(FUENTES_OFERTA));
     expect(dataset.ofertas.length).toBeGreaterThanOrEqual(30);
     expect(criterios.some((c) => !c.activo)).toBe(true);
+  });
+
+  it('las ofertas traen enlace y descripción seguros, y alguna carga manual no tiene enlace', () => {
+    for (const o of dataset.ofertas) {
+      if (o.url !== null) expect(urlSegura(o.url), o.url).toBe(o.url);
+      expect(o.descripcion.length).toBeGreaterThan(40);
+      expect(o.descripcion.length).toBeLessThanOrEqual(5000);
+      expect(o.descripcion).not.toMatch(/<\/?[a-z]/i);
+    }
+    expect(dataset.ofertas.filter((o) => o.url === null).length).toBeGreaterThan(0);
+    expect(dataset.ofertas.filter((o) => o.url !== null).length).toBeGreaterThan(20);
+    expect(dataset.ofertas.filter((o) => o.fuente !== 'Carga manual').every((o) => o.url !== null)).toBe(true);
   });
 
   it('no repite ofertas (la importación las descartaría por la misma clave)', () => {

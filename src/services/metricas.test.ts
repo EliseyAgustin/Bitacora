@@ -174,11 +174,12 @@ describe('distribucionScore', () => {
 });
 
 describe('ofertasPorFuente', () => {
-  it('cuenta las tres fuentes reales, incluye sin fuente en Carga manual y agrega Otras solo si hay', () => {
+  it('cuenta las fuentes reales, incluye sin fuente en Carga manual y agrega Otras solo si hay', () => {
     const r = ofertasPorFuente([
       { fuente: 'Remotive' },
       { fuente: 'Arbeitnow' },
       { fuente: 'Arbeitnow' },
+      { fuente: 'RemoteOK' },
       { fuente: null },
       { fuente: 'Carga manual' },
       { fuente: 'LinkedIn' },
@@ -186,6 +187,7 @@ describe('ofertasPorFuente', () => {
     expect(r).toEqual([
       { fuente: 'Remotive', cantidad: 1 },
       { fuente: 'Arbeitnow', cantidad: 2 },
+      { fuente: 'RemoteOK', cantidad: 1 },
       { fuente: 'Carga manual', cantidad: 2 },
       { fuente: 'Otras', cantidad: 1 },
     ]);
@@ -193,7 +195,7 @@ describe('ofertasPorFuente', () => {
 
   it('omite Otras cuando no hay ninguna', () => {
     const r = ofertasPorFuente([{ fuente: 'Remotive' }]);
-    expect(r.map((x) => x.fuente)).toEqual(['Remotive', 'Arbeitnow', 'Carga manual']);
+    expect(r.map((x) => x.fuente)).toEqual(['Remotive', 'Arbeitnow', 'RemoteOK', 'Carga manual']);
   });
 });
 

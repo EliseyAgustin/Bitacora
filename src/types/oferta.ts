@@ -10,6 +10,9 @@ export interface Oferta {
   stack_tecnologico: string[];
   fuente: string | null;
   fecha_publicacion: string | null;
+  // Enlace a la oferta original y su descripción en texto plano (las fuentes externas los traen; las ofertas manuales, a veces).
+  url: string | null;
+  descripcion: string | null;
   puntaje_scoring: number | null;
   created_at: string;
   updated_at: string;
@@ -17,5 +20,5 @@ export interface Oferta {
 
 export type OfertaInput = Omit<
   Oferta,
-  'id' | 'user_id' | 'puntaje_scoring' | 'created_at' | 'updated_at'
->;
+  'id' | 'user_id' | 'puntaje_scoring' | 'created_at' | 'updated_at' | 'url' | 'descripcion'
+> & { url?: string | null; descripcion?: string | null };

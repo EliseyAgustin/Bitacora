@@ -65,7 +65,7 @@ describe('vercel.json: cabeceras de seguridad', () => {
 
     it('las conexiones salen solo hacia Supabase y las dos fuentes de ofertas', () => {
       expect(csp['connect-src']).toEqual(
-        expect.arrayContaining(["'self'", 'https://*.supabase.co', 'wss://*.supabase.co', 'https://remotive.com', 'https://www.arbeitnow.com'])
+        expect.arrayContaining(["'self'", 'https://*.supabase.co', 'wss://*.supabase.co', 'https://remotive.com', 'https://www.arbeitnow.com', 'https://remoteok.com'])
       );
       expect(csp['connect-src']).not.toContain('*');
     });

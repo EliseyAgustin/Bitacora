@@ -82,6 +82,38 @@ export async function listarClavesOfertasExistentes(fuentes: string[]): Promise<
   return claves;
 }
 
+// Ofertas ya guardadas de las fuentes indicadas que todavía no tienen enlace (las importadas antes de que se guardara).
+export async function listarOfertasSinEnlace(
+  fuentes: string[]
+): Promise<{ id: string; empresa: string; rol: string; fuente: string | null }[]> {
+  const filas: { id: string; empresa: string; rol: string; fuente: string | null }[] = [];
+
+  for (const fuente of fuentes) {
+    filas.push(
+      ...(await leerEnLotes<{ id: string; empresa: string; rol: string; fuente: string | null }>((desde, hasta) =>
+        supabase
+          .from('ofertas')
+          .select('id, empresa, rol, fuente')
+          .is('url', null)
+          .ilike('fuente', escaparLike(fuente.trim()))
+          .order('id')
+          .range(desde, hasta)
+      ))
+    );
+  }
+
+  return filas;
+}
+
+// Solo completa el enlace y la descripción: no toca el puntaje ni nada más de la oferta.
+export async function completarEnlaceOferta(
+  id: string,
+  { url, descripcion }: { url: string; descripcion: string | null }
+): Promise<void> {
+  const { error } = await supabase.from('ofertas').update({ url, descripcion }).eq('id', id);
+  if (error) throw error;
+}
+
 // Cuántas de estas ofertas ya tienen una postulación (en tandas, para no armar una URL gigante).
 export async function contarPostulacionesDeOfertas(ofertaIds: string[]): Promise<number> {
   let total = 0;

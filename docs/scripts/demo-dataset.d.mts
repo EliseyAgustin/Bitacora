@@ -9,6 +9,8 @@ export type OfertaDemo = {
   stack_tecnologico: string[];
   fuente: string;
   fecha_publicacion: string | null;
+  url: string | null;
+  descripcion: string;
   created_at: string;
   puntaje_scoring: number;
 };

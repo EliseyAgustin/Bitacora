@@ -69,12 +69,12 @@ const OFERTAS = [
   ['Ceibo Tech', 'QA Automation Engineer', 'Buenos Aires, Argentina', 'hibrido', ['Cypress', 'TypeScript'], 'Remotive', 56],
   // Ofertas sin postulación: llegaron con las importaciones de las últimas semanas.
   ['Mercado Norte', 'Frontend Developer', 'Buenos Aires, Argentina', 'remoto', ['React', 'TypeScript'], 'Arbeitnow', 1],
-  ['Nubia Labs', 'Backend Developer', 'Worldwide', 'remoto', ['Node.js', 'PostgreSQL'], 'Remotive', 2],
+  ['Nubia Labs', 'Backend Developer', 'Worldwide', 'remoto', ['Node.js', 'PostgreSQL'], 'RemoteOK', 2],
   ['Orbita Soft', 'DevOps Engineer', 'LATAM', 'remoto', ['AWS', 'Docker'], 'Remotive', 4],
   ['Plano Digital', 'Data Analyst', 'Rosario, Argentina', 'hibrido', ['SQL', 'Power BI'], 'Carga manual', 6],
   ['Lumen Tech', 'Full Stack Developer', 'Buenos Aires, Argentina', 'remoto', ['React', 'Node.js', 'PostgreSQL', 'TypeScript'], 'Remotive', 3],
   ['Kappa Systems', 'QA Automation', 'Madrid, España', 'presencial', ['Selenium', 'Cypress'], 'Arbeitnow', 5],
-  ['Andes Software', 'React Developer', 'México', 'remoto', ['React'], 'Remotive', 8],
+  ['Andes Software', 'React Developer', 'México', 'remoto', ['React'], 'RemoteOK', 8],
   ['Pampa Cloud', 'Node.js Developer', 'Buenos Aires, Argentina', 'remoto', ['Node.js', 'TypeScript'], 'Arbeitnow', 9],
   ['Costa Digital', 'Frontend Engineer', 'Worldwide', 'remoto', ['React', 'TypeScript', 'Node.js'], 'Remotive', 10],
   ['Quimera Apps', 'Backend Developer', 'Berlín, Alemania', 'hibrido', ['Java', 'Spring'], 'Arbeitnow', 11],
@@ -83,11 +83,11 @@ const OFERTAS = [
   ['Vertice IT', 'Software Engineer', 'Buenos Aires, Argentina', 'hibrido', ['TypeScript', 'PostgreSQL'], 'Remotive', 15],
   ['Brisa Labs', 'UI Engineer', 'Barcelona, España', 'hibrido', ['React', 'TypeScript'], 'Arbeitnow', 18],
   ['Tilo Software', 'Frontend Developer', 'Buenos Aires, Argentina', 'remoto', ['React', 'TypeScript', 'Node.js', 'PostgreSQL'], 'Carga manual', 23],
-  ['Ceibo Tech', 'Backend Developer', 'Worldwide', 'remoto', ['Node.js', 'PostgreSQL', 'TypeScript'], 'Remotive', 25],
+  ['Ceibo Tech', 'Backend Developer', 'Worldwide', 'remoto', ['Node.js', 'PostgreSQL', 'TypeScript'], 'RemoteOK', 25],
   ['Mercado Norte', 'Mobile Developer', 'Bogotá, Colombia', 'remoto', ['React Native', 'TypeScript'], 'Arbeitnow', 28],
   ['Nubia Labs', 'SRE', 'Worldwide', 'remoto', ['Go', 'Kubernetes'], 'Remotive', 33],
   ['Orbita Soft', 'Frontend Developer', 'Córdoba, Argentina', 'presencial', ['React', 'TypeScript'], 'Carga manual', 38],
-  ['Plano Digital', 'Backend Developer', 'LATAM', 'remoto', ['Node.js', 'PostgreSQL'], 'Remotive', 44],
+  ['Plano Digital', 'Backend Developer', 'LATAM', 'remoto', ['Node.js', 'PostgreSQL'], 'RemoteOK', 44],
   ['Lumen Tech', 'Full Stack Developer', 'Madrid, España', 'remoto', ['React', 'Node.js', 'PostgreSQL'], 'Arbeitnow', 52],
 ];
 
@@ -168,6 +168,21 @@ const MENSAJES = [
   ['Hola Camila, revisamos tu perfil y las tecnologías cargadas son pocas. Si manejás otras, sumalas en Mi perfil de búsqueda para que tu solicitud quede más completa.', 1, false],
 ];
 
+// Enlaces de ejemplo (example.com está reservado para esto: no lleva a ningún sitio real). Algunas ofertas cargadas a mano no
+// tienen enlace, para mostrar también ese caso.
+const sinAcentos = (texto) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const slug = (texto) => sinAcentos(texto).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+function descripcionDe({ empresa, rol, ubicacion, modalidad, stack }) {
+  const lugar = modalidad === 'remoto' ? 'de forma remota' : modalidad === 'hibrido' ? 'en modalidad híbrida' : 'de forma presencial';
+  return [
+    `${empresa} busca ${rol} para sumarse a su equipo ${lugar} (${ubicacion}).`,
+    `Vas a trabajar con ${stack.join(', ')} en proyectos de producto, junto a diseño y negocio.`,
+    '• Experiencia comprobable en el stack\n• Ganas de aprender y de trabajar en equipo\n• Buen nivel de comunicación escrita',
+    'Esta es una oferta de ejemplo, escrita para la demostración de Laburin.',
+  ].join('\n\n');
+}
+
 export function construirDataset(ahora) {
   const hace = (dias, horas = 0) => new Date(ahora.getTime() - dias * DIA_MS - horas * HORA_MS).toISOString();
   const soloFecha = (dias) => hace(dias).slice(0, 10);
@@ -182,6 +197,8 @@ export function construirDataset(ahora) {
       stack_tecnologico: stack,
       fuente,
       fecha_publicacion: fuente === 'Carga manual' ? null : soloFecha(dias),
+      url: fuente === 'Carga manual' && i % 2 === 0 ? null : `https://example.com/empleos/${slug(`${empresa} ${rol}`)}-${i + 1}`,
+      descripcion: descripcionDe({ empresa, rol, ubicacion, modalidad, stack }),
       created_at: hace(dias, (i * 5) % 20),
     };
     return { ...oferta, puntaje_scoring: puntajeDe(oferta, lista) };

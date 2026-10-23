@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { coincideFuente, FUENTE_MANUAL, FUENTES_OFERTA } from '@/lib/fuentes';
 
 describe('FUENTES_OFERTA', () => {
-  it('lista solo las tres fuentes reales del sistema', () => {
-    expect(FUENTES_OFERTA).toEqual(['Remotive', 'Arbeitnow', 'Carga manual']);
+  it('lista solo las fuentes reales del sistema: tres portales y la carga manual', () => {
+    expect(FUENTES_OFERTA).toEqual(['Remotive', 'Arbeitnow', 'RemoteOK', 'Carga manual']);
   });
 });
 
