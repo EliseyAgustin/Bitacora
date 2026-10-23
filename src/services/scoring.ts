@@ -57,6 +57,16 @@ export function calcularScoring(oferta: OfertaParaScoring, criterios: CriterioSc
     .reduce((total, criterio) => total + criterio.peso, 0);
 }
 
+// Para explicar un puntaje: cada criterio activo y si la oferta lo cumple. Lo que coincide suma exactamente el puntaje.
+export function desglosarScoring(
+  oferta: OfertaParaScoring,
+  criterios: CriterioScoring[]
+): { id: string; nombre: string; peso: number; coincide: boolean }[] {
+  return criterios
+    .filter((criterio) => criterio.activo)
+    .map((criterio) => ({ id: criterio.id, nombre: criterio.nombre, peso: criterio.peso, coincide: criterioMatchea(oferta, criterio) }));
+}
+
 export async function obtenerCriteriosActivos(userId: string): Promise<CriterioScoring[]> {
   const { data, error } = await supabase
     .from('criterios_scoring')

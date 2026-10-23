@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calcularScoring, scoresDesactualizados } from '@/services/scoring';
+import { calcularScoring, desglosarScoring, scoresDesactualizados } from '@/services/scoring';
 import type { CriterioScoring } from '@/types/criterioScoring';
 import type { OfertaInput } from '@/types/oferta';
 
@@ -141,5 +141,41 @@ describe('scoresDesactualizados', () => {
   it('funciona con más de 1000 ofertas', () => {
     const muchas = Array.from({ length: 2500 }, (_, i) => fila(`o${i}`, 0));
     expect(scoresDesactualizados(muchas, cs)).toHaveLength(2500);
+  });
+});
+
+describe('desglosarScoring', () => {
+  it('lista cada criterio activo y si coincide con la oferta', () => {
+    const criterios = [
+      criterio({ id: 'a', nombre: 'Stack: React', peso: 15, valor_comparacion: 'React' }),
+      criterio({ id: 'b', nombre: 'Stack: Vue', peso: 15, valor_comparacion: 'Vue' }),
+      criterio({ id: 'c', nombre: 'Modalidad: Remoto', peso: 10, tipo_coincidencia: 'exacto', campo_objetivo: 'modalidad', valor_comparacion: 'remoto' }),
+      criterio({ id: 'd', nombre: 'Stack: SQL', peso: 5, valor_comparacion: 'SQL', activo: false }),
+    ];
+
+    expect(desglosarScoring(ofertaBase(), criterios)).toEqual([
+      { id: 'a', nombre: 'Stack: React', peso: 15, coincide: true },
+      { id: 'b', nombre: 'Stack: Vue', peso: 15, coincide: false },
+      { id: 'c', nombre: 'Modalidad: Remoto', peso: 10, coincide: true },
+    ]);
+  });
+
+  it('la suma de lo que coincide es exactamente el puntaje de la oferta', () => {
+    const criterios = [
+      criterio({ id: 'a', peso: 15, valor_comparacion: 'React' }),
+      criterio({ id: 'b', peso: 7.5, valor_comparacion: 'SQL' }),
+      criterio({ id: 'c', peso: 10, valor_comparacion: 'Go' }),
+      criterio({ id: 'd', peso: 5, tipo_coincidencia: 'rango_numerico', campo_objetivo: 'salario', valor_comparacion: null, rango_min: 1, rango_max: 9 }),
+    ];
+    const oferta = ofertaBase();
+    const suma = desglosarScoring(oferta, criterios)
+      .filter((c) => c.coincide)
+      .reduce((total, c) => total + c.peso, 0);
+
+    expect(suma).toBe(calcularScoring(oferta, criterios));
+  });
+
+  it('sin criterios activos no hay desglose', () => {
+    expect(desglosarScoring(ofertaBase(), [])).toEqual([]);
   });
 });
