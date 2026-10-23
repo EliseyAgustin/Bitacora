@@ -47,6 +47,8 @@ test.describe('candidato (cuenta compartida)', () => {
         rol: `Desarrollador Full Stack Senior con experiencia en múltiples tecnologías ${i}`,
         ubicacion: 'Buenos Aires, Argentina',
         stack_tecnologico: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Docker', 'AWS'],
+        url: `https://example.com/${'a'.repeat(180)}`,
+        descripcion: `Texto ${'x'.repeat(150)} y el final de la descripción.\n\n• Un punto de lista bastante largo para ver cómo se parte en una pantalla angosta`,
         puntaje_scoring: 25,
       }))
     );
@@ -73,6 +75,22 @@ test.describe('candidato (cuenta compartida)', () => {
     await page.getByRole('button', { name: 'Nueva oferta' }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await sinDesborde(page, 'Formulario Nueva oferta');
+
+    // El detalle de una oferta es un <aside>, que sinDesborde saltea: se mide aparte, con un texto largo sin espacios.
+    await page.goto('/ofertas');
+    await page.getByRole('button', { name: /^Ver detalle de/ }).first().click();
+    const detalle = page.getByRole('dialog').first();
+    await expect(detalle).toBeVisible();
+    for (const ancho of ANCHOS) {
+      await page.setViewportSize({ width: ancho, height: 800 });
+      await page.waitForTimeout(300);
+      const caja = await detalle.boundingBox();
+      expect(caja!.x, `detalle a ${ancho}px: se sale por la izquierda`).toBeGreaterThanOrEqual(0);
+      expect(caja!.x + caja!.width, `detalle a ${ancho}px: se sale por la derecha`).toBeLessThanOrEqual(ancho + 1);
+      const desborda = await detalle.evaluate((el) => Array.from(el.querySelectorAll('*')).some((n) => n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).overflowX === 'visible'));
+      expect(desborda, `detalle a ${ancho}px: hay contenido más ancho que su caja`).toBe(false);
+      await expect(detalle.getByRole('link', { name: /Ver oferta y postularme/ })).toBeVisible();
+    }
   });
 });
 

@@ -19,6 +19,8 @@ export interface OfertaFila {
   modalidad?: 'remoto' | 'hibrido' | 'presencial' | null;
   stack_tecnologico?: string[];
   fuente?: string | null;
+  url?: string | null;
+  descripcion?: string | null;
   puntaje_scoring?: number | null;
   created_at?: string;
 }

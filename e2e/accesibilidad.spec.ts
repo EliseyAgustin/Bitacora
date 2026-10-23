@@ -22,7 +22,16 @@ async function sinViolaciones(page: Page, donde: string) {
 test.describe('candidato (cuenta compartida)', () => {
   test('Ofertas, Mis postulaciones, ficha, Mi perfil, Mi progreso, Mensajes y los modales', async ({ page, api }) => {
     await api.sembrarOfertas([
-      { empresa: 'Nubia Labs', rol: 'React Engineer', ubicacion: 'Argentina', stack_tecnologico: ['React'], puntaje_scoring: 25 },
+      {
+        empresa: 'Nubia Labs',
+        rol: 'React Engineer',
+        ubicacion: 'Argentina',
+        stack_tecnologico: ['React'],
+        fuente: 'Remotive',
+        url: 'https://remotive.com/remote-jobs/software-dev/react-engineer-1',
+        descripcion: 'Buscamos una persona para el equipo de producto.\n\n• Experiencia con React',
+        puntaje_scoring: 25,
+      },
       { empresa: 'Orbita Soft', rol: 'Backend Dev', ubicacion: 'Worldwide', puntaje_scoring: 10 },
     ]);
     const { data } = await api.sb.from('ofertas').select('id').eq('rol', 'React Engineer').single();
@@ -37,6 +46,11 @@ test.describe('candidato (cuenta compartida)', () => {
     await expect(page.getByRole('dialog')).toBeVisible();
     await sinViolaciones(page, 'Formulario Nueva oferta');
     await page.getByRole('button', { name: 'Cancelar' }).click();
+
+    await page.getByRole('button', { name: 'Ver detalle de React Engineer en Nubia Labs' }).click();
+    await expect(page.getByRole('dialog', { name: 'React Engineer' })).toBeVisible();
+    await sinViolaciones(page, 'Detalle de una oferta');
+    await page.keyboard.press('Escape');
 
     await page.goto('/mis-postulaciones');
     await expect(page.getByRole('heading', { name: 'React Engineer', level: 4 })).toBeVisible();

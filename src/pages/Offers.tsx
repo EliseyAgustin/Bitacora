@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Download, Filter, MapPin, Clock, Building2, Pencil, Trash2, Plus, Inbox, Send, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { Download, ExternalLink, Filter, MapPin, Clock, Building2, Pencil, Trash2, Plus, Inbox, Send, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '@/components/PageHeader';
 import { PrimerosPasos } from '@/components/PrimerosPasos';
 import { mensajeDeError } from '@/lib/errores';
 import { ApplicationDetailPanel } from '@/components/ApplicationDetailPanel';
 import { ConfirmarEliminacionModal } from '@/components/ConfirmarEliminacionModal';
+import { OfertaDetallePanel } from '@/components/OfertaDetallePanel';
 import { OfertaFormModal } from '@/components/OfertaFormModal';
 import { FUENTES_OFERTA } from '@/lib/fuentes';
 import { paginaDentroDeRango, totalPaginas } from '@/lib/lotes';
+import { urlBusquedaLinkedIn } from '@/lib/ofertaDetalle';
 import { alternarId, alternarTodas, estadoSeleccionTodas } from '@/lib/seleccion';
 import { RUTAS } from '@/lib/rutas';
 import { scoreBandClasses, scoreBorderClasses } from '@/lib/utils';
@@ -27,8 +29,10 @@ import {
 } from '@/services/ofertas';
 import { crearPostulacion, ESTADO_POSTULACION_LABEL, listarPostulacionesDeOfertas } from '@/services/postulaciones';
 import { importarOfertasRemotas, resumenImportacion } from '@/services/fuentesExternas';
+import { obtenerPerfil } from '@/services/onboarding';
 import type { CriterioScoring } from '@/types/criterioScoring';
 import type { Oferta, OfertaInput } from '@/types/oferta';
+import type { PerfilUsuario } from '@/types/perfilUsuario';
 import type { EstadoPostulacion, Postulacion } from '@/types/postulacion';
 
 const MODALIDAD_LABEL: Record<string, string> = {
@@ -51,6 +55,8 @@ export function Offers() {
   const [postulacionesPorOferta, setPostulacionesPorOferta] = useState<Record<string, Postulacion>>({});
   const [postulandoId, setPostulandoId] = useState<string | null>(null);
   const [fichaPostulacionId, setFichaPostulacionId] = useState<string | null>(null);
+  const [detalleId, setDetalleId] = useState<string | null>(null);
+  const [perfil, setPerfil] = useState<PerfilUsuario | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
@@ -81,6 +87,10 @@ export function Offers() {
       .catch(() => !cancelado && setCriterios([]));
     listarUbicacionesDeOfertas()
       .then((data) => !cancelado && setUbicacionesSugeridas(data))
+      .catch(() => undefined);
+    // Solo para armar el enlace de búsqueda en LinkedIn: si falla, el botón simplemente no aparece.
+    obtenerPerfil()
+      .then((data) => !cancelado && setPerfil(data))
       .catch(() => undefined);
     return () => {
       cancelado = true;
@@ -129,6 +139,8 @@ export function Offers() {
       if (solicitud === solicitudRef.current) setLoading(false);
     }
   }
+
+  const cerrarDetalle = useCallback(() => setDetalleId(null), []);
 
   function irAPagina(nueva: number) {
     setPagina(nueva);
@@ -190,8 +202,16 @@ export function Offers() {
   }
 
   function openEditForm(oferta: Oferta) {
+    setDetalleId(null);
     setEditingOferta(oferta);
     setFormOpen(true);
+  }
+
+  // Un clic en la tarjeta abre el detalle, salvo que sea sobre un control (casilla, botones, enlaces).
+  function abrirDetalleDesdeTarjeta(oferta: Oferta, objetivo: EventTarget | null) {
+    if (objetivo instanceof Element && objetivo.closest('button, input, a, label, select, textarea')) return;
+    setFichaPostulacionId(null);
+    setDetalleId(oferta.id);
   }
 
   async function handleSubmit(input: OfertaInput) {
@@ -239,6 +259,8 @@ export function Offers() {
     filtros.score !== FILTROS_OFERTAS_VACIOS.score;
   const paginas = totalPaginas(total, TAMANO_PAGINA);
   const hayMasQueLaPagina = total > ofertas.length;
+  const ofertaDetalle = ofertas.find((o) => o.id === detalleId) ?? null;
+  const hayDatosParaLinkedIn = Boolean(perfil?.rol_buscado?.trim() || perfil?.ubicacion?.trim());
 
   // La selección puede abarcar más que la página visible ("Seleccionar las N que coinciden"),
   // así que el borrado actúa siempre sobre exactamente lo que dice el contador.
@@ -449,11 +471,23 @@ export function Offers() {
 
         {importing && (
           <div className="mb-lg p-4 bg-surface-container-high text-on-surface-variant rounded-lg text-sm">
-            Consultando Remotive y Arbeitnow… normalmente tarda entre 5 y 15 segundos, depende de cuántas ofertas nuevas haya.
+            Consultando Remotive, Arbeitnow y RemoteOK… normalmente tarda entre 5 y 15 segundos, depende de cuántas ofertas nuevas haya.
           </div>
         )}
 
-        <div className="flex justify-end gap-3 mb-lg">
+        <div className="flex flex-wrap justify-end gap-3 mb-lg">
+          {hayDatosParaLinkedIn && perfil && (
+            <a
+              href={urlBusquedaLinkedIn({ rol: perfil.rol_buscado, ubicacion: perfil.ubicacion, modalidad: perfil.modalidad_preferida })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-surface-container-high text-on-surface text-sm font-medium px-5 py-2.5 rounded-lg border border-outline-variant shadow-sm hover:bg-surface-variant transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <ExternalLink className="w-4.5 h-4.5" aria-hidden="true" />
+              Buscar en LinkedIn
+              <span className="sr-only"> (se abre en una pestaña nueva, con los datos de tu perfil de búsqueda)</span>
+            </a>
+          )}
           <button
             onClick={handleImportar}
             disabled={importing}
@@ -577,7 +611,8 @@ export function Offers() {
             {ofertas.map((oferta) => (
               <div
                 key={oferta.id}
-                className={`bg-surface-container-lowest border border-outline-variant rounded-xl p-5 hover:shadow-md hover:border-primary transition-all group flex flex-col h-full border-t-4 ${scoreBorderClasses(oferta.puntaje_scoring)} ${seleccionadas.has(oferta.id) ? 'ring-2 ring-primary' : ''}`}
+                onClick={(e) => abrirDetalleDesdeTarjeta(oferta, e.target)}
+                className={`bg-surface-container-lowest border border-outline-variant rounded-xl p-5 hover:shadow-md hover:border-primary transition-all group flex flex-col h-full cursor-pointer border-t-4 ${scoreBorderClasses(oferta.puntaje_scoring)} ${seleccionadas.has(oferta.id) ? 'ring-2 ring-primary' : ''}`}
               >
                 <div className="flex justify-between items-start mb-4">
                   <input
@@ -588,7 +623,18 @@ export function Offers() {
                     className="w-4 h-4 mt-1.5 mr-3 shrink-0 accent-primary cursor-pointer"
                   />
                   <div className="flex-1 pr-4">
-                    <h3 className="text-lg font-semibold leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors">{oferta.rol}</h3>
+                    <h3 className="text-lg font-semibold leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFichaPostulacionId(null);
+                          setDetalleId(oferta.id);
+                        }}
+                        className="text-left cursor-pointer"
+                      >
+                        {oferta.rol}
+                      </button>
+                    </h3>
                     <div className="flex items-center gap-2 text-on-surface-variant text-[13px]">
                       <Building2 className="w-4 h-4" />
                       <span>{oferta.empresa}</span>
@@ -622,7 +668,7 @@ export function Offers() {
                   ))}
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 flex flex-wrap items-center gap-2">
                   {postulacionesPorOferta[oferta.id] ? (
                     <button
                       onClick={() => setFichaPostulacionId(postulacionesPorOferta[oferta.id].id)}
@@ -642,6 +688,18 @@ export function Offers() {
                       {postulandoId === oferta.id ? 'Postulando…' : 'Postularme'}
                     </button>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFichaPostulacionId(null);
+                      setDetalleId(oferta.id);
+                    }}
+                    aria-label={`Ver detalle de ${oferta.rol} en ${oferta.empresa}`}
+                    className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-primary hover:underline cursor-pointer"
+                  >
+                    Ver detalle
+                    <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </button>
                 </div>
 
                 <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
@@ -711,6 +769,22 @@ export function Offers() {
           eliminando={eliminando}
           onConfirmar={handleEliminarSeleccionadas}
           onCancelar={() => setConfirmandoBorrado(false)}
+        />
+      )}
+
+      {ofertaDetalle && (
+        <OfertaDetallePanel
+          oferta={ofertaDetalle}
+          criterios={criterios ?? []}
+          postulacion={postulacionesPorOferta[ofertaDetalle.id]}
+          postulando={postulandoId === ofertaDetalle.id}
+          onClose={cerrarDetalle}
+          onPostularme={handlePostularme}
+          onVerFicha={(postulacionId) => {
+            setDetalleId(null);
+            setFichaPostulacionId(postulacionId);
+          }}
+          onEditar={openEditForm}
         />
       )}
 

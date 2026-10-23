@@ -1,7 +1,7 @@
 import { expect, test } from './fixtures';
 import { arbeitnow, mockearFuentes, remotive } from './mocks';
 
-// Con Remotive y Arbeitnow interceptados: se prueba la lógica de Laburin, no la disponibilidad de terceros.
+// Con Remotive, Arbeitnow y RemoteOK interceptados: se prueba la lógica de Laburin, no la disponibilidad de terceros.
 // Scores con los criterios base: React +15 y remoto +10 (todo lo importado es remoto).
 const REMOTIVE = [
   remotive('Nubia Labs', 'React Engineer', 'Argentina', ['React']), // 25

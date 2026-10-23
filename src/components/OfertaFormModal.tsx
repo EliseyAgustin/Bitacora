@@ -2,6 +2,7 @@ import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { X } from 'lucide-react';
 import { mensajeDeError } from '@/lib/errores';
 import { FUENTE_MANUAL } from '@/lib/fuentes';
+import { urlSegura } from '@/lib/ofertaDetalle';
 import { agregarTag } from '@/lib/tags';
 import type { Modalidad, Oferta, OfertaInput } from '@/types/oferta';
 
@@ -25,6 +26,8 @@ export function OfertaFormModal({ oferta, onClose, onSubmit }: OfertaFormModalPr
   const [ubicacion, setUbicacion] = useState(oferta?.ubicacion ?? '');
   const [modalidad, setModalidad] = useState<Modalidad | ''>(oferta?.modalidad ?? '');
   const [fechaPublicacion, setFechaPublicacion] = useState(oferta?.fecha_publicacion ?? '');
+  const [enlace, setEnlace] = useState(oferta?.url ?? '');
+  const [descripcion, setDescripcion] = useState(oferta?.descripcion ?? '');
   const [stack, setStack] = useState<string[]>(oferta?.stack_tecnologico ?? []);
   const [stackDraft, setStackDraft] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +60,13 @@ export function OfertaFormModal({ oferta, onClose, onSubmit }: OfertaFormModalPr
       return;
     }
 
+    // Vacío es válido; si hay algo, tiene que ser una dirección web (http o https).
+    const urlNormalizada = enlace.trim() ? urlSegura(enlace) : null;
+    if (enlace.trim() && !urlNormalizada) {
+      setError('El enlace tiene que empezar con http:// o https:// (por ejemplo, https://empresa.com/empleos/123).');
+      return;
+    }
+
     setSaving(true);
     try {
       await onSubmit({
@@ -67,6 +77,8 @@ export function OfertaFormModal({ oferta, onClose, onSubmit }: OfertaFormModalPr
         stack_tecnologico: stack,
         fuente: oferta?.fuente ?? FUENTE_MANUAL,
         fecha_publicacion: fechaPublicacion || null,
+        url: urlNormalizada,
+        descripcion: descripcion.trim() || null,
       });
     } catch (err) {
       setError(mensajeDeError(err, 'No se pudo guardar la oferta.'));
@@ -163,6 +175,32 @@ export function OfertaFormModal({ oferta, onClose, onSubmit }: OfertaFormModalPr
               />
             </label>
           </div>
+
+          <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+            Enlace a la oferta
+            <input
+              type="url"
+              inputMode="url"
+              maxLength={2000}
+              value={enlace}
+              onChange={(e) => setEnlace(e.target.value)}
+              placeholder="https://empresa.com/empleos/123"
+              className="bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+            />
+            <span className="text-xs">Opcional. Desde el detalle de la oferta vas a poder abrirlo para postularte.</span>
+          </label>
+
+          <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+            Descripción
+            <textarea
+              rows={4}
+              maxLength={5000}
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              placeholder="Pegá acá lo más importante del aviso (opcional)"
+              className="bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none"
+            />
+          </label>
 
           <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
             Tecnologías
