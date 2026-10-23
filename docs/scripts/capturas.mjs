@@ -49,7 +49,7 @@ const ROLES = [
   ['Analista Funcional', ['Jira', 'SQL']],
 ];
 const UBICACIONES = ['Buenos Aires, Argentina', 'Córdoba, Argentina', 'LATAM', 'Worldwide', 'Rosario, Argentina'];
-const FUENTES = ['Remotive', 'Arbeitnow', 'Carga manual'];
+const FUENTES = ['Remotive', 'Arbeitnow', 'RemoteOK', 'Carga manual'];
 
 // Mismos pesos que el Onboarding: tecnología 15, remoto 10, ubicación 5.
 function puntaje(oferta) {
@@ -121,6 +121,9 @@ async function sembrarOfertas(sb, userId) {
       stack_tecnologico: stack,
       fuente: FUENTES[i % FUENTES.length],
       fecha_publicacion: new Date(base - i * 86400000).toISOString().slice(0, 10),
+      // example.com está reservado para ejemplos: no lleva a ningún sitio real.
+      url: `https://example.com/empleos/oferta-${i + 1}`,
+      descripcion: `${EMPRESAS[(i * 5) % EMPRESAS.length]} busca ${rol} para sumarse a su equipo.\n\nVas a trabajar con ${stack.join(', ')} en proyectos de producto, junto a diseño y negocio.\n\n• Experiencia comprobable en el stack\n• Ganas de aprender y de trabajar en equipo\n• Buen nivel de comunicación escrita\n\nEsta es una oferta de ejemplo, escrita para la documentación de Laburin.`,
       created_at: new Date(base - i * 60000).toISOString(),
     };
     return { ...oferta, puntaje_scoring: puntaje(oferta) };
@@ -199,6 +202,12 @@ try {
   await page.getByRole('heading', { level: 3 }).first().waitFor();
   await shot(page, '04a-ofertas');
 
+  // Detalle de una oferta: el puntaje explicado, la descripción y el enlace para postularse.
+  await page.getByRole('button', { name: /^Ver detalle de/ }).first().click();
+  await page.getByRole('dialog').waitFor();
+  await shot(page, '04g-oferta-detalle');
+  await page.keyboard.press('Escape');
+
   await page.getByRole('navigation', { name: 'Paginación de ofertas' }).scrollIntoViewIfNeeded();
   await shot(page, '04c-ofertas-paginacion');
 
@@ -227,6 +236,8 @@ try {
   await page.route('https://www.arbeitnow.com/api/job-board-api*', (route) =>
     route.fulfill({ status: 200, headers: CORS, json: { data: [{ title: 'QA Analyst', company_name: 'Brújula Soft', location: 'Berlin', remote: true, tags: ['Selenium'], created_at: 1790000000 }] } })
   );
+  // RemoteOK devuelve un arreglo cuyo primer elemento es el aviso legal.
+  await page.route('https://remoteok.com/api*', (route) => route.fulfill({ status: 200, headers: CORS, json: [{ legal: 'API Terms of Service' }] }));
   await page.getByRole('button', { name: 'Importar ofertas remotas' }).click();
   await page.getByText(/ofertas nuevas importadas/).waitFor();
   await shot(page, '04b-ofertas-import');
