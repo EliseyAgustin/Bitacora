@@ -92,6 +92,9 @@ const doc = new Document({
       bullet('Recibir mensajes del equipo de Laburin, por ejemplo cuando falta algún dato de tu perfil.'),
       p('Las pantallas principales son: Ofertas, Mis postulaciones, Mi progreso, Mi perfil de búsqueda y Mensajes. Cada una tiene, debajo del título, una línea que explica qué se hace ahí.'),
 
+      h2('Ver Laburin con datos de ejemplo'),
+      p('Si querés conocer la aplicación antes de cargar tus propios datos, el equipo de Laburin puede darte una cuenta de demostración. Es la de alguien que usa Laburin hace unas ocho semanas, con todo ya cargado: ofertas con distintos puntajes, postulaciones en todas las columnas del tablero, interacciones, dos recordatorios de «Sin novedades», un mensaje del equipo sin leer y los gráficos de Mi progreso completos. Los datos son ficticios. Nada de lo que hagas ahí afecta a otras cuentas.'),
+
       // 2. Registro, inicio de sesión y contraseña
       h1('2. Registro, inicio de sesión y contraseña'),
       p('Para usar Laburin necesitás una cuenta. Podés crear una con tu email y una contraseña.'),
