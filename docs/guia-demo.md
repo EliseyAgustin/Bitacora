@@ -6,7 +6,7 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 - [ ] **Producción al día:** https://laburin.vercel.app abre y el último commit está desplegado.
 - [ ] **Supabase configurado** según [`guia-supabase.md`](guia-supabase.md): sobre todo el correo propio, para que la recuperación de contraseña funcione con el email de quien la pruebe.
 - [ ] **Cuenta DEMO al día:** `npm run demo:datos` deja a **Camila Ejemplo** como alguien que usa Laburin hace ocho semanas y suma a Tomás y Lucía Ejemplo para la vista del administrador. Conviene correrlo **el mismo día**: las fechas se arman respecto de hoy, y es repetible (reinicia la cuenta). Necesita `DEMO_EMAIL` y `DEMO_PASSWORD` en `.env.e2e`; los mensajes del administrador usan `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`. Al terminar: `npm run demo:borrar`.
-- [ ] **Qué trae la cuenta DEMO:** 36 ofertas (Remotive, Arbeitnow y carga manual) con puntajes altos, medios y bajos; 15 postulaciones en los seis estados, con su historial; 33 interacciones de los cuatro tipos; **2 recordatorios activos** («Sin novedades hace 15 y 9 días») y 2 resueltos; un criterio de scoring apagado; y 4 mensajes (la bienvenida y tres del administrador, **uno sin leer**: el menú muestra el 1). Mi progreso entra con datos en todas las tarjetas y gráficos.
+- [ ] **Qué trae la cuenta DEMO:** 36 ofertas (Remotive, Arbeitnow, RemoteOK y carga manual) con puntajes altos, medios y bajos, y con enlace y descripción (los enlaces son de example.com: no llevan a ningún sitio real, algunas ofertas manuales no tienen); 15 postulaciones en los seis estados, con su historial; 33 interacciones de los cuatro tipos; **2 recordatorios activos** («Sin novedades hace 15 y 9 días») y 2 resueltos; un criterio de scoring apagado; y 4 mensajes (la bienvenida y tres del administrador, **uno sin leer**: el menú muestra el 1). Mi progreso entra con datos en todas las tarjetas y gráficos.
 - [ ] **Dos ventanas listas:** una con la cuenta de candidato (Camila) y otra con la de administrador, ya con la sesión iniciada. Una más en un celular o en el modo móvil del navegador.
 - [ ] **Plan B si falla internet:** el [Manual de Usuario](../Laburin-Manual-de-Usuario.pdf) y las capturas de [`docs/scripts/capturas/`](scripts/capturas/).
 
@@ -23,7 +23,9 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 ### 3. Ofertas y puntaje (1 min 30 s)
 - **Ofertas**: la línea de ayuda bajo el título. *Importar ofertas remotas*. La tarjeta **Primeros pasos** solo se ve en una cuenta nueva: con la cuenta DEMO ya no aparece, porque ya se postuló. Mostrarla registrando una persona nueva (paso 2).
 - Cada oferta trae un **puntaje** según el perfil. Filtrar: **Ubicación** (las sugerencias son las que existen en las ofertas) y **Puntaje mínimo** (el control llega hasta el máximo posible del perfil). Probar un filtro que no devuelve nada y mostrar el mensaje que sugiere aflojarlo.
-- **Postularme** en una oferta.
+- **Abrir el detalle** de una oferta (un clic en la tarjeta): el panel explica **por qué tiene ese puntaje**, criterio por criterio, muestra la descripción y trae **"Ver oferta y postularme"**, que abre la publicación original en otra pestaña (con la cuenta DEMO el destino es de ejemplo). Escape lo cierra.
+- **Buscar en LinkedIn** (arriba de la lista): abre el buscador de LinkedIn con el rol, la ubicación y la modalidad del perfil. Aclarar que LinkedIn no ofrece una API pública de búsqueda, por eso no se importan sus ofertas.
+- **Postularme** en una oferta (o "Guardar en Mis postulaciones" desde el detalle).
 
 ### 4. Seguimiento (1 min)
 - **Mis postulaciones**: las seis columnas. Arrastrar una tarjeta (en el celular, el selector "Mover a…").

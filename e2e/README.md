@@ -30,7 +30,7 @@ del proyecto desktop en `playwright.config.ts` (el teclado virtual solo existe e
 "salteado" en cada corrida; las especs `seguridad-*` se excluyen de mobile porque hablan directo con la API y una
 sola corrida alcanza.
 
-Corrida completa de referencia: **112 tests** (2 sesiones de preparación, 61 en desktop —13 de seguridad contra la base— y 49 en mobile),
+Corrida completa de referencia: **128 tests** (2 sesiones de preparación, 69 en desktop —13 de seguridad contra la base— y 57 en mobile),
 todos en verde.
 
 ## Especificaciones
@@ -44,6 +44,7 @@ todos en verde.
 | `recorrido-usuario-nuevo` | Registro con errores a propósito, perfil, "Primeros pasos", importar, postularse, recordatorio, salir, recuperar y volver a entrar |
 | `mensajes-administrador` | Candidato y administrador: bienvenida, listado, envío, plantillas, no leído, marcado como leído, acceso por rol y página "No encontramos esa página" |
 | `seguridad-roles-mensajes` | Pruebas adversariales contra la base real (13): candidato contra candidato, escalada de rol, vista `candidatos`, mensajes, administrador, sin sesión |
+| `oferta-detalle` | Panel de detalle de una oferta: puntaje explicado, descripción, enlace de origen (otra pestaña, sin acceso a Laburin), foco y Escape, guardar la postulación, agregar un enlace, búsqueda en LinkedIn, importación con enlaces de las tres fuentes y enlaces o descripciones maliciosos |
 | `seguridad-xss` | Código malicioso en nombre, rol, ubicación, tecnologías, mensajes y ofertas importadas: todo se ve como texto y nada se ejecuta |
 | `accesibilidad` | axe-core (WCAG A y AA) en todas las pantallas y modales, en tema claro y oscuro |
 | `responsive-pantallas` | Ninguna pantalla se sale del ancho de un celular (320 y 375 px) |
