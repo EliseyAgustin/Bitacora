@@ -3,6 +3,7 @@ import { Send } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { mensajeDeError } from '@/lib/errores';
 import { almacenLocal } from '@/lib/actividad';
+import { EVENTO_PREFERENCIAS, leerPreferencia } from '@/lib/preferencias';
 import {
   posponerPendiente,
   resolverPendiente,
@@ -26,7 +27,8 @@ export function PreguntaPostulacion() {
 
   const revisar = useCallback(() => {
     if (!userId) return;
-    setPregunta(siguientePregunta(userId, Date.now(), almacenLocal()));
+    // Si la persona apagó la pregunta en Mi cuenta, no se muestra.
+    setPregunta(leerPreferencia(userId, 'preguntaPostulacion', almacenLocal()) ? siguientePregunta(userId, Date.now(), almacenLocal()) : null);
   }, [userId]);
 
   useEffect(() => {
@@ -36,11 +38,13 @@ export function PreguntaPostulacion() {
     window.addEventListener('focus', revisar);
     document.addEventListener('visibilitychange', revisar);
     window.addEventListener(EVENTO_PENDIENTE, revisar);
+    window.addEventListener(EVENTO_PREFERENCIAS, revisar);
     return () => {
       window.clearInterval(temporizador);
       window.removeEventListener('focus', revisar);
       document.removeEventListener('visibilitychange', revisar);
       window.removeEventListener(EVENTO_PENDIENTE, revisar);
+      window.removeEventListener(EVENTO_PREFERENCIAS, revisar);
     };
   }, [revisar]);
 

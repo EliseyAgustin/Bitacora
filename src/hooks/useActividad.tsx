@@ -15,6 +15,7 @@ import {
   type MensajeActividad,
   type ResultadoActividad,
 } from '@/lib/actividad';
+import { EVENTO_PREFERENCIAS, leerPreferencia } from '@/lib/preferencias';
 import { almacenDeSesion } from '@/lib/visitas';
 import { listarTodasLasInteracciones } from '@/services/interacciones';
 import { listarHistorialEstados, listarPostulaciones } from '@/services/postulaciones';
@@ -41,6 +42,8 @@ export function ActividadProvider({ children }: { children: ReactNode }) {
   const [resultado, setResultado] = useState<ResultadoActividad | null>(null);
   const [porAplicar, setPorAplicar] = useState(0);
   const [cierres, setCierres] = useState(0);
+  // Cambia al tocar las preferencias en Mi cuenta: fuerza a recalcular si hay aviso.
+  const [preferencias, setPreferencias] = useState(0);
   const [felicitacionVisible, setFelicitacionVisible] = useState(false);
   const userId = user?.id;
   const esCandidato = rol === 'candidato';
@@ -61,6 +64,12 @@ export function ActividadProvider({ children }: { children: ReactNode }) {
       cancelado = true;
     };
   }, [userId, esCandidato, pathname]);
+
+  useEffect(() => {
+    const alCambiar = () => setPreferencias((n) => n + 1);
+    window.addEventListener(EVENTO_PREFERENCIAS, alCambiar);
+    return () => window.removeEventListener(EVENTO_PREFERENCIAS, alCambiar);
+  }, []);
 
   // «Vas muy bien» es solo una felicitación: aparece una vez por semana (ver debeFelicitar).
   useEffect(() => {
@@ -83,7 +92,8 @@ export function ActividadProvider({ children }: { children: ReactNode }) {
     const mensaje = resultado ? mensajeDeActividad(resultado) : null;
     let aviso: ActividadContexto['aviso'] = null;
 
-    if (userId && resultado && estado && esAvisable(estado) && mensaje) {
+    const activado = !userId || leerPreferencia(userId, 'avisoActividad', almacenLocal());
+    if (activado && userId && resultado && estado && esAvisable(estado) && mensaje) {
       const cerrado = estado === 'vas-bien' ? !felicitacionVisible : avisoCerrado(userId, estado, new Date(), almacenLocal());
       if (!cerrado) aviso = { estado, mensaje };
     }
@@ -91,7 +101,7 @@ export function ActividadProvider({ children }: { children: ReactNode }) {
     return { resultado, aviso, porAplicar, cerrar, invitaARetomar: aviso !== null && aviso.estado !== 'vas-bien' };
     // «cierres» fuerza a recalcular después de cerrar el aviso.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultado, porAplicar, cerrar, userId, felicitacionVisible, cierres]);
+  }, [resultado, porAplicar, cerrar, userId, felicitacionVisible, cierres, preferencias]);
 
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }

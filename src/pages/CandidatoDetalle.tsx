@@ -15,8 +15,8 @@ import { enviarMensaje, listarMensajesEnviadosA } from '@/services/mensajes';
 function Dato({ etiqueta, children }: { etiqueta: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">{etiqueta}</dt>
-      <dd className="text-sm text-on-surface mt-0.5">{children}</dd>
+      <dt className="text-sm font-semibold text-on-surface-variant">{etiqueta}</dt>
+      <dd className="text-base text-on-surface mt-0.5">{children}</dd>
     </div>
   );
 }
@@ -102,7 +102,7 @@ export function CandidatoDetalle() {
   }
 
   const volver = (
-    <Link to={RUTAS.candidatos} className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline underline-offset-2">
+    <Link to={RUTAS.candidatos} className="inline-flex items-center gap-1.5 min-h-11 text-sm font-semibold text-primary hover:underline underline-offset-2">
       <ArrowLeft className="w-4 h-4" aria-hidden="true" />
       Volver a Candidatos
     </Link>
@@ -135,7 +135,7 @@ export function CandidatoDetalle() {
         <PageHeader title={nombre} help={`${candidato.rol_buscado} · Registrado el ${formatearFecha(candidato.registrado_el)}`} />
 
         <section aria-labelledby="perfil-titulo" className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
-          <h2 id="perfil-titulo" className="text-xl font-heading font-semibold text-on-surface mb-4">
+          <h2 id="perfil-titulo" className="text-xl font-heading font-bold text-on-surface mb-4">
             Perfil de búsqueda
           </h2>
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -148,14 +148,14 @@ export function CandidatoDetalle() {
             </Dato>
             <Dato etiqueta="Ubicación">{candidato.ubicacion || 'Sin indicar'}</Dato>
             <div className="sm:col-span-2">
-              <dt className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">Tecnologías</dt>
+              <dt className="text-sm font-semibold text-on-surface-variant">Tecnologías</dt>
               <dd className="mt-1">
                 {candidato.stack_interes.length === 0 ? (
-                  <span className="text-sm text-on-surface">Sin indicar</span>
+                  <span className="text-base text-on-surface">Sin indicar</span>
                 ) : (
                   <ul className="flex flex-wrap gap-1.5">
                     {candidato.stack_interes.map((t) => (
-                      <li key={t} className="bg-primary-container text-on-primary-container text-xs font-medium px-2.5 py-1 rounded-md">
+                      <li key={t} className="bg-primary-container text-on-primary-container text-sm font-semibold px-3 py-1 rounded-md">
                         {t}
                       </li>
                     ))}
@@ -167,17 +167,17 @@ export function CandidatoDetalle() {
         </section>
 
         <section aria-labelledby="mensaje-titulo" className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
-          <h2 id="mensaje-titulo" className="text-xl font-heading font-semibold text-on-surface">
+          <h2 id="mensaje-titulo" className="text-xl font-heading font-bold text-on-surface">
             Enviar mensaje
           </h2>
-          <p className="text-sm text-on-surface-variant mt-1 mb-4">
+          <p className="text-base text-on-surface-variant mt-1 mb-4">
             {nombre} lo va a ver en su sección Mensajes, por ejemplo para pedirle un dato que falta.
           </p>
 
           <form onSubmit={handleEnviar} noValidate className="flex flex-col gap-3">
             <div role="group" aria-labelledby="plantillas-titulo" className="flex flex-col gap-2">
               <p id="plantillas-titulo" className="text-sm text-on-surface-variant">
-                Usar una plantilla <span className="text-xs">(después podés editarla)</span>
+                Usar una plantilla <span className="text-sm">(después podés editarla)</span>
               </p>
               <div className="flex flex-wrap gap-2">
                 {PLANTILLAS_MENSAJE.map((p) => (
@@ -186,14 +186,14 @@ export function CandidatoDetalle() {
                     type="button"
                     title={p.descripcion}
                     onClick={() => aplicarPlantilla(p)}
-                    className="min-h-11 md:min-h-9 px-3 rounded-full border border-outline-variant bg-surface text-on-surface text-xs font-medium hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                    className="min-h-11 px-4 rounded-full border border-outline-variant bg-surface text-on-surface text-sm font-semibold hover:border-primary hover:text-primary transition-colors cursor-pointer"
                   >
                     {p.titulo}
                   </button>
                 ))}
               </div>
               {textoAnterior !== null && (
-                <p role="status" className="text-xs text-on-surface-variant">
+                <p role="status" className="text-sm text-on-surface-variant">
                   Plantilla aplicada.{' '}
                   <button type="button" onClick={deshacerPlantilla} className="font-medium text-primary underline underline-offset-2 cursor-pointer">
                     Deshacer
@@ -203,7 +203,7 @@ export function CandidatoDetalle() {
             </div>
             <div className="flex flex-col gap-1.5">
               {/* Etiqueta asociada por id (no envolviendo el campo): así su nombre accesible es siempre "Mensaje", tenga o no texto. */}
-              <label htmlFor="texto-mensaje" className="text-sm text-on-surface-variant">
+              <label htmlFor="texto-mensaje" className="text-sm font-semibold text-on-surface-variant">
                 Mensaje
               </label>
               <textarea
@@ -221,10 +221,10 @@ export function CandidatoDetalle() {
                 }}
                 onFocus={scrollFieldIntoView}
                 placeholder="Ej: Hola, nos falta tu ubicación exacta para tener en cuenta tu solicitud."
-                className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all aria-invalid:border-error"
+                className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-base text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all aria-invalid:border-error"
               />
             </div>
-            <div className="flex justify-between gap-3 text-xs text-on-surface-variant">
+            <div className="flex justify-between gap-3 text-sm text-on-surface-variant">
               <span>
                 {texto.trim().length} / {MENSAJE_MAX}
               </span>
@@ -247,7 +247,7 @@ export function CandidatoDetalle() {
             <button
               type="submit"
               disabled={enviando}
-              className="self-start bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
+              className="self-start bg-primary text-on-primary text-sm font-semibold px-6 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
             >
               {enviando ? 'Enviando…' : 'Enviar mensaje'}
             </button>
@@ -255,17 +255,17 @@ export function CandidatoDetalle() {
         </section>
 
         <section aria-labelledby="enviados-titulo" className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
-          <h2 id="enviados-titulo" className="text-xl font-heading font-semibold text-on-surface mb-3">
+          <h2 id="enviados-titulo" className="text-xl font-heading font-bold text-on-surface mb-3">
             Mensajes enviados
           </h2>
           {enviados.length === 0 ? (
-            <p className="text-sm text-on-surface-variant">Todavía no le escribiste a esta persona.</p>
+            <p className="text-base text-on-surface-variant">Todavía no le escribiste a esta persona.</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {enviados.map((m) => (
                 <li key={m.id} className="border border-outline-variant rounded-lg p-4">
-                  <p className="text-sm text-on-surface whitespace-pre-wrap">{m.texto}</p>
-                  <p className="text-xs text-on-surface-variant mt-2">
+                  <p className="text-base text-on-surface whitespace-pre-wrap">{m.texto}</p>
+                  <p className="text-sm text-on-surface-variant mt-2">
                     {formatearFechaHora(m.created_at)} · {m.leido ? 'Leído' : 'Sin leer'}
                   </p>
                 </li>

@@ -48,7 +48,7 @@ test('Mi cuenta (nombre, tema, contraseña) y sesión (cerrar, reingresar, los d
   // --- Tema ---
   const html = page.locator('html');
   const claro = await html.getAttribute('data-theme');
-  const interruptor = page.getByRole('switch');
+  const interruptor = page.getByRole('switch', { name: /modo (claro|oscuro)/ });
   await interruptor.click();
   const otro = claro === 'dark' ? 'light' : 'dark';
   await expect(html).toHaveAttribute('data-theme', otro);

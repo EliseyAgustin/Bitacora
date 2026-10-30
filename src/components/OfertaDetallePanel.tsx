@@ -4,6 +4,7 @@ import { EVENTO_PENDIENTE } from '@/components/PreguntaPostulacion';
 import { useAuth } from '@/hooks/useAuth';
 import { almacenLocal } from '@/lib/actividad';
 import { agregarPendiente } from '@/lib/pendientes';
+import { leerPreferencia } from '@/lib/preferencias';
 import { MODALIDAD_ETIQUETA } from '@/lib/etiquetas';
 import { ETAPA_CLASES } from '@/lib/etapas';
 import { resumenDeCoincidencias, urlSegura } from '@/lib/ofertaDetalle';
@@ -46,7 +47,7 @@ export function OfertaDetallePanel({
 
   // Se recuerda que abrió el enlace para preguntarle, al volver, si llegó a postularse.
   function alAbrirEnlace() {
-    if (!user || postulacion) return;
+    if (!user || postulacion || !leerPreferencia(user.id, 'preguntaPostulacion', almacenLocal())) return;
     agregarPendiente(user.id, { ofertaId: oferta.id, empresa: oferta.empresa, rol: oferta.rol }, Date.now(), almacenLocal());
     window.dispatchEvent(new Event(EVENTO_PENDIENTE));
   }
