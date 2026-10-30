@@ -46,12 +46,12 @@ test('el deslizador de etapas explica cada una y se maneja con el teclado', asyn
   const deslizador = page.getByRole('slider', { name: 'Etapa de la postulación' });
   await deslizador.scrollIntoViewIfNeeded();
   await expect(page.getByRole('heading', { level: 2, name: 'Primero guardás la oferta' })).toBeVisible();
-  await expect(page.getByText('La guardaste, todavía no te postulaste.')).toBeVisible();
+  await expect(page.getByText('Las guardaste, todavía no te postulaste.')).toBeVisible();
 
   await deslizador.focus();
   await page.keyboard.press('ArrowRight');
   await expect(deslizador).toHaveAttribute('aria-valuetext', 'Aplicado');
-  await expect(page.getByText('Ya te postulaste. Anotá la fecha y esperá novedades.')).toBeVisible();
+  await expect(page.getByText('Ya te postulaste. Esperá una respuesta.')).toBeVisible();
 
   await page.keyboard.press('End');
   await expect(deslizador).toHaveAttribute('aria-valuetext', 'Entrevista');

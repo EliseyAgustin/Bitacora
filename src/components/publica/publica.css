@@ -391,21 +391,10 @@
   font-size: 1.75rem;
   font-weight: 700;
   flex: none;
-  border: 2px solid currentColor;
+  border-width: 2px;
+  border-style: solid;
   transition: color 0.3s, background-color 0.3s;
   font-variant-numeric: tabular-nums;
-}
-.pub-puntaje[data-banda="alto"] {
-  color: var(--color-on-success-container);
-  background: var(--color-success-container);
-}
-.pub-puntaje[data-banda="medio"] {
-  color: var(--color-on-warning-container);
-  background: var(--color-warning-container);
-}
-.pub-puntaje[data-banda="bajo"] {
-  color: var(--color-on-error-container);
-  background: var(--color-error-container);
 }
 .pub-ui-rotulo {
   font-size: 0.9375rem;
@@ -991,4 +980,32 @@
 .pub-marco-panel {
   overflow: hidden;
   min-height: 100svh;
+}
+
+/* Las piezas de muestra (data-ui) llevan los colores de la app en oscuro (grafito), no el azul noche del Login. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pub [data-ui] {
+    --color-surface: #1c1e22;
+    --color-surface-container-lowest: #1c1e22;
+    --color-surface-container-low: #23262b;
+    --color-surface-container: #2a2d33;
+    --color-surface-container-high: #32363d;
+    --color-surface-container-highest: #3a3e46;
+    --color-outline-variant: #363a42;
+    --color-on-surface: #eceee9;
+    --color-on-surface-variant: #b3b9b4;
+    --color-outline: #8a918c;
+  }
+}
+:root[data-theme="dark"] .pub [data-ui] {
+  --color-surface: #1c1e22;
+  --color-surface-container-lowest: #1c1e22;
+  --color-surface-container-low: #23262b;
+  --color-surface-container: #2a2d33;
+  --color-surface-container-high: #32363d;
+  --color-surface-container-highest: #3a3e46;
+  --color-outline-variant: #363a42;
+  --color-on-surface: #eceee9;
+  --color-on-surface-variant: #b3b9b4;
+  --color-outline: #8a918c;
 }

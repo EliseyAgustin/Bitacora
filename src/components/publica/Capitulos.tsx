@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode } from 'react';
+import { Building2, Check, Clock, MapPin, Minus } from 'lucide-react';
+import { AvisoActividadVista } from '@/components/AvisoActividad';
 import { useConteo } from '@/hooks/useConteo';
-import { EMBUDO_EJEMPLO, ETAPAS_EJEMPLO, ETIQUETAS_STACK_EJEMPLO, OFERTA_EJEMPLO, calcularEjemploPuntaje } from '@/lib/capitulos';
+import { mensajeDeActividad } from '@/lib/actividad';
+import { ETAPA_CLASES } from '@/lib/etapas';
+import { cn } from '@/lib/utils';
+import { EMBUDO_EJEMPLO, ETAPAS_EJEMPLO, ETIQUETAS_STACK_EJEMPLO, OFERTA_EJEMPLO, calcularEjemploPuntaje, conversionesDelEmbudo } from '@/lib/capitulos';
 
 // Aparece al llegar a la pantalla (una sola vez). Sin IntersectionObserver o con "reducir movimiento" se ve desde el principio.
 export function Aparece({
@@ -40,6 +45,13 @@ export function Aparece({
   );
 }
 
+// Los mismos colores de la tarjeta de oferta de la aplicación para cada banda de puntaje.
+const BANDA_CLASES = {
+  alto: 'bg-success-container text-on-success-container border-success',
+  medio: 'bg-warning-container text-on-warning-container border-warning',
+  bajo: 'bg-error-container text-on-error-container border-error',
+} as const;
+
 // Capítulo 2: el puntaje de una oferta de ejemplo, que cambia con las tecnologías que marca la persona.
 export function CapituloPuntaje() {
   const [marcadas, setMarcadas] = useState<Set<string>>(() => new Set(['React', 'TypeScript']));
@@ -69,13 +81,29 @@ export function CapituloPuntaje() {
         <Aparece className="pub-der" orden={2}>
           <div data-ui>
             <div className="pub-ui-arriba">
-              <div>
+              <div className="min-w-0">
                 <h3 className="pub-ui-titulo">{OFERTA_EJEMPLO.rol}</h3>
-                <p className="pub-ui-sub">
-                  {OFERTA_EJEMPLO.empresa} · Remoto · {OFERTA_EJEMPLO.ubicacion}
+                <p className="pub-ui-sub flex items-center gap-2">
+                  <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  {OFERTA_EJEMPLO.empresa}
                 </p>
+                <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-on-surface-variant list-none p-0">
+                  <li className="flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    {OFERTA_EJEMPLO.ubicacion}
+                  </li>
+                  <li className="flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    Remoto
+                  </li>
+                </ul>
               </div>
-              <div className="pub-puntaje" data-banda={ejemplo.banda} role="img" aria-label={`Puntaje ${ejemplo.puntaje}`}>
+              <div
+                className={cn('pub-puntaje', BANDA_CLASES[ejemplo.banda])}
+                data-banda={ejemplo.banda}
+                role="img"
+                aria-label={`Puntaje ${ejemplo.puntaje}`}
+              >
                 {mostrado}
               </div>
             </div>
@@ -92,7 +120,10 @@ export function CapituloPuntaje() {
             <ul className="pub-criterios" aria-live="polite">
               {ejemplo.filas.map((f) => (
                 <li key={f.nombre}>
-                  <span className={f.coincide ? 'si' : 'no'}>{f.nombre}</span>
+                  <span className={cn('flex items-center gap-2', f.coincide ? 'si' : 'no')}>
+                    {f.coincide ? <Check className="w-4 h-4 shrink-0 text-success" aria-hidden="true" /> : <Minus className="w-4 h-4 shrink-0" aria-hidden="true" />}
+                    {f.nombre}
+                  </span>
                   <span className={f.coincide ? 'si num' : 'no'}>{f.coincide ? `Coincide · suma ${f.peso}` : 'No coincide'}</span>
                 </li>
               ))}
@@ -131,16 +162,37 @@ export function CapituloEtapas() {
           <div data-ui>
             <div className="pub-etapas" aria-hidden="true">
               {ETAPAS_EJEMPLO.map((e, i) => (
-                <span key={e.nombre} data-on={i <= indice} />
+                <span key={e.nombre} data-on={i <= indice} style={i <= indice ? { backgroundColor: `var(--color-etapa-${e.estado.replace('_', '-')})` } : undefined} />
               ))}
             </div>
             <div key={cambio} className={cambio > 0 ? 'pub-cambio' : undefined}>
-              <h3 className="pub-ui-titulo">Full Stack Developer</h3>
-              <p className="pub-ui-sub">Plano Digital · Remoto</p>
-              <p style={{ marginTop: 16 }}>
-                <span className="pub-pill">{etapa.nombre}</span>
-              </p>
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="flex items-center gap-2 text-lg font-bold">
+                  <span aria-hidden="true" className={cn('w-2.5 h-2.5 rounded-full', ETAPA_CLASES[etapa.estado].punto)} />
+                  {etapa.nombre}
+                </h3>
+                <span className={cn('num px-2.5 py-0.5 rounded-full text-sm font-bold', ETAPA_CLASES[etapa.estado].chip)}>1</span>
+              </div>
               <p className="pub-explicacion">{etapa.explicacion}</p>
+              <div className="mt-4 rounded-md border border-outline-variant border-t-4 border-t-warning p-4 bg-surface">
+                <p className="text-base font-medium leading-tight">Full Stack Developer</p>
+                <p className="mt-2 flex items-center gap-1.5 text-sm text-on-surface-variant">
+                  <Building2 className="w-4 h-4" aria-hidden="true" />
+                  Plano Digital
+                </p>
+                <div className="mt-3 flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant">
+                    <span aria-hidden="true" className="w-2 h-2 rounded-full bg-primary" />
+                    Puntaje: 55
+                  </span>
+                  {indice > 0 && (
+                    <span className="flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant bg-surface-container px-2 py-1 rounded-sm">
+                      <Clock className="w-4 h-4" aria-hidden="true" />
+                      2026-10-25
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </Aparece>
@@ -188,25 +240,34 @@ export function CapituloAviso({ onCrearCuenta }: { onCrearCuenta: () => void }) 
           </Aparece>
         </div>
         <Aparece className="pub-der" orden={2}>
-          <div data-ui className="pub-aviso-ui">
-            <h3 className="pub-ui-titulo">Bajó tu ritmo</h3>
-            <p>Esta semana hiciste 2 movimientos y la anterior 7. ¿Retomamos con las postulaciones que están por vencer?</p>
-            <span className="pub-btn" aria-hidden="true">
-              Ver mis postulaciones
-            </span>
-          </div>
+          <AvisoActividadVista
+            estado="bajo-ritmo"
+            mensaje={mensajeDeActividad({ estado: 'bajo-ritmo', esta: 2, anterior: 7, diasSinActividad: 3 })!}
+            accion={{ texto: 'Ver Mis postulaciones' }}
+            anunciar={false}
+          />
           <div data-ui style={{ marginTop: 20 }}>
-            <h3 className="pub-ui-titulo">Tu progreso</h3>
+            <h3 className="pub-ui-titulo">Embudo de postulaciones</h3>
             <p className="pub-ui-sub">Postulaciones que llegaron al menos a cada etapa</p>
             <ul className="pub-barras-embudo" aria-label="Embudo de postulaciones de ejemplo">
               {EMBUDO_EJEMPLO.map((e) => (
                 <li key={e.etapa}>
                   <span>{e.etapa}</span>
-                  <i style={{ '--w': `${Math.max(4, Math.round((e.cantidad / maximo) * 100))}%` } as CSSProperties} />
+                  <i
+                    style={
+                      {
+                        '--w': `${Math.max(4, Math.round((e.cantidad / maximo) * 100))}%`,
+                        backgroundColor: `var(--color-etapa-${e.estado.replace('_', '-')})`,
+                      } as CSSProperties
+                    }
+                  />
                   <b>{e.cantidad}</b>
                 </li>
               ))}
             </ul>
+            <p className="pub-nota">
+              Conversión desde la etapa anterior: {conversionesDelEmbudo().map((c) => `${c.etapa} ${c.porcentaje}%`).join(' · ')}
+            </p>
           </div>
           <button type="button" className="pub-btn pub-cta" onClick={onCrearCuenta}>
             Crear mi cuenta

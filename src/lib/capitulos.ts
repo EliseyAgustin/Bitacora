@@ -1,3 +1,4 @@
+import { DESCRIPCION_ETAPA } from '@/lib/etapas';
 import { calcularScoring, desglosarScoring } from '@/services/scoring';
 import type { CriterioScoring } from '@/types/criterioScoring';
 
@@ -96,18 +97,24 @@ export function calcularEjemploPuntaje(tecnologiasMarcadas: ReadonlySet<string>)
   };
 }
 
+// Las cuatro primeras etapas del tablero, con el mismo nombre y la misma explicación que muestra la aplicación en cada columna.
 export const ETAPAS_EJEMPLO = [
-  { nombre: 'Por aplicar', clausula: 'Primero guardás la oferta', explicacion: 'La guardaste, todavía no te postulaste.' },
-  { nombre: 'Aplicado', clausula: 'Después te postulás en su web', explicacion: 'Ya te postulaste. Anotá la fecha y esperá novedades.' },
-  { nombre: 'En proceso', clausula: 'Seguís cada paso del proceso', explicacion: 'Te respondieron y hay novedades para seguir.' },
-  { nombre: 'Entrevista', clausula: 'Y llegás a la entrevista', explicacion: 'Tenés una charla agendada: preparala con calma.' },
+  { estado: 'por_aplicar', nombre: 'Por aplicar', clausula: 'Primero guardás la oferta', explicacion: DESCRIPCION_ETAPA.por_aplicar },
+  { estado: 'aplicado', nombre: 'Aplicado', clausula: 'Después te postulás en su web', explicacion: DESCRIPCION_ETAPA.aplicado },
+  { estado: 'en_proceso', nombre: 'En proceso', clausula: 'Seguís cada paso del proceso', explicacion: DESCRIPCION_ETAPA.en_proceso },
+  { estado: 'entrevista', nombre: 'Entrevista', clausula: 'Y llegás a la entrevista', explicacion: DESCRIPCION_ETAPA.entrevista },
 ] as const;
 
 // El embudo de ejemplo del último capítulo (los mismos números de la demostración).
 export const EMBUDO_EJEMPLO = [
-  { etapa: 'Por aplicar', cantidad: 15 },
-  { etapa: 'Aplicado', cantidad: 12 },
-  { etapa: 'En proceso', cantidad: 7 },
-  { etapa: 'Entrevista', cantidad: 4 },
-  { etapa: 'Oferta', cantidad: 1 },
+  { estado: 'por_aplicar', etapa: 'Por aplicar', cantidad: 15 },
+  { estado: 'aplicado', etapa: 'Aplicado', cantidad: 12 },
+  { estado: 'en_proceso', etapa: 'En proceso', cantidad: 7 },
+  { estado: 'entrevista', etapa: 'Entrevista', cantidad: 4 },
+  { estado: 'oferta', etapa: 'Oferta', cantidad: 1 },
 ] as const;
+
+// La misma cuenta de «conversión desde la etapa anterior» que muestra Mi progreso.
+export function conversionesDelEmbudo(): { etapa: string; porcentaje: number }[] {
+  return EMBUDO_EJEMPLO.slice(1).map((e, i) => ({ etapa: e.etapa, porcentaje: Math.round((e.cantidad / EMBUDO_EJEMPLO[i].cantidad) * 100) }));
+}
