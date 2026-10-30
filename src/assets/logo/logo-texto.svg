@@ -1,5 +1,5 @@
 <svg width="280" height="355" viewBox="200 20 280 355" xmlns="http://www.w3.org/2000/svg" role="img">
-<title>Mascota topo de Laburin con wordmark</title>
+<title>Mascota topo con el nombre debajo</title>
 <desc>Topo con anteojos asomando de un pozo, sosteniendo una pala pequeña y un currículum enrollado, con el texto Laburin debajo</desc>
 <defs>
 <clipPath id="c1t"><circle cx="340" cy="160" r="130"/></clipPath>
@@ -54,5 +54,5 @@
 
 <circle cx="340" cy="160" r="130" fill="none" stroke="#5C80BC" stroke-width="3"/>
 
-<text x="340" y="360" text-anchor="middle" class="wordmark" font-size="46">Laburin</text>
+<text x="340" y="360" text-anchor="middle" class="wordmark" font-size="46">Bitácora</text>
 </svg>

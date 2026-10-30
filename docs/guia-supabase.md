@@ -26,7 +26,7 @@ Si querés probar versiones de prueba (previews) de Vercel, sumá `https://*-<tu
 > **Actualizada (octubre de 2026):** la plantilla tiene un diseño nuevo, con la misma identidad visual que el Login (franjas azul, naranja, salvia y azul noche, titular grande y botón amarillo). Si ya habías pegado la anterior, hay que pegar esta de nuevo: los cambios del repositorio no llegan solos al panel de Supabase.
 **Authentication → Email Templates → Reset Password** (en versiones nuevas: *Authentication → Emails → Templates*)
 
-1. **Subject (asunto):** `Cambiá tu contraseña de Laburin`
+1. **Subject (asunto):** `Cambiá tu contraseña de Bitácora`
 2. **Message body:** abrí [`docs/plantillas-email/recuperar-contrasena.html`](plantillas-email/recuperar-contrasena.html), copiá todo su contenido y pegalo en el cuerpo del mensaje (en modo HTML / "Source").
 3. Guardá. No borres `{{ .ConfirmationURL }}`: es el enlace que Supabase completa. Un test automático del repositorio cuida que siga ahí.
 
@@ -41,7 +41,7 @@ Sin esto, el mail sale en inglés y con el diseño por defecto de Supabase.
 Con eso, la profe (u otra persona) que pida recuperar su contraseña **no recibe nada**. Hay que conectar un servicio propio:
 
 **Authentication → Emails → SMTP Settings → Enable custom SMTP**, y completar lo que te da el servicio:
-`Sender email`, `Sender name` (por ejemplo, *Laburin*), `Host`, `Port`, `Username` y `Password`.
+`Sender email`, `Sender name` (por ejemplo, *Bitácora*), `Host`, `Port`, `Username` y `Password`.
 
 Opciones habituales (todas tienen plan gratuito; **revisá las condiciones vigentes en cada sitio**, cambian):
 
@@ -77,8 +77,8 @@ Para quitarlo: `update public.roles_usuario set rol = 'candidato' where user_id 
 
 ## 7. Verificación (hacela con tu email real, en producción)
 1. Entrá a https://laburin.vercel.app → **¿Olvidaste tu contraseña?** → escribí tu email → *Enviar enlace*. Aparece "Revisá tu correo".
-2. **El mail llega** (mirá también el spam), **en español** y con el diseño de Laburin.
-3. El botón **abre la pantalla "Elegí tu contraseña nueva"** de Laburin (no la página de inicio ni una de error).
+2. **El mail llega** (mirá también el spam), **en español** y con el diseño de Bitácora.
+3. El botón **abre la pantalla "Elegí tu contraseña nueva"** de Bitácora (no la página de inicio ni una de error).
 4. Elegí una contraseña, guardá, cerrá sesión y **entrá con la nueva**.
 5. Volvé a abrir **el mismo enlace del mail**: tiene que mostrar "No pudimos validar el enlace" (los enlaces se usan una sola vez).
 6. Iniciá sesión con la cuenta de administrador: **cae en Candidatos**.

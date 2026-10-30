@@ -16,7 +16,7 @@ import { actualizarEstadoPostulacion, crearPostulacion, listarPostulacionesDeOfe
 export const EVENTO_PENDIENTE = 'laburin:pendiente';
 const POSPONER_MS = 24 * 60 * 60 * 1000;
 
-// Laburín no ve lo que pasa en el sitio de la empresa. Si la persona abrió el enlace de una oferta, al volver se le pregunta
+// La aplicación no ve lo que pasa en el sitio de la empresa. Si la persona abrió el enlace de una oferta, al volver se le pregunta
 // si llegó a postularse: con «Sí» queda en Aplicado, con «Todavía no» se le vuelve a preguntar mañana.
 export function PreguntaPostulacion() {
   const { user } = useAuth();

@@ -1,6 +1,6 @@
 import { expect, test } from './fixtures';
 
-// Flujo «¿Ya te postulaste?»: Laburín no ve el sitio de la empresa. Al abrir el enlace de una oferta recuerda la oferta y,
+// Flujo «¿Ya te postulaste?»: La aplicación no ve el sitio de la empresa. Al abrir el enlace de una oferta recuerda la oferta y,
 // al volver, pregunta. «Sí» la deja en Aplicado; «Todavía no» no la guarda y pospone la pregunta.
 const OFERTA = {
   empresa: 'Nubia Labs',

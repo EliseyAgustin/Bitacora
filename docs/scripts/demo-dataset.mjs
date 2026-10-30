@@ -1,5 +1,5 @@
 import MARCA from '../../src/lib/marca.json' with { type: 'json' };
-// Datos de la cuenta DEMO: el recorrido de alguien que usa Laburin hace unas ocho semanas, todo ficticio.
+// Datos de la cuenta DEMO: el recorrido de alguien que usa la aplicación hace unas ocho semanas, todo ficticio.
 // Es una función pura (sin red): la usa docs/scripts/demo-datos.mjs para cargarlos y src/lib/demoDataset.test.ts
 // para comprobar que son coherentes con el motor de scoring, los recordatorios y las métricas de la aplicación.
 //

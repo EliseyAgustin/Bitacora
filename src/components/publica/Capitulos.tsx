@@ -279,7 +279,7 @@ export function CapituloAviso({ onCrearCuenta }: { onCrearCuenta: () => void }) 
           <a href="#como-funciona">Cómo funciona</a>
           <span>Hecho en Argentina para quienes buscan laburo</span>
         </nav>
-        <p className="pub-nombre" aria-hidden="true">
+        <p className="pub-nombre" aria-hidden="true" style={{ '--letras': MARCA.nombre.length } as CSSProperties}>
           {MARCA.nombre}
         </p>
       </div>

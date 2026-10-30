@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
+import logoIcono from '@/assets/logo/logo-icono.svg';
 import { Topo } from './Topo';
 import './publica.css';
 import { MARCA } from '@/lib/marca';

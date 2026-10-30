@@ -1,4 +1,4 @@
-// Laburín no puede saber si la persona se postuló en el sitio de la empresa: lo que sí sabe es que abrió el enlace.
+// La aplicación no puede saber si la persona se postuló en el sitio de la empresa: lo que sí sabe es que abrió el enlace.
 // Se recuerda esa oferta como «pendiente de confirmar» y, al volver a la aplicación, se le pregunta.
 // Se guarda en el navegador de cada persona (localStorage), así sobrevive a una recarga, algo común en el celular.
 type Almacen = Pick<Storage, 'getItem' | 'setItem'>;

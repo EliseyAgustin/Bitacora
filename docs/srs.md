@@ -1,4 +1,4 @@
-# Especificación de Requerimientos (SRS) — Laburin
+# Especificación de Requerimientos (SRS) — Bitácora
 
 **PPS:** Plataforma Web de Búsqueda y Seguimiento Laboral Automatizada con Motor de Scoring
 **Universidad:** Universidad Nacional del Oeste — Escuela de Ciencias Tecnológicas
@@ -12,16 +12,16 @@
 
 ## 1. Contexto y objetivo de este documento
 
-Laburin evoluciona un antecedente funcional real: [`jobbot-v5.gs`](../legacy/jobbot-v5.gs), un script en Google Apps Script que Agustín usa para su propia búsqueda laboral. El v5.0 busca ofertas en 7 fuentes, las puntúa con un motor de scoring hardcodeado y manda un mail diario con un link a una planilla de Google Sheets. No tiene modelo relacional, no permite editar reglas sin tocar código, y no hace seguimiento del ciclo de vida de una postulación después de que aparece en la planilla.
+Bitácora evoluciona un antecedente funcional real: [`jobbot-v5.gs`](../legacy/jobbot-v5.gs), un script en Google Apps Script que Agustín usa para su propia búsqueda laboral. El v5.0 busca ofertas en 7 fuentes, las puntúa con un motor de scoring hardcodeado y manda un mail diario con un link a una planilla de Google Sheets. No tiene modelo relacional, no permite editar reglas sin tocar código, y no hace seguimiento del ciclo de vida de una postulación después de que aparece en la planilla.
 
-Este documento formaliza las reglas de negocio reales extraídas del v5.0 y las traduce a los requerimientos funcionales de Laburin, dentro del alcance ya aprobado en la propuesta de PPS.
+Este documento formaliza las reglas de negocio reales extraídas del v5.0 y las traduce a los requerimientos funcionales de Bitácora, dentro del alcance ya aprobado en la propuesta de PPS.
 
 ## 2. Glosario de entidades
 
 | Entidad | Definición |
 |---|---|
 | **Oferta** | Un puesto de trabajo encontrado por el motor de búsqueda en alguna de las 7 fuentes. Tiene un score calculado, es efímera (vence a las 72hs, igual que en v5.0) y no requiere acción del usuario hasta que decide trackearla. |
-| **Postulación** | Una Oferta que el usuario decidió seguir. Vive en el Tablero Kanban con un estado (Por aplicar → Aplicado → En proceso → Entrevista → Oferta / Rechazado) y tiene su propia Ficha. **No existía en el v5.0** — es la capa nueva que agrega Laburin. |
+| **Postulación** | Una Oferta que el usuario decidió seguir. Vive en el Tablero Kanban con un estado (Por aplicar → Aplicado → En proceso → Entrevista → Oferta / Rechazado) y tiene su propia Ficha. **No existía en el v5.0** — es la capa nueva que agrega Bitácora. |
 | **Interacción** | Un evento registrado dentro de la Ficha de una Postulación: llamado, entrevista, mail enviado, nota. |
 | **Criterio de Scoring** | Un parámetro configurable del motor de puntuación (stack, modalidad, ubicación). Editable desde la UI sin tocar código. |
 | **Regla fija de Scoring** | Componente del cálculo de puntaje heredado tal cual del v5.0 (recencia, seniority, exclusiones, idioma, salario) que **no** se expone como configuración de usuario en esta PPS. |
@@ -77,7 +77,7 @@ Score base 50, clamp final a [0, 100]. Componentes:
 | Soft-exclude keywords | −4 c/u |
 | Stack no deseado (kubernetes, terraform, ML, etc.) | −5 c/u |
 
-### 3.6 Limitaciones identificadas (motivan el diseño de Laburin)
+### 3.6 Limitaciones identificadas (motivan el diseño de Bitácora)
 
 1. Todo hardcodeado en `CONFIG` — cambiar una keyword o un peso requiere editar y redeployar el script.
 2. Perfil de categorías fijo a una sola persona (Agustín) — no hay concepto de multi-usuario.
@@ -129,7 +129,7 @@ Score base 50, clamp final a [0, 100]. Componentes:
 
 ## 6. Tabla de decisión: qué se porta, qué se configura, qué se fija
 
-| Regla del v5.0 | En Laburin |
+| Regla del v5.0 | En Bitácora |
 |---|---|
 | 7 fuentes de búsqueda | Se portan las 7, automatizadas vía Edge Function + cron |
 | Categorías QA/Data Entry/Admin/Data Analyst | Se portan como taxonomía fija (no editable en esta PPS) |
@@ -144,7 +144,7 @@ Score base 50, clamp final a [0, 100]. Componentes:
 | Idioma español | Se porta como regla fija del motor |
 | Salario en USD | Se porta como regla fija del motor |
 | Vencimiento 72hs | Se porta como regla fija del motor |
-| Umbral de inactividad ($N$ días) | **Configurable por el usuario** (RF-14) — en v5.0 no existía este concepto, es nuevo de Laburin |
+| Umbral de inactividad ($N$ días) | **Configurable por el usuario** (RF-14) — en v5.0 no existía este concepto, es nuevo de Bitácora |
 | Salida: planilla + mail diario | Se reemplaza por Tablero interactivo + Analytics; el mail se conserva como notificación (RF-16) |
 | Seguimiento post-hallazgo de la oferta | **No existía en v5.0** — es el módulo completamente nuevo de Postulaciones/Tablero/Ficha |
 
@@ -180,7 +180,7 @@ Después de la demostración del 29/10/2026 la docente pidió una interfaz más 
 ### 10.1 Requerimientos funcionales
 
 - **RF-18 (Estados explicados)**: cada columna del tablero debe indicar con una frase qué significa (por ejemplo, «Por aplicar»: las guardaste, todavía no te postulaste) y distinguirse por un color de etapa propio, que se repite en la ficha, el embudo y las tarjetas.
-- **RF-19 (Confirmar la postulación)**: al abrir el enlace de una oferta para postularse en el sitio de origen, el sistema debe recordarlo y, al volver, preguntar «¿Ya te postulaste?»: con «Sí, ya apliqué» la postulación queda en *Aplicado*; con «Todavía no» no se guarda nada y se vuelve a preguntar al día siguiente. Laburín no puede saber lo que ocurre en el sitio de la empresa: la pregunta evita que la persona tenga que acordarse de marcarla.
+- **RF-19 (Confirmar la postulación)**: al abrir el enlace de una oferta para postularse en el sitio de origen, el sistema debe recordarlo y, al volver, preguntar «¿Ya te postulaste?»: con «Sí, ya apliqué» la postulación queda en *Aplicado*; con «Todavía no» no se guarda nada y se vuelve a preguntar al día siguiente. Bitácora no puede saber lo que ocurre en el sitio de la empresa: la pregunta evita que la persona tenga que acordarse de marcarla.
 - **RF-20 (Aviso de actividad)**: el sistema debe avisar con buen tono, dentro de la aplicación, en solo dos casos: cuando pasan 10 días sin actividad y cuando una semana tuvo la mitad o menos de movimientos que la anterior, siempre que la anterior haya tenido al menos 4 (con menos no hay base para comparar). Un *movimiento* es una postulación creada, una interacción registrada o un cambio de estado real. No hay felicitaciones ni indicador en el menú. El aviso se calcula en el navegador con datos que ya existen, solo al abrir Mis postulaciones y Mi progreso; se puede cerrar (reaparece a los 3 días) y se puede apagar. La docente lo propuso y dejó a criterio del autor qué parte conservar: se evaluó y se dejó la versión intermedia (Sección 5.17 de la Memoria). No hay notificación por email (RF-16 sigue fuera del alcance).
 - **RF-21 (Mi progreso legible)**: cada indicador de RF-17 debe tener un nombre que diga qué mide, una ayuda que lo explique y su tendencia contra la semana anterior (las fórmulas no cambian).
 - **RF-22 (Mi cuenta completa)**: la persona debe poder cambiar su nombre y su contraseña, cerrar sesión en todos los dispositivos, elegir el tema, apagar los avisos de RF-19 y RF-20, **descargar todos sus datos** en un archivo y **borrar sus ofertas y postulaciones** con una confirmación explícita.

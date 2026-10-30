@@ -1,4 +1,4 @@
-// «Descargar mis datos»: todo lo que Laburin guarda de una persona, en un archivo que se puede leer y llevar a otro lado.
+// «Descargar mis datos»: todo lo que la aplicación guarda de una persona, en un archivo que se puede leer y llevar a otro lado.
 // Se arma en el navegador con lo que la persona ya puede leer (las reglas de acceso no cambian): nada sale a ningún servicio.
 type Fila = Record<string, unknown>;
 

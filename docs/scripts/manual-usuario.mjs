@@ -80,7 +80,7 @@ const doc = new Document({
       new TableOfContents('Índice', { hyperlink: true, headingStyleRange: '1-2' }),
       new Paragraph({ children: [new PageBreak()] }),
 
-      // 1. Qué es Laburin
+      // 1. Qué es la aplicación
       h1(`1. Qué es ${MARCA.nombre}`),
       p(`${MARCA.nombre} es una aplicación web pensada para organizar tu búsqueda laboral en un solo lugar. En vez de tener las ofertas que te interesan dispersas en pestañas del navegador, planillas sueltas o notas, ${MARCA.nombre} te permite guardar cada oferta, hacerle seguimiento a tu postulación paso a paso, y calcular automáticamente qué tan bien encaja cada oferta con lo que buscás.`),
       p(`Con ${MARCA.nombre} podés:`),
@@ -89,7 +89,7 @@ const doc = new Document({
       bullet('Seguir el estado de cada postulación en un tablero visual, desde "Por aplicar" hasta "Oferta" o "Rechazado".'),
       bullet('Registrar cada contacto con la empresa (mails, llamados, entrevistas) para no perder el hilo.'),
       bullet('Recibir un recordatorio cuando una postulación lleva mucho tiempo sin novedades. Es solo un aviso: no se borra nada.'),
-      bullet(`Recibir un aviso, con la mascota de ${MARCA.nombre}, cuando pasaron varios días sin novedades o una semana fue más tranquila que la anterior.`),
+      bullet(`Recibir un aviso, con la mascota, cuando pasaron varios días sin novedades o una semana fue más tranquila que la anterior.`),
       bullet('Ver cómo te va en toda tu búsqueda: cuántas postulaciones activas tenés, cómo avanzan y qué fuentes te traen mejores ofertas.'),
       bullet(`Recibir mensajes del equipo de ${MARCA.nombre}, por ejemplo cuando falta algún dato de tu perfil.`),
       p('Las pantallas principales son: Ofertas, Mis postulaciones, Mi progreso, Mi perfil de búsqueda y Mensajes. Cada una abre con una banda de color (azul, naranja o verde salvia), el mismo de la pantalla de inicio, con su título y, debajo, una línea que explica qué se hace ahí. En el menú lateral, la pantalla en la que estás se marca con el color de su banda.'),
@@ -276,7 +276,7 @@ const doc = new Document({
       p(`Verás este aviso en el primer paso de la configuración inicial, en el resumen final y en Mi cuenta: "Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de ${MARCA.nombre}. Tus ofertas y postulaciones son solo tuyas."`),
       p('Los mensajes que recibís son solo tuyos: nadie más los puede leer, y vos podés borrarlos cuando quieras.'),
 
-      // 13. Para el equipo de Laburin
+      // 13. Para el equipo
       h1(`13. Para el equipo de ${MARCA.nombre}: Candidatos`),
       p(`Esta sección es solo para quienes administran ${MARCA.nombre} y no la ve ninguna otra persona. El rol de administrador no se puede pedir ni obtener desde la aplicación: lo asigna una persona del equipo directamente en la base de datos.`),
       p('Al iniciar sesión, el administrador entra directo a "Candidatos", y su menú solo tiene esa sección (más "Mi cuenta" y "Cerrar Sesión"). Una persona que no es administradora no puede entrar a esa pantalla, ni siquiera escribiendo la dirección a mano: la aplicación la devuelve a su inicio, y la base de datos tampoco le devolvería ningún dato.'),
@@ -297,5 +297,5 @@ const doc = new Document({
 
 Packer.toBuffer(doc).then((buf) => {
   fs.writeFileSync(path.join(RAIZ, `${MARCA.archivo}-Manual-de-Usuario.docx`), buf);
-  console.log(`Generado: ${MARCA.nombre}-Manual-de-Usuario.docx`, buf.length, 'bytes');
+  console.log(`Generado: ${MARCA.archivo}-Manual-de-Usuario.docx`, buf.length, 'bytes');
 });

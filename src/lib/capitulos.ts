@@ -3,7 +3,7 @@ import { calcularScoring, desglosarScoring } from '@/services/scoring';
 import type { CriterioScoring } from '@/types/criterioScoring';
 
 // Datos de ejemplo de los capítulos de la página de inicio (Login y Registro). Son ficticios, pero el cálculo del puntaje
-// usa el mismo motor de scoring que la aplicación: lo que se ve acá es lo que después hace Laburin con las ofertas reales.
+// usa el mismo motor de scoring que la aplicación: lo que se ve acá es lo que después hace la aplicación con las ofertas reales.
 
 export const ETIQUETAS_STACK_EJEMPLO = ['React', 'TypeScript', 'Node.js', 'PostgreSQL'] as const;
 

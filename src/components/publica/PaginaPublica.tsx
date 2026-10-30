@@ -1,7 +1,7 @@
 import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import { desplazarA } from '@/lib/desplazar';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
+import logoIcono from '@/assets/logo/logo-icono.svg';
 import { CapituloAviso, CapituloEtapas, CapituloPuntaje } from './Capitulos';
 import { Topo } from './Topo';
 import './publica.css';
@@ -23,11 +23,11 @@ const TITULARES: Record<ModoPublico, { titulo: string; texto: string }> = {
   },
   registro: {
     titulo: 'Empezá a ordenar tu búsqueda',
-    texto: `Armás tu perfil en cinco pasos y ${MARCA.nombre} te muestra qué ofertas te convienen más.`,
+    texto: 'Armás tu perfil en cinco pasos y empezás a registrar tu búsqueda.',
   },
 };
 
-// Página de inicio, antes de entrar: la sesión arriba y, debajo, un capítulo de color por cada cosa que hace Laburin.
+// Página de inicio, antes de entrar: la sesión arriba y, debajo, un capítulo de color por cada cosa que hace la aplicación.
 export function PaginaPublica({ modo, onCrearCuenta, children }: PaginaPublicaProps) {
   const { titulo, texto } = TITULARES[modo];
 

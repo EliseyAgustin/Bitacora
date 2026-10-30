@@ -635,7 +635,8 @@
 }
 .pub-nombre {
   grid-column: 1 / -1;
-  font-size: 31.5vw;
+  /* 220vw repartido entre las letras: llena el ancho con el nombre que sea (31,4vw con 7 letras, 27,5vw con 8). */
+  font-size: calc(220vw / var(--letras, 7));
   line-height: 0.8;
   letter-spacing: -0.06em;
   font-weight: 700;

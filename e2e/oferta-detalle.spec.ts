@@ -38,7 +38,7 @@ test('un clic en la tarjeta abre el detalle: puntaje explicado, descripción y e
   await expect(detalle.getByText('Buscamos una persona para sumarse al equipo de producto.')).toBeVisible();
   await expect(detalle.getByText('• Experiencia con React')).toBeVisible();
 
-  // El enlace abre el sitio de origen en otra pestaña, sin darle acceso a la ventana de Laburin.
+  // El enlace abre el sitio de origen en otra pestaña, sin darle acceso a la ventana de la aplicación.
   const enlace = detalle.getByRole('link', { name: /Ver oferta y postularme/ });
   await expect(enlace).toHaveAttribute('href', URL_ORIGEN);
   await expect(enlace).toHaveAttribute('target', '_blank');

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 // Remotive, Arbeitnow y RemoteOK son servicios de terceros: se interceptan para que el import sea determinista.
-// Lo que se verifica es la lógica de Laburin (normalizar, deduplicar, insertar), no la disponibilidad de esos sitios.
+// Lo que se verifica es la lógica de la aplicación (normalizar, deduplicar, insertar), no la disponibilidad de esos sitios.
 // El smoke contra los servicios reales vive aparte (import-real.spec.ts).
 export interface JobRemotive {
   title: string;

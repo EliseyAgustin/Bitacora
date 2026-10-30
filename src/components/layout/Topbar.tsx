@@ -1,5 +1,5 @@
 import { Menu } from 'lucide-react';
-import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
+import logoIcono from '@/assets/logo/logo-icono.svg';
 import { MARCA } from '@/lib/marca';
 
 interface TopbarProps {

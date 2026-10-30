@@ -331,6 +331,13 @@ try {
     const hoy = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const tarjetas = [...document.querySelectorAll('ul.grid > li')];
     for (const li of tarjetas) if (!li.textContent.includes(`Registrado el ${hoy}`)) li.remove();
+    // Si quedaron cuentas de corridas anteriores del mismo dia, se deja una sola tarjeta por nombre (la primera, la mas reciente).
+    const vistos = new Set();
+    for (const li of [...document.querySelectorAll('ul.grid > li')]) {
+      const nombre = li.querySelector('h3')?.textContent ?? '';
+      if (vistos.has(nombre)) li.remove();
+      else vistos.add(nombre);
+    }
     const cuenta = [...document.querySelectorAll('p')].find((el) => /^\d+ candidatos?$/.test(el.textContent.trim()));
     if (cuenta) cuenta.textContent = `${document.querySelectorAll('ul.grid > li').length} candidatos`;
   });

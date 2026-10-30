@@ -5,7 +5,7 @@
 //   node docs/scripts/demo-datos.mjs --probar    crea y borra enseguida (para comprobar que el script anda)
 //
 // Qué se crea:
-//  - La cuenta DEMO (Camila Ejemplo): el recorrido de alguien que usa Laburin hace ocho semanas. 36 ofertas con puntaje,
+//  - La cuenta DEMO (Camila Ejemplo): el recorrido de alguien que usa la aplicación hace ocho semanas. 36 ofertas con puntaje,
 //    15 postulaciones en los seis estados con su historial, interacciones de los cuatro tipos, dos avisos de seguimiento
 //    activos y dos resueltos, un criterio de scoring apagado y tres mensajes del administrador (uno sin leer).
 //    Los datos están definidos en docs/scripts/demo-dataset.mjs y un test los compara con el motor real de la aplicación.

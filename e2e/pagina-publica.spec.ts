@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-// La página de inicio (Login y Registro) tiene un capítulo de color por cada cosa que hace Laburin: se prueba lo que la
+// La página de inicio (Login y Registro) tiene un capítulo de color por cada cosa que hace la aplicación: se prueba lo que la
 // persona puede mover (el puntaje de ejemplo y el deslizador de etapas) y que respete el tema y "reducir movimiento".
 test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -71,7 +71,7 @@ test('«Crear mi cuenta», al final de la página, lleva al registro', async ({ 
 test('el modo oscuro cambia el color de los campos y todo sigue a la vista', async ({ page }) => {
   await page.goto('/');
   const primero = page.locator('section').first();
-  await expect(primero).toHaveCSS('background-color', 'rgb(27, 70, 201)'); // azul de Laburín, modo claro
+  await expect(primero).toHaveCSS('background-color', 'rgb(27, 70, 201)'); // azul de la marca, modo claro
   await page.getByRole('switch', { name: 'Cambiar a modo oscuro' }).click();
   await expect(primero).toHaveCSS('background-color', 'rgb(20, 48, 143)');
   await expect(page.getByRole('button', { name: 'Ingresar' })).toBeVisible();

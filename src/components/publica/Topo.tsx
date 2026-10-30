@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-// La mascota de Laburín asomando de su pozo, con las mismas piezas del logo (anteojos, pala y currículum).
+// La mascota (un topo con anteojos, sin nombre propio) asomando de su pozo, con las mismas piezas del logo (anteojos, pala y currículum).
 // Sube del pozo al aparecer, parpadea de vez en cuando y mueve el papel; con "reducir movimiento" queda quieta.
 export function Topo({ className }: { className?: string }) {
   const clip = useId();

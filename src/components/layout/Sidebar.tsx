@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRol } from '@/hooks/useRol';
 import { useMensajesNoLeidos } from '@/hooks/useMensajesNoLeidos';
 import { CuentaModal } from '@/components/CuentaModal';
-import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
+import logoIcono from '@/assets/logo/logo-icono.svg';
 import { MARCA } from '@/lib/marca';
 
 // Cada pantalla se marca en el menú con el color de su capítulo (el mismo de la banda con que abre).

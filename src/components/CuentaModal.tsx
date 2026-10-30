@@ -139,7 +139,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
     try {
       const { error } = await supabase.auth.updateUser({ data: { full_name: nombre.trim() } });
       if (error) throw error;
-      // También en el perfil de búsqueda, que es lo que ve el equipo de Laburin (null si se borra el nombre).
+      // También en el perfil de búsqueda, que es lo que ve el equipo (null si se borra el nombre).
       const { error: errorPerfil } = await supabase
         .from('perfil_usuario')
         .upsert({ user_id: user!.id, nombre: nombre.trim() || null }, { onConflict: 'user_id' });

@@ -1,19 +1,19 @@
 # Guion de la demostración (5 a 7 minutos)
 
-Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con lo que conviene decir en cada paso y qué debería verse. Los datos de ejemplo son ficticios. Todas las pantallas comparten la identidad del Login y el Registro: cada una abre con un capítulo de color y la mascota.
+Un recorrido pensado para mostrarle Bitácora a la docente de principio a fin, con lo que conviene decir en cada paso y qué debería verse. Los datos de ejemplo son ficticios. Todas las pantallas comparten la identidad del Login y el Registro: cada una abre con un capítulo de color y la mascota.
 
 ## Antes de empezar (10 minutos antes)
 - [ ] **Producción al día:** https://laburin.vercel.app abre y el último commit está desplegado.
 - [ ] **Supabase configurado** según [`guia-supabase.md`](guia-supabase.md): sobre todo el correo propio, para que la recuperación de contraseña funcione con el email de quien la pruebe.
-- [ ] **Cuenta DEMO al día:** `npm run demo:datos` deja a **Camila Ejemplo** como alguien que usa Laburin hace ocho semanas y suma a Tomás y Lucía Ejemplo para la vista del administrador. Conviene correrlo **el mismo día**: las fechas se arman respecto de hoy, y es repetible (reinicia la cuenta). Necesita `DEMO_EMAIL` y `DEMO_PASSWORD` en `.env.e2e`; los mensajes del administrador usan `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`. Al terminar: `npm run demo:borrar`.
+- [ ] **Cuenta DEMO al día:** `npm run demo:datos` deja a **Camila Ejemplo** como alguien que usa Bitácora hace ocho semanas y suma a Tomás y Lucía Ejemplo para la vista del administrador. Conviene correrlo **el mismo día**: las fechas se arman respecto de hoy, y es repetible (reinicia la cuenta). Necesita `DEMO_EMAIL` y `DEMO_PASSWORD` en `.env.e2e`; los mensajes del administrador usan `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`. Al terminar: `npm run demo:borrar`.
 - [ ] **Qué trae la cuenta DEMO:** 36 ofertas (Remotive, Arbeitnow, RemoteOK y carga manual) con puntajes altos, medios y bajos, y con enlace y descripción (los enlaces son de example.com: no llevan a ningún sitio real, algunas ofertas manuales no tienen); 15 postulaciones en los seis estados, con su historial; 33 interacciones de los cuatro tipos; **2 recordatorios activos** («Sin novedades hace 15 y 9 días») y 2 resueltos; un criterio de scoring apagado; y 4 mensajes (la bienvenida y tres del administrador, **uno sin leer**: el menú muestra el 1). Mi progreso entra con datos en todas las tarjetas y gráficos. Los mensajes del administrador se fechan siempre después de la bienvenida de la cuenta.
 - [ ] **Dos ventanas listas:** una con la cuenta de candidato (Camila) y otra con la de administrador, ya con la sesión iniciada. Una más en un celular o en el modo móvil del navegador.
-- [ ] **Plan B si falla internet:** el [Manual de Usuario](../Laburin-Manual-de-Usuario.pdf) y las capturas de [`docs/scripts/capturas/`](scripts/capturas/).
+- [ ] **Plan B si falla internet:** el [Manual de Usuario](../Bitacora-Manual-de-Usuario.pdf) y las capturas de [`docs/scripts/capturas/`](scripts/capturas/).
 
 ## El recorrido
 
 ### 1. El problema (30 s)
-> "Buscar trabajo suele terminar en pestañas sueltas y planillas. Laburin junta las ofertas en un lugar, calcula qué tan bien encaja cada una con tu perfil y te ayuda a seguir cada postulación. Además hay un lado de administración que recibe lo que cargan quienes se registran y puede escribirles."
+> "Buscar trabajo suele terminar en pestañas sueltas y planillas. Bitácora junta las ofertas en un lugar, calcula qué tan bien encaja cada una con tu perfil y te ayuda a seguir cada postulación. Además hay un lado de administración que recibe lo que cargan quienes se registran y puede escribirles."
 
 ### 2. Una persona nueva se registra (1 min)
 - Pantalla de registro → escribir un email **sin arroba** y una contraseña corta → mostrar los **errores en español junto a cada campo**. Elegir una contraseña fuerte y ver el medidor.

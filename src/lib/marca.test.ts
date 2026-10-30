@@ -9,7 +9,8 @@ import { MARCA } from './marca';
 const RAIZ = path.resolve(import.meta.dirname, '../..');
 const CARPETAS = ['src', 'e2e', 'docs/scripts'];
 const EXTENSIONES = /\.(ts|tsx|mjs)$/;
-const NOMBRE_A_MANO = /Laburin|Laburín/;
+const sinTildes = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const NOMBRE_A_MANO = new RegExp([...new Set([MARCA.nombre, sinTildes(MARCA.nombre)])].join('|'));
 
 function archivos(dir: string): string[] {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
