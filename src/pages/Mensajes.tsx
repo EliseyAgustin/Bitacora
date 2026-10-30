@@ -106,7 +106,7 @@ export function Mensajes() {
             <p className="text-base text-on-surface-variant">Cuando el equipo de Laburin te escriba, lo vas a ver acá.</p>
             <Link
               to={RUTAS.postulaciones}
-              className="mt-3 bg-primary text-on-primary text-sm font-semibold px-5 min-h-11 inline-flex items-center rounded-lg shadow-sm hover:opacity-90 transition-all"
+              className="mt-3 bg-cta text-on-cta text-sm font-semibold px-5 min-h-11 inline-flex items-center rounded-lg shadow-sm hover:opacity-90 transition-all"
             >
               Ir a Mis postulaciones
             </Link>
@@ -128,7 +128,7 @@ export function Mensajes() {
                   <h2 className="text-lg font-heading font-bold text-on-surface">{tituloDelMensaje(m)}</h2>
                   <div className="flex items-center gap-2 text-sm text-on-surface-variant">
                     {!m.leido && (
-                      <span className="bg-primary text-on-primary font-semibold px-2.5 py-0.5 rounded-full">Nuevo</span>
+                      <span className="bg-cta text-on-cta font-semibold px-2.5 py-0.5 rounded-full">Nuevo</span>
                     )}
                     {formatearFechaHora(m.created_at)}
                   </div>

@@ -336,7 +336,7 @@ export function Offers() {
               </p>
               <Link
                 to={RUTAS.perfil}
-                className="bg-primary text-on-primary text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all"
+                className="bg-cta text-on-cta text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all"
               >
                 Completar mi perfil de búsqueda
               </Link>
@@ -438,7 +438,7 @@ export function Offers() {
             )}
             <button
               type="submit"
-              className="h-11 sm:h-10 shrink-0 w-full sm:w-auto justify-center bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer"
+              className="h-11 sm:h-10 shrink-0 w-full sm:w-auto justify-center bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer"
             >
               <Filter className="w-4.5 h-4.5" aria-hidden="true" />
               Aplicar
@@ -502,7 +502,7 @@ export function Offers() {
             <button
               onClick={handleImportar}
               disabled={importing}
-              className="h-11 bg-primary text-on-primary text-sm font-semibold px-5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              className="h-11 bg-cta text-on-cta text-sm font-semibold px-5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <Download className="w-4.5 h-4.5" />
               {importing ? 'Importando…' : 'Importar ofertas remotas'}
@@ -528,7 +528,7 @@ export function Offers() {
                 type="button"
                 onClick={handleImportar}
                 disabled={importing}
-                className="bg-primary text-on-primary text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                className="bg-cta text-on-cta text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 <Download className="w-4.5 h-4.5" />
                 Importar ofertas remotas

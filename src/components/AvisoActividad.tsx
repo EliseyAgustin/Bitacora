@@ -45,7 +45,7 @@ export function AvisoActividad({ donde }: AvisoActividadProps) {
         {accion && (
           <Link
             to={accion.ruta}
-            className="mt-3 inline-flex h-11 items-center px-5 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="mt-3 inline-flex h-11 items-center px-5 rounded-lg bg-cta text-on-cta text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             {accion.texto}
           </Link>

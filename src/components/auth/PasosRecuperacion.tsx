@@ -3,8 +3,38 @@ import { cn } from '@/lib/utils';
 
 const PASOS = ['Pedí el enlace', 'Revisá tu correo', 'Elegí tu contraseña'];
 
+interface PasosRecuperacionProps {
+  actual: 1 | 2 | 3;
+  // «lado»: lista vertical grande sobre el campo de color, al costado de la tarjeta.
+  variante?: 'tarjeta' | 'lado';
+}
+
 // Indicador de los tres pasos para recuperar la contraseña: dónde está la persona y cuánto falta.
-export function PasosRecuperacion({ actual }: { actual: 1 | 2 | 3 }) {
+export function PasosRecuperacion({ actual, variante = 'tarjeta' }: PasosRecuperacionProps) {
+  if (variante === 'lado') {
+    return (
+      <ol aria-label="Pasos para recuperar tu contraseña" className="pub-pasos">
+        {PASOS.map((texto, i) => {
+          const numero = i + 1;
+          const hecho = numero < actual;
+          const esActual = numero === actual;
+          return (
+            <li key={texto} aria-current={esActual ? 'step' : undefined} data-estado={hecho ? 'hecho' : esActual ? 'actual' : 'pendiente'}>
+              <span className="pub-paso-num" aria-hidden="true">
+                {hecho ? <Check className="w-5 h-5" /> : numero}
+              </span>
+              <span className="pub-paso-texto">
+                {texto}
+                {hecho && <span className="sr-only"> (hecho)</span>}
+                {esActual && <span className="sr-only"> (paso actual)</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    );
+  }
+
   return (
     <ol aria-label="Pasos para recuperar tu contraseña" className="flex items-start justify-between gap-1">
       {PASOS.map((texto, i) => {

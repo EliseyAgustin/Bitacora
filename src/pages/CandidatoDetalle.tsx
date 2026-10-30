@@ -247,7 +247,7 @@ export function CandidatoDetalle() {
             <button
               type="submit"
               disabled={enviando}
-              className="self-start bg-primary text-on-primary text-sm font-semibold px-6 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
+              className="self-start bg-cta text-on-cta text-sm font-semibold px-6 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
             >
               {enviando ? 'Enviando…' : 'Enviar mensaje'}
             </button>

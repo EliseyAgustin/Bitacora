@@ -173,7 +173,7 @@ export function Tablero() {
             </p>
             <Link
               to={RUTAS.ofertas}
-              className="bg-primary text-on-primary text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all"
+              className="bg-cta text-on-cta text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all"
             >
               Ir a Ofertas
             </Link>

@@ -26,7 +26,7 @@ function iniciales(nombre: string, email: string): string {
 const CAMPO =
   'w-full bg-surface border border-outline-variant rounded-lg px-3 min-h-11 text-base text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all';
 const BOTON_PRIMARIO =
-  'self-start bg-primary text-on-primary text-sm font-semibold px-5 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer';
+  'self-start bg-cta text-on-cta text-sm font-semibold px-5 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer';
 const BOTON_SECUNDARIO =
   'self-start inline-flex items-center gap-2 bg-surface text-on-surface text-sm font-semibold px-5 min-h-11 rounded-lg border border-outline hover:bg-surface-container-low transition-colors disabled:opacity-50 cursor-pointer';
 
@@ -262,7 +262,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
 
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 shrink-0 rounded-full bg-primary text-on-primary flex items-center justify-center text-xl font-bold">
+            <div className="w-16 h-16 shrink-0 rounded-full bg-cta text-on-cta flex items-center justify-center text-xl font-bold">
               {iniciales(nombre, email)}
             </div>
             <div className="min-w-0">

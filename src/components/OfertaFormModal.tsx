@@ -248,7 +248,7 @@ export function OfertaFormModal({ oferta, onClose, onSubmit }: OfertaFormModalPr
             <button
               type="submit"
               disabled={saving}
-              className="bg-primary text-on-primary text-sm font-medium px-6 py-2 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
+              className="bg-cta text-on-cta text-sm font-medium px-6 py-2 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
             >
               {saving ? 'Guardando…' : isEditing ? 'Guardar cambios' : 'Crear oferta'}
             </button>

@@ -133,7 +133,7 @@ export function OnboardingWizard() {
             <button
               type="button"
               onClick={() => irA(RUTAS.ofertas)}
-              className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all cursor-pointer"
+              className="bg-cta text-on-cta text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all cursor-pointer"
             >
               Ver ofertas
             </button>
@@ -279,7 +279,7 @@ export function OnboardingWizard() {
               type="button"
               onClick={continuar}
               disabled={isTransitioning}
-              className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all cursor-pointer disabled:opacity-50"
+              className="bg-cta text-on-cta text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all cursor-pointer disabled:opacity-50"
             >
               Continuar
             </button>
@@ -288,7 +288,7 @@ export function OnboardingWizard() {
               type="button"
               onClick={finish}
               disabled={saving}
-              className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
+              className="bg-cta text-on-cta text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
             >
               {saving ? 'Guardando…' : 'Confirmar y terminar'}
             </button>

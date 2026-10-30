@@ -391,7 +391,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                     <button
                       type="submit"
                       disabled={guardando}
-                      className="px-4 py-1.5 rounded-md bg-primary text-on-primary text-sm font-semibold min-h-11 hover:opacity-90 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
+                      className="px-4 py-1.5 rounded-md bg-cta text-on-cta text-sm font-semibold min-h-11 hover:opacity-90 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
                     >
                       {guardando ? 'Guardando…' : 'Guardar'}
                     </button>

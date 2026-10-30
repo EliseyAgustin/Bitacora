@@ -90,7 +90,7 @@ export function PreguntaPostulacion() {
           type="button"
           onClick={() => confirmar(pregunta)}
           disabled={trabajando}
-          className="min-h-11 px-5 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          className="min-h-11 px-5 rounded-lg bg-cta text-on-cta text-sm font-semibold hover:opacity-90 disabled:opacity-50 cursor-pointer"
         >
           {trabajando ? 'Guardando…' : 'Sí, ya apliqué'}
         </button>

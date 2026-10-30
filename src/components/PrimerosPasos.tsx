@@ -95,7 +95,7 @@ export function PrimerosPasos() {
                 pendiente && 'bg-surface-container-lowest text-on-surface ring-2 ring-primary p-3 -m-1'
               )}
             >
-              <span className="w-6 h-6 rounded-full bg-primary text-on-primary text-xs font-semibold flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-full bg-cta text-on-cta text-xs font-semibold flex items-center justify-center shrink-0">
                 {hecho ? <Check className="w-3.5 h-3.5" aria-label="Hecho" /> : i + 1}
               </span>
               <span>

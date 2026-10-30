@@ -1,22 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f6f7fb;
-  --color-on-background: #12172b;
+  --color-background: #f5f6f4;
+  --color-on-background: #101418;
   --color-surface: #ffffff;
-  --color-surface-dim: #d7dcea;
-  --color-surface-bright: #f6f7fb;
+  --color-surface-dim: #d5dcd5;
+  --color-surface-bright: #f5f6f4;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #eef1f8;
-  --color-surface-container: #e4e9f5;
-  --color-surface-container-high: #dbe1f0;
-  --color-surface-container-highest: #d2d9ea;
-  --color-on-surface: #12172b;
-  --color-on-surface-variant: #4b5468;
-  --color-outline: #6b7386;
-  --color-outline-variant: #d7dcea;
-  --color-primary: #1e4fd8;
+  --color-surface-container-low: #eaefea;
+  --color-surface-container: #e0e7e0;
+  --color-surface-container-high: #d7dfd7;
+  --color-surface-container-highest: #cdd6cd;
+  --color-on-surface: #101418;
+  --color-on-surface-variant: #46504a;
+  --color-outline: #67716a;
+  --color-outline-variant: #d3dbd3;
+  --color-primary: #1b46c9;
   --color-on-primary: #ffffff;
+  /* Botón principal de acción: el azul del Login en claro y su amarillo en oscuro. */
+  --color-cta: #1b46c9;
+  --color-on-cta: #ffffff;
   --color-primary-container: #dee7ff;
   --color-on-primary-container: #0e2e86;
   --color-primary-fixed: #dee7ff;
@@ -69,22 +72,24 @@
  */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-background: #0b0e1a;
-    --color-on-background: #e7eaf6;
-    --color-surface: #10162a;
-    --color-surface-dim: #0b0e1a;
-    --color-surface-bright: #161d33;
-    --color-surface-container-lowest: #0b0e1a;
-    --color-surface-container-low: #161d33;
-    --color-surface-container: #1d253e;
-    --color-surface-container-high: #242d4a;
-    --color-surface-container-highest: #2b3556;
-    --color-on-surface: #e7eaf6;
-    --color-on-surface-variant: #a7afc7;
-    --color-outline: #7d84a0;
-    --color-outline-variant: #2a3350;
+    --color-background: #131417;
+    --color-on-background: #eceee9;
+    --color-surface: #1c1e22;
+    --color-surface-dim: #131417;
+    --color-surface-bright: #23262b;
+    --color-surface-container-lowest: #1c1e22;
+    --color-surface-container-low: #23262b;
+    --color-surface-container: #2a2d33;
+    --color-surface-container-high: #32363d;
+    --color-surface-container-highest: #3a3e46;
+    --color-on-surface: #eceee9;
+    --color-on-surface-variant: #b3b9b4;
+    --color-outline: #8a918c;
+    --color-outline-variant: #363a42;
     --color-primary: #7da2ff;
     --color-on-primary: #0b1b4d;
+    --color-cta: #f0ff1c;
+    --color-on-cta: #0e1330;
     --color-primary-container: #1e2f63;
     --color-on-primary-container: #c7d5ff;
     --color-primary-fixed: #1e2f63;
@@ -115,22 +120,24 @@
 }
 
 :root[data-theme="dark"] {
-  --color-background: #0b0e1a;
-  --color-on-background: #e7eaf6;
-  --color-surface: #10162a;
-  --color-surface-dim: #0b0e1a;
-  --color-surface-bright: #161d33;
-  --color-surface-container-lowest: #0b0e1a;
-  --color-surface-container-low: #161d33;
-  --color-surface-container: #1d253e;
-  --color-surface-container-high: #242d4a;
-  --color-surface-container-highest: #2b3556;
-  --color-on-surface: #e7eaf6;
-  --color-on-surface-variant: #a7afc7;
-  --color-outline: #7d84a0;
-  --color-outline-variant: #2a3350;
+  --color-background: #131417;
+  --color-on-background: #eceee9;
+  --color-surface: #1c1e22;
+  --color-surface-dim: #131417;
+  --color-surface-bright: #23262b;
+  --color-surface-container-lowest: #1c1e22;
+  --color-surface-container-low: #23262b;
+  --color-surface-container: #2a2d33;
+  --color-surface-container-high: #32363d;
+  --color-surface-container-highest: #3a3e46;
+  --color-on-surface: #eceee9;
+  --color-on-surface-variant: #b3b9b4;
+  --color-outline: #8a918c;
+  --color-outline-variant: #363a42;
   --color-primary: #7da2ff;
   --color-on-primary: #0b1b4d;
+  --color-cta: #f0ff1c;
+  --color-on-cta: #0e1330;
   --color-primary-container: #1e2f63;
   --color-on-primary-container: #c7d5ff;
   --color-primary-fixed: #1e2f63;
@@ -353,4 +360,14 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*
+ * Capítulo de color de cada pantalla: el mismo campo que usa el Login, de borde a borde. Los pies de color se extienden con una
+ * sombra sin desenfoque y se recortan arriba y abajo, así llegan al borde de la ventana aunque la pantalla tenga márgenes.
+ */
+.hero-campo {
+  position: relative;
+  box-shadow: 0 0 0 100vmax var(--campo);
+  clip-path: inset(0 -100vmax);
 }

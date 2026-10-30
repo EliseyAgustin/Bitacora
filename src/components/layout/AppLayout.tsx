@@ -27,7 +27,7 @@ export function AppLayout() {
     <div className="flex h-screen overflow-hidden bg-background">
       <a
         href="#contenido"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-on-primary"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-lg focus:bg-cta focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-on-cta"
       >
         Saltar al contenido
       </a>

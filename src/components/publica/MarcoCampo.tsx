@@ -11,14 +11,17 @@ interface MarcoCampoProps {
   campo?: CampoColor;
   // Tarjeta más ancha para las pantallas con más contenido (configuración inicial).
   amplio?: boolean;
+  // Frase grande al costado de la tarjeta (escritorio) o encima (celular), y lo que va debajo de ella.
+  frase?: string;
+  lado?: ReactNode;
   children: ReactNode;
 }
 
 // Marco de las pantallas con una tarjeta (recuperar contraseña, nueva contraseña, configuración inicial y "no encontrada"):
 // un campo de color a pantalla completa, la marca arriba y la mascota asomando por detrás de la tarjeta.
-export function MarcoCampo({ campo = 1, amplio = false, children }: MarcoCampoProps) {
+export function MarcoCampo({ campo = 1, amplio = false, frase, lado, children }: MarcoCampoProps) {
   return (
-    <div className="pub pub-marco" data-campo={campo}>
+    <div className="pub pub-marco" data-campo={campo} data-dividido={frase ? '' : undefined}>
       <header className="pub-top">
         <span className="pub-marca">
           <img src={logoIcono} alt="" />
@@ -27,10 +30,18 @@ export function MarcoCampo({ campo = 1, amplio = false, children }: MarcoCampoPr
         <ThemeToggle />
       </header>
 
-      <main className="pub-tarjeta-wrap" data-ancho={amplio ? 'amplio' : undefined}>
-        <Topo className="pub-topo-tarjeta" />
-        <div className="pub-tarjeta">{children}</div>
-      </main>
+      <div className="pub-marco-cuerpo">
+        {frase && (
+          <div className="pub-lado">
+            <p className="pub-frase">{frase}</p>
+            {lado}
+          </div>
+        )}
+        <main className="pub-tarjeta-wrap" data-ancho={amplio ? 'amplio' : undefined}>
+          <Topo className="pub-topo-tarjeta" />
+          <div className="pub-tarjeta">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }

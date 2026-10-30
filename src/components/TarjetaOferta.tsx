@@ -136,7 +136,7 @@ export function TarjetaOferta({
             type="button"
             onClick={onPostularme}
             disabled={postulando}
-            className="inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 h-9 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-cta text-on-cta px-4 h-9 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
           >
             <Send className="w-4 h-4" aria-hidden="true" />
             {postulando ? 'Postulando…' : 'Postularme'}

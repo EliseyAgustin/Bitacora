@@ -4,7 +4,6 @@ import { KeyRound, MailCheck } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { EncabezadoAuth } from '@/components/auth/EncabezadoAuth';
-import { PasosRecuperacion } from '@/components/auth/PasosRecuperacion';
 import type { ErrorAuthTraducido } from '@/lib/authErrores';
 import { validarEmail } from '@/lib/validacionAuth';
 import { scrollFieldIntoView } from '@/lib/utils';
@@ -58,8 +57,11 @@ export function RecuperarPassword() {
   }
 
   return (
-    <AuthLayout compacto>
-      <PasosRecuperacion actual={enviado ? 2 : 1} />
+    <AuthLayout
+      compacto
+      pasos={enviado ? 2 : 1}
+      frase={enviado ? 'Revisá tu correo: ya salió el enlace.' : 'Te mandamos un enlace y volvés a entrar.'}
+    >
 
       {!enviado ? (
         <>
@@ -102,7 +104,7 @@ export function RecuperarPassword() {
             <button
               type="submit"
               disabled={enviando}
-              className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               {enviando ? 'Enviando…' : 'Enviar enlace'}
             </button>
@@ -139,7 +141,7 @@ export function RecuperarPassword() {
               type="button"
               onClick={() => void enviar()}
               disabled={enviando || espera > 0}
-              className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               {enviando ? 'Enviando…' : espera > 0 ? `Podés pedir otro enlace en ${espera} s` : 'Reenviar enlace'}
             </button>

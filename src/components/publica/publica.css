@@ -815,3 +815,123 @@
     padding: 24px 20px;
   }
 }
+
+/* Pantalla dividida (recuperar contraseña, nueva contraseña, no encontrada): frase grande y pasos a un lado, la tarjeta al otro. */
+.pub-marco {
+  --campo-fondo: var(--color-capitulo-1);
+  --campo-tinta: var(--color-capitulo-1-tinta);
+}
+.pub-marco[data-campo="2"] {
+  --campo-fondo: var(--color-capitulo-2);
+  --campo-tinta: var(--color-capitulo-2-tinta);
+}
+.pub-marco[data-campo="3"] {
+  --campo-fondo: var(--color-capitulo-3);
+  --campo-tinta: var(--color-capitulo-3-tinta);
+}
+.pub-marco[data-campo="4"] {
+  --campo-fondo: var(--color-capitulo-4);
+  --campo-tinta: var(--color-capitulo-4-tinta);
+}
+.pub-marco-cuerpo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pub-lado {
+  width: 100%;
+  max-width: 28rem;
+  margin-bottom: 8px;
+}
+.pub-frase {
+  font-size: clamp(2rem, 1.2rem + 3vw, 2.75rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+.pub-pasos {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pub-pasos li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+.pub-paso-num {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 2px solid var(--campo-tinta);
+}
+.pub-pasos li[data-estado="actual"] {
+  font-weight: 700;
+}
+.pub-pasos li[data-estado="actual"] .pub-paso-num,
+.pub-pasos li[data-estado="hecho"] .pub-paso-num {
+  background: var(--campo-tinta);
+  color: var(--campo-fondo);
+}
+@media (min-width: 1024px) {
+  .pub-marco[data-dividido] .pub-marco-cuerpo {
+    max-width: 74rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 28rem);
+    column-gap: 96px;
+    align-items: center;
+  }
+  .pub-marco[data-dividido] .pub-lado {
+    max-width: none;
+    margin-bottom: 0;
+  }
+  .pub-marco[data-dividido] .pub-frase {
+    font-size: clamp(3rem, 1rem + 3.6vw, 4.5rem);
+    max-width: 12ch;
+  }
+  .pub-marco[data-dividido] .pub-pasos {
+    margin-top: 48px;
+  }
+  .pub-marco[data-dividido] .pub-pasos li {
+    font-size: 1.375rem;
+  }
+}
+
+/* Login, Registro y pantallas de acceso conservan su tarjeta azul noche en el modo oscuro, aunque la app use grafito. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pub {
+    --color-surface: #10162a;
+    --color-surface-container-lowest: #0b0e1a;
+    --color-surface-container-low: #161d33;
+    --color-surface-container: #1d253e;
+    --color-surface-container-high: #242d4a;
+    --color-surface-container-highest: #2b3556;
+    --color-outline-variant: #2a3350;
+    --color-on-surface: #e7eaf6;
+    --color-on-surface-variant: #a7afc7;
+    --color-outline: #7d84a0;
+  }
+}
+:root[data-theme="dark"] .pub {
+  --color-surface: #10162a;
+  --color-surface-container-lowest: #0b0e1a;
+  --color-surface-container-low: #161d33;
+  --color-surface-container: #1d253e;
+  --color-surface-container-high: #242d4a;
+  --color-surface-container-highest: #2b3556;
+  --color-outline-variant: #2a3350;
+  --color-on-surface: #e7eaf6;
+  --color-on-surface-variant: #a7afc7;
+  --color-outline: #7d84a0;
+}

@@ -214,7 +214,7 @@ export function OfertaDetallePanel({
             onClick={alAbrirEnlace}
             target="_blank"
             rel="noopener noreferrer"
-            className="min-h-11 md:min-h-12 bg-primary text-on-primary text-base font-semibold px-5 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
+            className="min-h-11 md:min-h-12 bg-cta text-on-cta text-base font-semibold px-5 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
           >
             <ExternalLink className="w-4.5 h-4.5" aria-hidden="true" />
             Ver oferta y postularme

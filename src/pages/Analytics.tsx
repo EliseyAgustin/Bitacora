@@ -23,19 +23,19 @@ import { ESTADO_POSTULACION_LABEL } from '@/services/postulaciones';
 
 const CHART_COLORS = {
   light: {
-    grid: '#e4e9f5',
-    axisText: '#4b5468',
-    tooltipBg: '#12172b',
+    grid: '#d9e0d9',
+    axisText: '#46504a',
+    tooltipBg: '#101418',
     tooltipText: '#ffffff',
     primary: '#1e4fd8',
     series: { mail: '#1e4fd8', llamada: '#0d9488', entrevista: '#d97706', nota: '#7c3aed' },
     bandas: { alto: '#16a34a', medio: '#d97706', bajo: '#dc2626', sinScore: '#9aa3b8' },
   },
   dark: {
-    grid: '#2a3350',
-    axisText: '#a7afc7',
-    tooltipBg: '#1d253e',
-    tooltipText: '#e7eaf6',
+    grid: '#363a42',
+    axisText: '#b3b9b4',
+    tooltipBg: '#2a2d33',
+    tooltipText: '#eceee9',
     primary: '#7da2ff',
     series: { mail: '#7da2ff', llamada: '#5eead4', entrevista: '#fbbf24', nota: '#c4b5fd' },
     bandas: { alto: '#4ade80', medio: '#fbbf24', bajo: '#f87171', sinScore: '#6b7594' },

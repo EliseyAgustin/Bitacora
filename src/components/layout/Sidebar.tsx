@@ -10,15 +10,22 @@ import { useMensajesNoLeidos } from '@/hooks/useMensajesNoLeidos';
 import { CuentaModal } from '@/components/CuentaModal';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
 
-const NAV_CANDIDATO = [
-  { icon: Briefcase, label: 'Ofertas', path: RUTAS.ofertas },
-  { icon: LayoutDashboard, label: 'Mis postulaciones', path: RUTAS.postulaciones },
-  { icon: BarChart2, label: 'Mi progreso', path: RUTAS.progreso },
-  { icon: Settings, label: 'Mi perfil de búsqueda', path: RUTAS.perfil },
-  { icon: Mail, label: 'Mensajes', path: RUTAS.mensajes },
-];
+// Cada pantalla se marca en el menú con el color de su capítulo (el mismo de la banda con que abre).
+const CAMPO_ACTIVO = {
+  1: 'bg-capitulo-1 text-capitulo-1-tinta font-bold',
+  2: 'bg-capitulo-2 text-capitulo-2-tinta font-bold',
+  3: 'bg-capitulo-3 text-capitulo-3-tinta font-bold',
+} as const;
 
-const NAV_ADMINISTRADOR = [{ icon: Users, label: 'Candidatos', path: RUTAS.candidatos }];
+const NAV_CANDIDATO = [
+  { icon: Briefcase, label: 'Ofertas', path: RUTAS.ofertas, campo: 1 },
+  { icon: LayoutDashboard, label: 'Mis postulaciones', path: RUTAS.postulaciones, campo: 2 },
+  { icon: BarChart2, label: 'Mi progreso', path: RUTAS.progreso, campo: 3 },
+  { icon: Settings, label: 'Mi perfil de búsqueda', path: RUTAS.perfil, campo: 1 },
+  { icon: Mail, label: 'Mensajes', path: RUTAS.mensajes, campo: 2 },
+] as const;
+
+const NAV_ADMINISTRADOR = [{ icon: Users, label: 'Candidatos', path: RUTAS.candidatos, campo: 3 }] as const;
 
 interface SidebarProps {
   open: boolean;
@@ -57,7 +64,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed h-screen w-60 left-0 top-0 bg-background border-r border-outline-variant flex flex-col py-md px-sm z-50 transition-transform duration-200 md:translate-x-0',
+          'fixed h-screen w-60 left-0 top-0 bg-surface text-on-surface border-r border-outline-variant flex flex-col py-md px-sm z-50 transition-transform duration-200 md:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >
@@ -72,7 +79,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               type="button"
               onClick={onClose}
               aria-label="Cerrar menú"
-              className="md:hidden p-2.5 -mr-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
+              className="md:hidden w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -90,10 +97,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               to={item.path}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-3 px-3 min-h-11 rounded-lg text-sm font-medium transition-colors duration-150",
-                  isActive
-                    ? "bg-primary-container text-on-primary-container font-semibold"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
+                  "flex items-center gap-3 px-3 min-h-11 rounded-lg text-[0.9375rem] font-medium transition-colors duration-150",
+                  isActive ? CAMPO_ACTIVO[item.campo] : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
                 )
               }
             >
@@ -103,13 +108,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <span
                   role="img"
                   aria-label="Hay un aviso de actividad"
-                  className="ml-auto w-2.5 h-2.5 rounded-full bg-etapa-en-proceso"
+                  className="ml-auto w-2.5 h-2.5 rounded-full bg-capitulo-2"
                 />
               )}
               {item.path === RUTAS.mensajes && noLeidos > 0 && (
                 <span
                   aria-label={noLeidos === 1 ? '1 mensaje sin leer' : `${noLeidos} mensajes sin leer`}
-                  className="num ml-auto bg-primary text-on-primary text-xs font-semibold min-w-6 h-6 px-1.5 rounded-full flex items-center justify-center"
+                  className="num ml-auto bg-capitulo-2 text-capitulo-2-tinta text-sm font-bold min-w-6 h-6 px-1.5 rounded-full flex items-center justify-center"
                 >
                   {noLeidos}
                 </span>

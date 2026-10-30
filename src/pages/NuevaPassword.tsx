@@ -7,7 +7,6 @@ import { CampoPassword } from '@/components/auth/CampoPassword';
 import { ChecklistPassword } from '@/components/auth/ChecklistPassword';
 import { EncabezadoAuth } from '@/components/auth/EncabezadoAuth';
 import { MedidorPassword } from '@/components/auth/MedidorPassword';
-import { PasosRecuperacion } from '@/components/auth/PasosRecuperacion';
 import { traducirErrorAuth, type ErrorAuthTraducido } from '@/lib/authErrores';
 import { RUTAS } from '@/lib/rutas';
 import { validarConfirmacion, validarPasswordNueva } from '@/lib/validacionAuth';
@@ -61,15 +60,14 @@ export function NuevaPassword() {
   // Sin sesión de recuperación no hay a quién cambiarle la contraseña: el enlace venció, ya se usó o se abrió a mano.
   if (!session || enlaceConError()) {
     return (
-      <AuthLayout compacto>
-        <PasosRecuperacion actual={3} />
+      <AuthLayout compacto pasos={3} frase="Este enlace ya no sirve, pero se arregla rápido.">
         <EncabezadoAuth icono={TriangleAlert} titulo="No pudimos validar el enlace" tono="alerta">
           <p role="alert">{traducirErrorAuth({ code: 'otp_expired' }, 'nueva-password').mensaje}</p>
         </EncabezadoAuth>
         <div className="flex flex-col gap-3">
           <Link
             to="/recuperar"
-            className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center"
+            className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center"
           >
             Pedir un enlace nuevo
           </Link>
@@ -83,14 +81,14 @@ export function NuevaPassword() {
 
   if (listo) {
     return (
-      <AuthLayout compacto>
+      <AuthLayout compacto campo={3} frase="Listo: tu cuenta está otra vez a tu nombre.">
         <EncabezadoAuth icono={CheckCircle2} titulo="Tu contraseña quedó actualizada" tono="exito">
           <p role="status">Listo, ya podés usar tu nueva contraseña la próxima vez que inicies sesión.</p>
         </EncabezadoAuth>
         <button
           type="button"
           onClick={() => navigate(RUTAS.postulaciones, { replace: true })}
-          className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
+          className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
           Continuar
         </button>
@@ -99,8 +97,7 @@ export function NuevaPassword() {
   }
 
   return (
-    <AuthLayout compacto>
-      <PasosRecuperacion actual={3} />
+    <AuthLayout compacto pasos={3} frase="Último paso: elegí una clave que solo sepas vos.">
       <EncabezadoAuth icono={LockKeyhole} titulo="Elegí tu contraseña nueva">
         <p>Escribila dos veces para asegurarte de que no hay errores.</p>
       </EncabezadoAuth>
@@ -140,7 +137,7 @@ export function NuevaPassword() {
         <button
           type="submit"
           disabled={guardando}
-          className="h-11 bg-primary text-on-primary text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+          className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
         >
           {guardando ? 'Guardando…' : 'Guardar contraseña nueva'}
         </button>

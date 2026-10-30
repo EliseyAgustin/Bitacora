@@ -85,7 +85,7 @@ export function TecnologiasEditor({
                 className={cn(
                   'px-3 py-1.5 rounded-full text-sm font-medium border transition-colors cursor-pointer',
                   active
-                    ? 'bg-primary text-on-primary border-primary'
+                    ? 'bg-cta text-on-cta border-primary'
                     : 'bg-surface text-on-surface-variant border-outline-variant hover:border-primary'
                 )}
               >
