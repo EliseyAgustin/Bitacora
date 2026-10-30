@@ -176,12 +176,12 @@ export function Analytics() {
   }, []);
 
   const tooltipProps = {
-    contentStyle: { backgroundColor: colors.tooltipBg, borderRadius: '8px', color: colors.tooltipText, border: 'none' },
+    contentStyle: { backgroundColor: colors.tooltipBg, borderRadius: '8px', color: colors.tooltipText, border: 'none', fontSize: 14 },
     itemStyle: { color: colors.tooltipText },
     labelStyle: { color: colors.tooltipText },
     cursor: { fill: 'rgba(128,128,128,0.1)' },
   };
-  const axisTick = { fontSize: 12, fill: colors.axisText };
+  const axisTick = { fontSize: 14, fill: colors.axisText };
 
   return (
     <div className="flex-1 overflow-y-auto p-margin h-full">
@@ -220,7 +220,12 @@ function Contenido({
 }) {
   const totalPostulaciones = Object.values(m.postulaciones.porEstado).reduce((a, b) => a + b, 0);
 
-  const embudoData = m.embudo.etapas.map((e) => ({ name: ESTADO_POSTULACION_LABEL[e.estado], value: e.alcanzadas }));
+  // Cada barra lleva el color de su etapa, el mismo del tablero: se reconoce a simple vista.
+  const embudoData = m.embudo.etapas.map((e) => ({
+    name: ESTADO_POSTULACION_LABEL[e.estado],
+    value: e.alcanzadas,
+    color: `var(--color-etapa-${e.estado.replace('_', '-')})`,
+  }));
   const bandas = m.score.bandas;
   const bandasData = bandas && [
     { name: 'Alto', value: bandas.alto, color: colors.bandas.alto },
@@ -339,10 +344,13 @@ function Contenido({
                   <BarChart data={embudoData} layout="vertical" margin={{ top: 5, right: 40, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={colors.grid} />
                     <XAxis type="number" allowDecimals={false} tick={axisTick} axisLine={false} tickLine={false} />
-                    <YAxis dataKey="name" type="category" tick={axisTick} axisLine={false} tickLine={false} width={90} />
+                    <YAxis dataKey="name" type="category" tick={axisTick} axisLine={false} tickLine={false} width={100} />
                     <Tooltip {...tooltipProps} />
                     <Bar dataKey="value" name="Postulaciones" fill={colors.primary} radius={[0, 4, 4, 0]} barSize={24}>
-                      <LabelList dataKey="value" position="right" fill={colors.axisText} fontSize={12} />
+                      {embudoData.map((e) => (
+                        <Cell key={e.name} fill={e.color} />
+                      ))}
+                      <LabelList dataKey="value" position="right" fill={colors.axisText} fontSize={14} fontWeight={600} />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
@@ -368,7 +376,7 @@ function Contenido({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bandasData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={colors.grid} />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: colors.axisText }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 13, fill: colors.axisText }} axisLine={false} tickLine={false} />
                 <YAxis allowDecimals={false} tick={axisTick} axisLine={false} tickLine={false} />
                 <Tooltip {...tooltipProps} />
                 <Bar dataKey="value" name="Ofertas" radius={[4, 4, 0, 0]} barSize={32}>
@@ -395,7 +403,7 @@ function Contenido({
                 <XAxis dataKey="semana" tick={axisTick} axisLine={false} tickLine={false} />
                 <YAxis allowDecimals={false} tick={axisTick} axisLine={false} tickLine={false} />
                 <Tooltip {...tooltipProps} labelFormatter={(semana) => `Semana desde ${semana}`} />
-                <Legend wrapperStyle={{ fontSize: 12, color: colors.axisText }} />
+                <Legend wrapperStyle={{ fontSize: 14, color: colors.axisText }} />
                 <Bar dataKey="Mail" stackId="a" fill={colors.series.mail} />
                 <Bar dataKey="Llamada" stackId="a" fill={colors.series.llamada} />
                 <Bar dataKey="Entrevista" stackId="a" fill={colors.series.entrevista} />
@@ -412,7 +420,7 @@ function Contenido({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={m.fuentes} margin={{ top: 5, right: 10, left: -20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={colors.grid} />
-                <XAxis dataKey="fuente" tick={{ fontSize: 11, fill: colors.axisText }} axisLine={false} tickLine={false} angle={-30} textAnchor="end" />
+                <XAxis dataKey="fuente" tick={{ fontSize: 13, fill: colors.axisText }} axisLine={false} tickLine={false} angle={-30} textAnchor="end" />
                 <YAxis allowDecimals={false} tick={axisTick} axisLine={false} tickLine={false} />
                 <Tooltip {...tooltipProps} />
                 <Bar dataKey="cantidad" name="Ofertas" fill={colors.primary} radius={[4, 4, 0, 0]} barSize={32} />
