@@ -908,9 +908,10 @@
   }
 }
 
-/* Login, Registro y pantallas de acceso conservan su tarjeta azul noche en el modo oscuro, aunque la app use grafito. */
+/* Login y Registro conservan su tarjeta azul noche en el modo oscuro. Las pantallas con tarjeta sobre un campo (recuperar contraseña,
+   configuración inicial, no encontrada) usan las superficies de la app: blanca en claro, grafito en oscuro. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .pub {
+  :root:not([data-theme="light"]) .pub:not(.pub-marco) {
     --color-surface: #10162a;
     --color-surface-container-lowest: #0b0e1a;
     --color-surface-container-low: #161d33;
@@ -923,7 +924,7 @@
     --color-outline: #7d84a0;
   }
 }
-:root[data-theme="dark"] .pub {
+:root[data-theme="dark"] .pub:not(.pub-marco) {
   --color-surface: #10162a;
   --color-surface-container-lowest: #0b0e1a;
   --color-surface-container-low: #161d33;

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 type Tono = 'primario' | 'exito' | 'alerta';
 
 const TONOS: Record<Tono, string> = {
-  primario: 'bg-primary-container text-on-primary-container',
+  primario: 'bg-capitulo-3 text-capitulo-3-tinta',
   exito: 'bg-success/15 text-success',
   alerta: 'bg-error-container text-on-error-container',
 };
