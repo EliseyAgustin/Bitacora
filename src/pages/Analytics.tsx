@@ -11,10 +11,13 @@ import {
   Legend,
   LabelList,
 } from 'recharts';
-import { Activity, BellRing, Briefcase, Gauge, Hourglass, Inbox, Target, type LucideIcon } from 'lucide-react';
+import { Activity, BellRing, Briefcase, Gauge, Hourglass, Info, Inbox, Minus, Target, TrendingDown, TrendingUp, type LucideIcon } from 'lucide-react';
+import { AvisoActividad } from '@/components/AvisoActividad';
 import { PageHeader } from '@/components/PageHeader';
 import { mensajeDeError } from '@/lib/errores';
 import { useTheme } from '@/hooks/useTheme';
+import { calcularTendencias, tendenciaDe, textoDeTendencia, type Tendencia } from '@/lib/tendencias';
+import { cn } from '@/lib/utils';
 import { calcularMetricas, cargarDatosMetricas } from '@/services/metricas';
 import { ESTADO_POSTULACION_LABEL } from '@/services/postulaciones';
 
@@ -41,15 +44,62 @@ const CHART_COLORS = {
 
 const porcentaje = (valor: number | null) => (valor === null ? '—' : `${Math.round(valor * 100)}%`);
 
-function KpiCard({ label, icon: Icon, value, detail }: { label: string; icon: LucideIcon; value: string; detail: string }) {
+// Más es mejor en todas las tarjetas con tendencia: subir va en verde y bajar en un tono cálido. El color nunca va solo: lleva flecha y texto.
+const TONO_TENDENCIA = {
+  sube: { clase: 'text-etapa-oferta-tinta', Icono: TrendingUp },
+  baja: { clase: 'text-etapa-en-proceso-tinta', Icono: TrendingDown },
+  igual: { clase: 'text-on-surface-variant', Icono: Minus },
+} as const;
+
+function KpiCard({
+  id,
+  label,
+  ayuda,
+  icon: Icon,
+  value,
+  detail,
+  tendencia,
+}: {
+  id: string;
+  label: string;
+  ayuda: string;
+  icon: LucideIcon;
+  value: string;
+  detail: string;
+  tendencia?: Tendencia | null;
+}) {
+  const [abierta, setAbierta] = useState(false);
+  const tono = tendencia ? TONO_TENDENCIA[tendencia.sentido] : null;
+
   return (
-    <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant hover:border-primary transition-colors shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">{label}</span>
-        <Icon className="w-5 h-5 text-primary" />
+    <div className="entrada bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm flex flex-col">
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-base font-semibold text-on-surface leading-snug">{label}</h3>
+        <button
+          type="button"
+          onClick={() => setAbierta((v) => !v)}
+          aria-expanded={abierta}
+          aria-controls={`ayuda-${id}`}
+          aria-label={`Qué mide «${label}»`}
+          className="shrink-0 -mt-2 -mr-2 w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low cursor-pointer"
+        >
+          <Info className="w-5 h-5" aria-hidden="true" />
+        </button>
       </div>
-      <div className="text-2xl font-semibold text-on-surface">{value}</div>
-      <p className="text-[11px] text-on-surface-variant mt-1">{detail}</p>
+      <p id={`ayuda-${id}`} hidden={!abierta} className="mb-2 rounded-lg bg-surface-container-low p-3 text-sm text-on-surface">
+        {ayuda}
+      </p>
+      <div className="flex items-center gap-2 mt-1">
+        <Icon className="w-6 h-6 text-primary shrink-0" aria-hidden="true" />
+        <span className="num text-4xl font-bold text-on-surface leading-none">{value}</span>
+      </div>
+      <p className="text-sm text-on-surface-variant mt-2">{detail}</p>
+      {tendencia && tono && (
+        <p className={cn('mt-2 flex items-center gap-1.5 text-sm font-semibold', tono.clase)}>
+          <tono.Icono className="w-4 h-4 shrink-0" aria-hidden="true" />
+          {textoDeTendencia(tendencia)}
+        </p>
+      )}
     </div>
   );
 }
@@ -77,7 +127,7 @@ function ChartCard({
         {badge && (
           <span
             title={badge.title}
-            className="shrink-0 bg-tertiary-container text-on-tertiary-container text-[11px] font-semibold px-2 py-1 rounded-full cursor-help"
+            className="shrink-0 bg-tertiary-container text-on-tertiary-container text-xs font-semibold px-2.5 py-1 rounded-full cursor-help"
           >
             {badge.text}
           </span>
@@ -103,15 +153,18 @@ export function Analytics() {
   const { theme } = useTheme();
   const colors = CHART_COLORS[theme];
   const [metricas, setMetricas] = useState<Metricas | null>(null);
+  const [tendencias, setTendencias] = useState<ReturnType<typeof calcularTendencias> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [advertencias, setAdvertencias] = useState<string[]>([]);
 
   useEffect(() => {
     let cancelado = false;
     cargarDatosMetricas()
-      .then(({ datos, advertencias }) => {
+      .then(({ datos, tendencias, advertencias }) => {
         if (cancelado) return;
-        setMetricas(calcularMetricas(datos, new Date()));
+        const ahora = new Date();
+        setMetricas(calcularMetricas(datos, ahora));
+        setTendencias(calcularTendencias(tendencias, ahora));
         setAdvertencias(advertencias);
       })
       .catch((err) => {
@@ -133,7 +186,8 @@ export function Analytics() {
   return (
     <div className="flex-1 overflow-y-auto p-margin h-full">
       <div className="max-w-7xl mx-auto space-y-6">
-        <PageHeader title="Mi progreso" help="Cómo te está yendo en tu búsqueda: ofertas, postulaciones y respuestas." />
+        <PageHeader title="Mi progreso" help="Cómo te está yendo en tu búsqueda: ofertas, postulaciones y respuestas. Tocá la «i» de cada tarjeta para ver qué mide." />
+        <AvisoActividad donde="progreso" />
 
         {error && <div className="p-4 bg-error-container text-on-error-container rounded-lg text-sm">{error}</div>}
         {advertencias.map((advertencia) => (
@@ -145,7 +199,7 @@ export function Analytics() {
           <div className="text-center text-on-surface-variant text-sm py-16">Calculando métricas…</div>
         )}
 
-        {metricas && <Contenido metricas={metricas} colors={colors} tooltipProps={tooltipProps} axisTick={axisTick} />}
+        {metricas && <Contenido metricas={metricas} tendencias={tendencias} colors={colors} tooltipProps={tooltipProps} axisTick={axisTick} />}
       </div>
     </div>
   );
@@ -153,17 +207,18 @@ export function Analytics() {
 
 function Contenido({
   metricas: m,
+  tendencias,
   colors,
   tooltipProps,
   axisTick,
 }: {
   metricas: Metricas;
+  tendencias: ReturnType<typeof calcularTendencias> | null;
   colors: (typeof CHART_COLORS)['light'];
   tooltipProps: object;
   axisTick: object;
 }) {
   const totalPostulaciones = Object.values(m.postulaciones.porEstado).reduce((a, b) => a + b, 0);
-  const variacionOfertas = m.ofertas.ultimos7 - m.ofertas.previos7;
 
   const embudoData = m.embudo.etapas.map((e) => ({ name: ESTADO_POSTULACION_LABEL[e.estado], value: e.alcanzadas }));
   const bandas = m.score.bandas;
@@ -186,13 +241,18 @@ function Contenido({
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
-          label="Postulaciones activas"
+          id="en-curso"
+          label="Postulaciones en curso"
+          ayuda="Las que siguen abiertas: todas menos las que terminaron en oferta o rechazo. La tendencia cuenta las postulaciones nuevas de esta semana contra la anterior."
           icon={Briefcase}
           value={String(m.postulaciones.activas)}
           detail={`de ${totalPostulaciones} postulaciones en total`}
+          tendencia={tendencias?.enCurso}
         />
         <KpiCard
-          label="Tasa de respuesta"
+          id="respuestas"
+          label="Postulaciones con respuesta"
+          ayuda="De las que enviaste, cuántas ya tuvieron respuesta, incluidos los rechazos. La tendencia cuenta las respuestas nuevas de esta semana, según el historial de estados."
           icon={Target}
           value={porcentaje(m.tasaRespuesta.tasa)}
           detail={
@@ -200,15 +260,21 @@ function Contenido({
               ? 'Todavía no aplicaste a ninguna'
               : `${m.tasaRespuesta.respondidas} de ${m.tasaRespuesta.aplicadas} postulaciones ya enviadas`
           }
+          tendencia={tendencias?.respuestas}
         />
         <KpiCard
-          label="Ofertas cargadas"
+          id="ofertas"
+          label="Ofertas guardadas"
+          ayuda="Todas las ofertas que cargaste o importaste. La tendencia compara los últimos 7 días con los 7 anteriores."
           icon={Inbox}
           value={String(m.ofertas.total)}
-          detail={`${m.ofertas.ultimos7} en los últimos 7 días (${variacionOfertas >= 0 ? '+' : ''}${variacionOfertas} vs. los 7 previos)`}
+          detail={`${m.ofertas.ultimos7} en los últimos 7 días`}
+          tendencia={tendenciaDe(m.ofertas.ultimos7, m.ofertas.previos7)}
         />
         <KpiCard
-          label="Puntaje promedio"
+          id="encaje"
+          label="Qué tanto encajan tus ofertas"
+          ayuda="El promedio de los puntajes, contra el máximo que podría sumar una oferta con tu perfil. La tendencia compara las ofertas de esta semana con las anteriores."
           icon={Gauge}
           value={m.score.promedio === null ? '—' : m.score.promedio.toFixed(1)}
           detail={
@@ -216,29 +282,37 @@ function Contenido({
               ? 'Sin criterios activos para comparar'
               : `${porcentaje(m.score.promedioPct)} del máximo posible (${m.score.maximo} puntos)`
           }
+          tendencia={tendencias?.encaje}
         />
         <KpiCard
-          label="Actividad reciente"
+          id="movimiento"
+          label="Postulaciones con movimiento"
+          ayuda="Cuántas de tus postulaciones abiertas tuvieron una novedad esta semana: un mail, una llamada, una entrevista o una nota. La tendencia las compara con la semana anterior."
           icon={Activity}
           value={porcentaje(m.actividad.porcentaje)}
           detail={
             m.actividad.activas === 0
               ? 'No hay postulaciones activas'
-              : `${m.actividad.conActividad} de ${m.actividad.activas} activas con interacción en 7 días`
+              : `${m.actividad.conActividad} de ${m.actividad.activas} activas con novedad en 7 días`
           }
+          tendencia={tendencias?.movimiento}
         />
         <KpiCard
-          label="Aplicado → 1ª entrevista"
+          id="entrevista"
+          label="Días hasta tu primera entrevista"
+          ayuda="Cuánto tarda, en promedio, una entrevista desde que te postulás. Se calcula solo donde hay fecha de postulación y una entrevista registrada."
           icon={Hourglass}
           value={m.diasHastaEntrevista.promedio === null ? '—' : `${m.diasHastaEntrevista.promedio.toFixed(1)} días`}
           detail={
             m.diasHastaEntrevista.n === 0
               ? 'Sin datos: requiere fecha de postulación y una interacción de tipo entrevista'
-              : `Promedio sobre ${m.diasHastaEntrevista.n} postulación${m.diasHastaEntrevista.n === 1 ? '' : 'es'}`
+              : `Sobre ${m.diasHastaEntrevista.n} postulación${m.diasHastaEntrevista.n === 1 ? '' : 'es'}`
           }
         />
         <KpiCard
-          label="Recordatorios activos"
+          id="sin-novedades"
+          label="Postulaciones sin novedades"
+          ayuda="Las que llevan más días sin movimiento que el límite que configuraste en Mi perfil de búsqueda. Es solo un aviso: no se borra nada."
           icon={BellRing}
           value={String(m.recordatorios.activos)}
           detail={`${m.recordatorios.resueltos} resuelto${m.recordatorios.resueltos === 1 ? '' : 's'}`}
@@ -273,7 +347,7 @@ function Contenido({
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <p className="text-xs text-on-surface-variant mt-2">
+              <p className="text-sm text-on-surface-variant mt-2">
                 Conversión desde la etapa anterior:{' '}
                 {m.embudo.etapas
                   .slice(1)

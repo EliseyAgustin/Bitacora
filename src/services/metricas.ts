@@ -1,4 +1,5 @@
 import { conContexto, mensajeDeError } from '@/lib/errores';
+import type { DatosTendencias } from '@/lib/tendencias';
 import { coincideFuente, FUENTES_OFERTA } from '@/lib/fuentes';
 import { listarCriterios } from '@/services/criteriosScoring';
 import { listarTodasLasInteracciones } from '@/services/interacciones';
@@ -227,7 +228,7 @@ export function actividadReciente(postulaciones: PostulacionMin[], interacciones
   };
 }
 
-export async function cargarDatosMetricas(): Promise<{ datos: DatosMetricas; advertencias: string[] }> {
+export async function cargarDatosMetricas(): Promise<{ datos: DatosMetricas; tendencias: DatosTendencias; advertencias: string[] }> {
   const advertencias: string[] = [];
 
   // El historial solo refina el embudo: si no se puede leer, el panel sigue con el estado actual y avisa.
@@ -247,6 +248,14 @@ export async function cargarDatosMetricas(): Promise<{ datos: DatosMetricas; adv
 
   return {
     datos: { ofertas, postulaciones, interacciones, recordatorios, historial: historialEstados, criterios },
+    // Las mismas lecturas, con las fechas que necesita la comparación contra la semana anterior.
+    tendencias: {
+      postulaciones,
+      historial: historialEstados,
+      ofertas,
+      interacciones,
+      abiertas: postulaciones.filter((p) => !estadoEsFinal(p.estado)).map((p) => p.id),
+    },
     advertencias,
   };
 }

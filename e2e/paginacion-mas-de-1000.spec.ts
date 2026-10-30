@@ -110,9 +110,9 @@ test.describe('más de 1000 ofertas', () => {
         .filter({ has: page.locator('p') })
         .last();
 
-    await expect(tarjeta('Ofertas cargadas')).toContainText(String(TOTAL));
+    await expect(tarjeta('Ofertas guardadas')).toContainText(String(TOTAL));
     // 550 ofertas con 25 y 550 con 10 => promedio 17.5
-    await expect(tarjeta('Puntaje promedio')).toContainText('17.5');
+    await expect(tarjeta('Qué tanto encajan tus ofertas')).toContainText('17.5');
   });
 
   test('cambiar un peso recalcula los scores de todas las ofertas, también las pasadas la fila 1000', async ({ page, api }) => {
@@ -141,7 +141,7 @@ test.describe('más de 1000 ofertas', () => {
     await page.goto('/mi-progreso');
     const tarjeta = page
       .locator('div')
-      .filter({ has: page.getByText('Puntaje promedio', { exact: true }) })
+      .filter({ has: page.getByText('Qué tanto encajan tus ofertas', { exact: true }) })
       .filter({ has: page.locator('p') })
       .last();
     await expect(tarjeta).toContainText('20.0'); // (550*30 + 550*10) / 1100
