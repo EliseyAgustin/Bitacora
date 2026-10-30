@@ -8,10 +8,26 @@ const ESTILO_NIVEL: Record<NivelFortalezaPassword, { label: string; barra: strin
 };
 
 // Medidor de fortaleza compartido por Registro, "Nueva contraseña" y Mi cuenta.
-export function MedidorPassword({ password }: { password: string }) {
+export function MedidorPassword({ password, sobreCampo = false }: { password: string; sobreCampo?: boolean }) {
   const fortaleza = calcularFortalezaPassword(password);
   if (!fortaleza) return null;
   const estilo = ESTILO_NIVEL[fortaleza.nivel];
+
+  if (sobreCampo) {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="pub-barras" data-n={estilo.barras} aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+        <span className="text-[0.9375rem] font-semibold">Contraseña {estilo.label.toLowerCase()}</span>
+        {fortaleza.nivel === 'baja' && (
+          <span className="text-[0.9375rem]">Para reforzarla, hacela más larga y sumá mayúsculas, números o símbolos.</span>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-1">

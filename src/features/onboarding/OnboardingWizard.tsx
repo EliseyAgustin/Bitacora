@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2 } from 'lucide-react';
 import { mensajeDeError } from '@/lib/errores';
 import { RUTAS } from '@/lib/rutas';
 import { agregarTag } from '@/lib/tags';
@@ -8,6 +7,7 @@ import { completarOnboarding, omitirOnboarding } from '@/services/onboarding';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import type { Modalidad } from '@/types/oferta';
 import type { Seniority } from '@/types/perfilUsuario';
+import { MarcoCampo, type CampoColor } from '@/components/publica/MarcoCampo';
 import { RolStep } from './steps/RolStep';
 import { StackStep } from './steps/StackStep';
 import { ModalidadStep } from './steps/ModalidadStep';
@@ -16,6 +16,9 @@ import { ResumenStep } from './steps/ResumenStep';
 import { validarPasoOnboarding, type ErroresOnboarding } from './validacion';
 
 const TOTAL_STEPS = 5;
+
+// Cada paso tiene su color de fondo, el mismo lenguaje de capítulos que la página de inicio.
+const CAMPO_POR_PASO: Record<number, CampoColor> = { 1: 1, 2: 2, 3: 3, 4: 2, 5: 4 };
 
 export function OnboardingWizard() {
   const navigate = useNavigate();
@@ -118,10 +121,9 @@ export function OnboardingWizard() {
 
   if (terminado) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface p-margin">
-        <div className="w-full max-w-128 bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm flex flex-col items-center text-center gap-4">
-          <CheckCircle2 className="w-14 h-14 text-success" aria-hidden="true" />
-          <h1 className="text-2xl font-heading font-bold text-on-surface">Tu perfil quedó listo</h1>
+      <MarcoCampo campo={2}>
+        <div className="flex flex-col items-center text-center gap-4">
+          <h1 className="text-3xl font-heading font-bold text-on-surface">Tu perfil quedó listo</h1>
           <p className="text-sm text-on-surface-variant">
             Ya ordenamos las ofertas según lo que buscás. Podés cambiar estos datos cuando quieras en Mi perfil de
             búsqueda.
@@ -144,13 +146,13 @@ export function OnboardingWizard() {
             </button>
           </div>
         </div>
-      </div>
+      </MarcoCampo>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface p-margin">
-      <div className="w-full max-w-128 bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm flex flex-col gap-6">
+    <MarcoCampo campo={CAMPO_POR_PASO[step] ?? 1} amplio>
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center text-xs font-semibold text-on-surface-variant">
             <span>
@@ -293,6 +295,6 @@ export function OnboardingWizard() {
           )}
         </div>
       </div>
-    </div>
+    </MarcoCampo>
   );
 }

@@ -4,7 +4,29 @@ import { cn } from '@/lib/utils';
 
 // Lista de requisitos que se tilda en vivo mientras se escribe la contraseña. Solo el largo es obligatorio;
 // el resto son recomendaciones para que sea más difícil de adivinar.
-export function ChecklistPassword({ password }: { password: string }) {
+export function ChecklistPassword({ password, sobreCampo = false }: { password: string; sobreCampo?: boolean }) {
+  if (sobreCampo) {
+    return (
+      <div className="flex flex-col gap-2">
+        <p className="text-[0.9375rem] font-semibold">Tu contraseña debe tener:</p>
+        <ul aria-label="Requisitos de la contraseña" className="pub-requisitos">
+          {requisitosPassword(password).map((r) => (
+            <li key={r.id} data-requisito={r.id} data-cumplido={r.cumplido}>
+              <span className="pub-punto" aria-hidden="true">
+                <Check strokeWidth={3} />
+              </span>
+              <span>
+                {r.texto}
+                {!r.obligatorio && <span> (recomendado)</span>}
+                <span className="sr-only">{r.cumplido ? ': cumplido' : ': pendiente'}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-1.5">
       <p className="text-xs font-semibold text-on-surface">Tu contraseña debe tener:</p>

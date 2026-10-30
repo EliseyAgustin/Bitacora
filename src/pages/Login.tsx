@@ -1,8 +1,10 @@
-import { useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { AuthLayout } from '@/components/auth/AuthLayout';
 import { CampoPassword } from '@/components/auth/CampoPassword';
+import { ChecklistPassword } from '@/components/auth/ChecklistPassword';
+import { TEXTO_PRIVACIDAD } from '@/components/AvisoPrivacidad';
+import { PaginaPublica } from '@/components/publica/PaginaPublica';
 import { MedidorPassword } from '@/components/auth/MedidorPassword';
 import { generarDatosEjemplo } from '@/lib/datosEjemplo';
 import { rutaInicialPorRol } from '@/lib/rol';
@@ -115,33 +117,41 @@ export function Login() {
     );
   }
 
+  const idEmail = useId();
+
   return (
-    <AuthLayout subtitulo={mode === 'login' ? 'Iniciá sesión para ver tus postulaciones.' : 'Creá tu cuenta para empezar.'}>
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-        <div className="flex flex-col gap-1.5">
-          <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+    <PaginaPublica modo={mode === 'login' ? 'login' : 'registro'} onCrearCuenta={() => cambiarModo('signup')}>
+      <h2>{mode === 'login' ? 'Ingresá a tu cuenta' : 'Creá tu cuenta'}</h2>
+      <p className="pub-lead">{mode === 'login' ? 'Iniciá sesión para ver tus postulaciones.' : 'Creá tu cuenta para empezar.'}</p>
+
+      <form onSubmit={handleSubmit} noValidate className="pub-form">
+        <div className="pub-campo">
+          <label htmlFor={idEmail} className="pub-etiqueta">
             Email
-            <input
-              ref={emailRef}
-              type="email"
-              maxLength={254}
-              autoComplete="email"
-              value={email}
-              aria-invalid={Boolean(errores.email)}
-              aria-describedby={errores.email ? 'error-email' : undefined}
-              onChange={(e) => setEmail(e.target.value)}
-              onFocus={scrollFieldIntoView}
-              className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all aria-invalid:border-error"
-            />
           </label>
+          <input
+            id={idEmail}
+            ref={emailRef}
+            type="email"
+            maxLength={254}
+            autoComplete="email"
+            placeholder="tu@email.com"
+            value={email}
+            aria-invalid={Boolean(errores.email)}
+            aria-describedby={errores.email ? 'error-email' : undefined}
+            onChange={(e) => setEmail(e.target.value)}
+            onFocus={scrollFieldIntoView}
+            className="pub-input"
+          />
           {errores.email && (
-            <p id="error-email" role="alert" className="text-sm text-error">
+            <p id="error-email" role="alert" className="pub-aviso">
               {errores.email}
             </p>
           )}
         </div>
 
         <CampoPassword
+          sobreCampo
           etiqueta="Contraseña"
           value={password}
           onChange={setPassword}
@@ -151,54 +161,40 @@ export function Login() {
         />
 
         {mode === 'login' && (
-          <Link
-            to="/recuperar"
-            state={{ email }}
-            className="self-start -mt-3 text-sm text-primary hover:underline underline-offset-2"
-          >
+          <Link to="/recuperar" state={{ email }} className="pub-enlace self-start -mt-2">
             ¿Olvidaste tu contraseña?
           </Link>
         )}
 
         {mode === 'signup' && (
-          <div className="-mt-3">
-            <MedidorPassword password={password} />
-          </div>
+          <>
+            <MedidorPassword password={password} sobreCampo />
+            <ChecklistPassword password={password} sobreCampo />
+            <p className="pub-privacidad">{TEXTO_PRIVACIDAD}</p>
+          </>
         )}
 
         {import.meta.env.DEV && mode === 'signup' && (
-          <button
-            type="button"
-            onClick={handleCompletarConEjemplo}
-            className="text-xs font-medium text-on-surface-variant border border-dashed border-outline-variant rounded-lg px-3 py-2 hover:border-primary hover:text-primary transition-colors cursor-pointer"
-          >
+          <button type="button" onClick={handleCompletarConEjemplo} className="pub-enlace-btn">
             Completar con datos de ejemplo (solo desarrollo)
           </button>
         )}
 
         {errorServicio && (
-          <p role="alert" className="text-sm text-error">
+          <p role="alert" className="pub-aviso">
             {mensajeServicio(errorServicio)}
           </p>
         )}
-        {info && <p className="text-sm text-primary">{info}</p>}
+        {info && <p className="pub-info">{info}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-primary text-on-primary text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50"
-        >
+        <button type="submit" disabled={loading} className="pub-btn">
           {loading ? 'Procesando…' : mode === 'login' ? 'Ingresar' : 'Registrarme'}
         </button>
 
-        <button
-          type="button"
-          onClick={() => cambiarModo(mode === 'login' ? 'signup' : 'login')}
-          className="text-sm text-on-surface-variant hover:text-primary transition-colors"
-        >
+        <button type="button" onClick={() => cambiarModo(mode === 'login' ? 'signup' : 'login')} className="pub-enlace-btn">
           {mode === 'login' ? '¿No tenés cuenta? Registrate' : '¿Ya tenés cuenta? Iniciá sesión'}
         </button>
       </form>
-    </AuthLayout>
+    </PaginaPublica>
   );
 }

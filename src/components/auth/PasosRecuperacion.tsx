@@ -23,7 +23,7 @@ export function PasosRecuperacion({ actual }: { actual: 1 | 2 | 3 }) {
             >
               {hecho ? <Check className="w-4 h-4" aria-hidden="true" /> : numero}
             </span>
-            <span className={cn('text-[11px] leading-tight', esActual ? 'font-semibold text-on-surface' : 'text-on-surface-variant')}>
+            <span className={cn('text-xs leading-tight', esActual ? 'font-semibold text-on-surface' : 'text-on-surface-variant')}>
               {texto}
               {hecho && <span className="sr-only"> (hecho)</span>}
               {esActual && <span className="sr-only"> (paso actual)</span>}

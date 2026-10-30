@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { scrollFieldIntoView } from '@/lib/utils';
 
@@ -9,11 +9,51 @@ interface CampoPasswordProps {
   autoComplete: 'current-password' | 'new-password';
   error?: string | null;
   idError: string;
+  // Sobre el campo de color de la página pública: etiqueta clara, caja blanca y el error en una chapa legible.
+  sobreCampo?: boolean;
 }
 
 // Input de contraseña con botón mostrar/ocultar. El mensaje de error va debajo, junto al campo.
-export function CampoPassword({ etiqueta, value, onChange, autoComplete, error, idError }: CampoPasswordProps) {
+export function CampoPassword({ etiqueta, value, onChange, autoComplete, error, idError, sobreCampo = false }: CampoPasswordProps) {
   const [visible, setVisible] = useState(false);
+  const id = useId();
+
+  if (sobreCampo) {
+    return (
+      <div className="pub-campo">
+        <label htmlFor={id} className="pub-etiqueta">
+          {etiqueta}
+        </label>
+        <div className="pub-control">
+          <input
+            id={id}
+            type={visible ? 'text' : 'password'}
+            maxLength={128}
+            autoComplete={autoComplete}
+            value={value}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? idError : undefined}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={scrollFieldIntoView}
+            className="pub-input"
+          />
+          <button
+            type="button"
+            onClick={() => setVisible((v) => !v)}
+            aria-label={visible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            className="pub-mostrar"
+          >
+            {visible ? 'Ocultar' : 'Mostrar'}
+          </button>
+        </div>
+        {error && (
+          <p id={idError} role="alert" className="pub-aviso">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-1.5">
