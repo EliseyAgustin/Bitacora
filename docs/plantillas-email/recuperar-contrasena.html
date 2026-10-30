@@ -7,43 +7,37 @@
   <meta name="supported-color-schemes" content="light">
   <title>Cambiá tu contraseña de Laburin</title>
 </head>
-<body style="margin:0; padding:0; background-color:#eef2fb;" bgcolor="#eef2fb">
+<!--
+  Mismo lenguaje que el Login y el Registro: franjas de color de borde a borde (azul, naranja, salvia y azul noche),
+  titular grande, botón amarillo y esquinas rectas. Los mails no pueden llevar imágenes externas ni fuentes propias:
+  todo es texto y color, con la tipografía del sistema.
+-->
+<body style="margin:0; padding:0; background-color:#1b46c9;" bgcolor="#1b46c9">
   <!-- Texto que se ve en la vista previa de la bandeja de entrada -->
   <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent; mso-hide:all;">
     Pediste cambiar tu contraseña. Tocá el botón para elegir una nueva: el enlace se usa una sola vez.
   </div>
 
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef2fb" style="background-color:#eef2fb;">
+  <!-- Franja azul: la marca, el titular y el botón -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#1b46c9" style="background-color:#1b46c9;">
     <tr>
-      <td align="center" style="padding:32px 12px;">
-
-        <!-- Marca -->
+      <td align="center" style="padding:0 20px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
           <tr>
-            <td align="left" style="padding:0 4px 16px 4px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
+            <td style="padding:32px 0 0 0; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td width="36" height="36" align="center" valign="middle" bgcolor="#1e4fd8" style="width:36px; height:36px; background-color:#1e4fd8; border-radius:10px; color:#ffffff; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:20px; font-weight:700; line-height:36px;">L</td>
-                  <td style="padding-left:10px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:20px; font-weight:700; letter-spacing:-0.3px; color:#12172b;">Laburin</td>
+                  <td width="40" height="40" align="center" valign="middle" bgcolor="#ffffff" style="width:40px; height:40px; background-color:#ffffff; border-radius:20px; color:#1b46c9; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:22px; font-weight:700; line-height:40px;">L</td>
+                  <td style="padding-left:12px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:24px; font-weight:700; letter-spacing:-0.5px; color:#ffffff;">Laburin</td>
                 </tr>
               </table>
             </td>
           </tr>
-        </table>
-
-        <!-- Tarjeta -->
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="max-width:560px; background-color:#ffffff; border:1px solid #d9dfee; border-radius:16px;">
           <tr>
-            <td height="6" bgcolor="#1e4fd8" style="height:6px; line-height:6px; font-size:0; background-color:#1e4fd8; border-radius:16px 16px 0 0;">&nbsp;</td>
-          </tr>
-          <tr>
-            <td style="padding:36px 36px 0 36px; font-family:Segoe UI, Helvetica, Arial, sans-serif; color:#12172b;">
-              <p style="margin:0 0 10px 0; font-size:12px; line-height:1.4; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#1e4fd8;">Recuperar contraseña</p>
-              <h1 style="margin:0 0 16px 0; font-size:26px; line-height:1.25; font-weight:700; letter-spacing:-0.4px; color:#12172b;">Elegí una contraseña nueva</h1>
-              <p style="margin:0 0 8px 0; font-size:16px; line-height:1.6; color:#2b3144;">
+            <td style="padding:56px 0 0 0; font-family:Segoe UI, Helvetica, Arial, sans-serif; color:#ffffff;">
+              <h1 style="margin:0; font-size:44px; line-height:1.02; font-weight:700; letter-spacing:-1.6px; color:#ffffff;">Elegí una contraseña nueva.</h1>
+              <p style="margin:24px 0 0 0; font-size:18px; line-height:1.5; color:#ffffff;">
                 Hola. Recibimos un pedido para cambiar la contraseña de tu cuenta de Laburin.
-              </p>
-              <p style="margin:0; font-size:16px; line-height:1.6; color:#2b3144;">
                 Tocá el botón y elegila en un minuto.
               </p>
             </td>
@@ -51,66 +45,75 @@
 
           <!-- Botón -->
           <tr>
-            <td align="center" style="padding:28px 36px 8px 36px;">
-              <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ .ConfirmationURL }}" style="height:52px;v-text-anchor:middle;width:300px;" arcsize="20%" stroke="f" fillcolor="#1e4fd8"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Elegir una contraseña nueva</center></v:roundrect><![endif]-->
+            <td style="padding:32px 0 56px 0;">
+              <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ .ConfirmationURL }}" style="height:56px;v-text-anchor:middle;width:560px;" arcsize="7%" stroke="f" fillcolor="#f0ff1c"><w:anchorlock/><center style="color:#0e1330;font-family:Arial,sans-serif;font-size:17px;font-weight:bold;">Elegir una contraseña nueva</center></v:roundrect><![endif]-->
               <!--[if !mso]><!-- -->
-              <a href="{{ .ConfirmationURL }}" style="display:block; background-color:#1e4fd8; color:#ffffff; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:16px; font-weight:700; line-height:1.2; text-align:center; text-decoration:none; padding:16px 24px; border-radius:10px;">
+              <a href="{{ .ConfirmationURL }}" style="display:block; background-color:#f0ff1c; color:#0e1330; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:17px; font-weight:700; line-height:1.2; text-align:center; text-decoration:none; padding:19px 24px; border-radius:4px;">
                 Elegir una contraseña nueva
               </a>
               <!--<![endif]-->
             </td>
           </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 
-          <!-- Aviso de vencimiento -->
+  <!-- Franja naranja: el enlace vence -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ff7a45" style="background-color:#ff7a45;">
+    <tr>
+      <td align="center" style="padding:0 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
           <tr>
-            <td style="padding:20px 36px 0 36px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef3ff" style="background-color:#eef3ff; border-radius:10px;">
-                <tr>
-                  <td width="4" bgcolor="#1e4fd8" style="width:4px; background-color:#1e4fd8; border-radius:10px 0 0 10px;">&nbsp;</td>
-                  <td style="padding:14px 16px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:14px; line-height:1.55; color:#1f2a4d;">
-                    <strong>El enlace vence al rato y solo se puede usar una vez.</strong>
-                    Si ya no sirve, pedí otro desde la pantalla de inicio de sesión, en «¿Olvidaste tu contraseña?».
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Respaldo si el botón no anda -->
-          <tr>
-            <td style="padding:22px 36px 0 36px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
-              <p style="margin:0 0 6px 0; font-size:13px; line-height:1.6; color:#4a5168;">
-                Si el botón no funciona, copiá y pegá esta dirección en tu navegador:
-              </p>
-              <p style="margin:0; font-size:12px; line-height:1.5; color:#1e4fd8; word-break:break-all;">
-                <a href="{{ .ConfirmationURL }}" style="color:#1e4fd8;">{{ .ConfirmationURL }}</a>
-              </p>
-            </td>
-          </tr>
-
-          <!-- Seguridad -->
-          <tr>
-            <td style="padding:24px 36px 32px 36px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
-              <div style="border-top:1px solid #e3e7f2; padding-top:20px;">
-                <p style="margin:0; font-size:14px; line-height:1.6; color:#4a5168;">
-                  <strong style="color:#12172b;">Si no fuiste vos</strong>, ignorá este mensaje: tu contraseña actual
-                  sigue siendo la misma y nadie puede entrar a tu cuenta con este correo.
-                </p>
-              </div>
+            <td style="padding:36px 0; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:18px; line-height:1.5; color:#0e1330;">
+              <strong style="font-size:22px; letter-spacing:-0.4px;">El enlace vence al rato y solo se puede usar una vez.</strong><br>
+              Si ya no sirve, pedí otro desde la pantalla de inicio de sesión, en «¿Olvidaste tu contraseña?».
             </td>
           </tr>
         </table>
+      </td>
+    </tr>
+  </table>
 
-        <!-- Pie -->
+  <!-- Franja salvia: respaldo del botón y seguridad -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#d4e6d8" style="background-color:#d4e6d8;">
+    <tr>
+      <td align="center" style="padding:0 20px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
           <tr>
-            <td align="center" style="padding:20px 12px 0 12px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:12px; line-height:1.6; color:#5b6378;">
-              Laburin · Tu búsqueda de empleo, en un solo lugar<br>
+            <td style="padding:36px 0 0 0; font-family:Segoe UI, Helvetica, Arial, sans-serif; color:#0e1330;">
+              <p style="margin:0 0 8px 0; font-size:15px; line-height:1.6; color:#0e1330;">
+                Si el botón no funciona, copiá y pegá esta dirección en tu navegador:
+              </p>
+              <p style="margin:0; font-size:14px; line-height:1.5; color:#0e1330; word-break:break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color:#0e1330; text-decoration:underline;">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 0 40px 0; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:17px; line-height:1.55; color:#0e1330;">
+              <strong>Si no fuiste vos</strong>, ignorá este mensaje: tu contraseña actual
+              sigue siendo la misma y nadie puede entrar a tu cuenta con este correo.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Franja azul noche: pie -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0e1330" style="background-color:#0e1330;">
+    <tr>
+      <td align="center" style="padding:0 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+          <tr>
+            <td style="padding:32px 0 40px 0; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:14px; line-height:1.6; color:#f4f6fb;">
+              <strong style="font-size:20px; letter-spacing:-0.4px; color:#ffffff;">Laburin</strong><br>
+              Tu búsqueda de empleo, en un solo lugar.<br>
               Este mensaje se envió automáticamente: no hace falta que lo respondas.
             </td>
           </tr>
         </table>
-
       </td>
     </tr>
   </table>
