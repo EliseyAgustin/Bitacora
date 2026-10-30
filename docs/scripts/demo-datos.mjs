@@ -26,7 +26,7 @@ import dotenv from 'dotenv';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { construirDataset } from './demo-dataset.mjs';
+import { construirDataset, fecharDespuesDeLaBienvenida } from './demo-dataset.mjs';
 
 dotenv.config();
 dotenv.config({ path: '.env.e2e' });
@@ -160,6 +160,10 @@ async function enviarMensajesDemo({ sb, userId }, mensajes) {
   const admin = cliente();
   const { data: sesion, error: errorSesion } = await admin.auth.signInWithPassword({ email, password });
   if (errorSesion || !sesion.user) return `omitidos (no se pudo iniciar sesión como administrador: ${errorSesion?.message ?? 'sin sesión'})`;
+
+  // La bienvenida (la manda la base al registrarse) tiene su fecha real: los mensajes del equipo van después.
+  const { data: bienvenida } = await sb.from('mensajes').select('created_at').eq('destinatario_id', userId).eq('tipo', 'bienvenida').maybeSingle();
+  if (bienvenida) mensajes = fecharDespuesDeLaBienvenida(mensajes, new Date(bienvenida.created_at).getTime(), Date.now());
 
   const { data, error } = await admin
     .from('mensajes')

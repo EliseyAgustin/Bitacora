@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MailOpen } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
+import { Topo } from '@/components/publica/Topo';
 import { mensajeDeError } from '@/lib/errores';
 import { formatearFechaHora } from '@/lib/etiquetas';
 import { contarNoLeidos, tituloDelMensaje, type Mensaje } from '@/lib/mensajes';
@@ -83,7 +83,7 @@ export function Mensajes() {
                 type="button"
                 onClick={marcarTodos}
                 disabled={trabajando}
-                className="bg-surface-container-high text-on-surface text-sm font-medium px-4 py-2 rounded-lg border border-outline-variant hover:bg-surface-variant transition-all disabled:opacity-50 cursor-pointer"
+                className="bg-surface-container-high text-on-surface text-sm font-semibold px-4 min-h-11 rounded-lg border border-outline-variant hover:bg-surface-variant transition-all disabled:opacity-50 cursor-pointer"
               >
                 Marcar todos como leídos
               </button>
@@ -100,13 +100,13 @@ export function Mensajes() {
         {mensajes === null && <div className="text-center text-on-surface-variant text-sm py-16">Cargando mensajes…</div>}
 
         {mensajes !== null && mensajes.length === 0 && !error && (
-          <div className="flex flex-col items-center justify-center text-center py-20 gap-2">
-            <MailOpen className="w-12 h-12 text-outline-variant" />
-            <p className="text-sm font-medium text-on-surface-variant">Todavía no tenés mensajes.</p>
-            <p className="text-sm text-on-surface-variant">Cuando el equipo de Laburin te escriba, lo vas a ver acá.</p>
+          <div className="flex flex-col items-center justify-center text-center py-16 gap-2">
+            <Topo className="w-44" />
+            <p className="text-lg font-semibold text-on-surface">Todavía no tenés mensajes.</p>
+            <p className="text-base text-on-surface-variant">Cuando el equipo de Laburin te escriba, lo vas a ver acá.</p>
             <Link
               to={RUTAS.postulaciones}
-              className="mt-3 bg-primary text-on-primary text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all"
+              className="mt-3 bg-primary text-on-primary text-sm font-semibold px-5 min-h-11 inline-flex items-center rounded-lg shadow-sm hover:opacity-90 transition-all"
             >
               Ir a Mis postulaciones
             </Link>
@@ -120,27 +120,27 @@ export function Mensajes() {
                 key={m.id}
                 data-estado={m.leido ? 'leido' : 'no-leido'}
                 className={cn(
-                  'rounded-xl border p-5',
+                  'entrada rounded-xl border p-5 border-l-4',
                   m.leido ? 'bg-surface-container-lowest border-outline-variant' : 'bg-primary-container/40 border-primary'
                 )}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h2 className="text-base font-heading font-semibold text-on-surface">{tituloDelMensaje(m)}</h2>
-                  <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <h2 className="text-lg font-heading font-bold text-on-surface">{tituloDelMensaje(m)}</h2>
+                  <div className="flex items-center gap-2 text-sm text-on-surface-variant">
                     {!m.leido && (
-                      <span className="bg-primary text-on-primary font-semibold px-2 py-0.5 rounded-full">Nuevo</span>
+                      <span className="bg-primary text-on-primary font-semibold px-2.5 py-0.5 rounded-full">Nuevo</span>
                     )}
                     {formatearFechaHora(m.created_at)}
                   </div>
                 </div>
-                <p className="text-sm text-on-surface mt-2 whitespace-pre-wrap">{m.texto}</p>
+                <p className="text-base text-on-surface mt-2 whitespace-pre-wrap max-w-prose">{m.texto}</p>
                 <div className="flex flex-wrap gap-4 mt-3">
                   {!m.leido && (
                     <button
                       type="button"
                       onClick={() => marcarLeido(m)}
                       disabled={trabajando}
-                      className="min-h-11 md:min-h-0 text-sm font-medium text-primary hover:underline underline-offset-2 disabled:opacity-50 cursor-pointer"
+                      className="min-h-11 text-sm font-semibold text-primary hover:underline underline-offset-2 disabled:opacity-50 cursor-pointer"
                     >
                       Marcar como leído
                     </button>
@@ -149,7 +149,7 @@ export function Mensajes() {
                     type="button"
                     onClick={() => borrar(m)}
                     disabled={trabajando}
-                    className="min-h-11 md:min-h-0 text-sm text-on-surface-variant hover:text-error disabled:opacity-50 cursor-pointer"
+                    className="min-h-11 text-sm font-semibold text-on-surface-variant hover:text-error disabled:opacity-50 cursor-pointer"
                   >
                     Borrar
                   </button>

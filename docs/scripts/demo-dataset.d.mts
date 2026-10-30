@@ -81,3 +81,6 @@ export interface DatasetDemo {
 
 export function construirDataset(ahora: Date): DatasetDemo;
 export function puntajeDe(oferta: Record<string, unknown>, criterios: CriterioDemo[]): number;
+
+/** Corre los mensajes hasta después de la bienvenida (que tiene su fecha real), en orden y sin pasar de ahora. */
+export function fecharDespuesDeLaBienvenida<T extends { created_at: string }>(mensajes: T[], bienvenidaMs: number, ahoraMs: number): T[];

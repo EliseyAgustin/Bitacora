@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 // El script de la demostración (npm run demo:datos) arma los datos de la cuenta DEMO con esta función pura.
-import { construirDataset } from '../../docs/scripts/demo-dataset.mjs';
+import { construirDataset, fecharDespuesDeLaBienvenida } from '../../docs/scripts/demo-dataset.mjs';
 import { claveDedupeOferta, FUENTES_OFERTA } from '@/lib/fuentes';
 import { urlSegura } from '@/lib/ofertaDetalle';
 import { armarMensaje, PLANTILLAS_MENSAJE } from '@/lib/plantillasMensaje';
@@ -164,5 +164,36 @@ describe('datos de la cuenta DEMO', () => {
     expect(dataset.perfil.onboarding_completado).toBe(true);
     expect(dataset.perfil.stack_interes.length).toBeGreaterThanOrEqual(3);
     expect(new Date(dataset.perfil.registrado_el).getTime()).toBeLessThan(AHORA.getTime() - 50 * DIA_MS);
+  });
+
+  it('los mensajes no repiten la bienvenida: no usan la plantilla «Solicitud recibida»', () => {
+    const repetido = armarMensaje(PLANTILLAS_MENSAJE.find((p) => p.id === 'solicitud-recibida')!, dataset.perfil.nombre);
+    expect(dataset.mensajes.map((m) => m.texto)).not.toContain(repetido);
+  });
+
+  describe('fecharDespuesDeLaBienvenida', () => {
+    const mensajes = [
+      { texto: 'a', created_at: '2026-10-10T10:00:00.000Z', leido: true },
+      { texto: 'b', created_at: '2026-10-20T10:00:00.000Z', leido: true },
+      { texto: 'c', created_at: '2026-10-22T10:00:00.000Z', leido: false },
+    ];
+    const bienvenida = new Date('2026-10-22T09:00:00Z').getTime();
+    const ahora = new Date('2026-10-23T15:00:00Z').getTime();
+
+    it('ninguno queda antes de la bienvenida y se conserva el orden', () => {
+      const r = fecharDespuesDeLaBienvenida(mensajes, bienvenida, ahora);
+      const fechas = r.map((m: { created_at: string }) => new Date(m.created_at).getTime());
+      for (const f of fechas) expect(f).toBeGreaterThan(bienvenida);
+      expect([...fechas].sort((x, y) => x - y)).toEqual(fechas);
+      expect(r.map((m: { texto: string }) => m.texto)).toEqual(['a', 'b', 'c']);
+    });
+    it('ninguno queda en el futuro, aunque la bienvenida sea de hace minutos', () => {
+      const r = fecharDespuesDeLaBienvenida(mensajes, ahora - 60_000, ahora);
+      for (const m of r) expect(new Date(m.created_at).getTime()).toBeLessThanOrEqual(ahora);
+    });
+    it('no toca los que ya son posteriores a la bienvenida', () => {
+      const r = fecharDespuesDeLaBienvenida(mensajes, new Date('2026-10-01T00:00:00Z').getTime(), ahora);
+      expect(r.map((m: { created_at: string }) => m.created_at)).toEqual(mensajes.map((m) => m.created_at));
+    });
   });
 });

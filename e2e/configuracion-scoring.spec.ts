@@ -21,9 +21,10 @@ test('cambiar un peso recalcula el score de las ofertas y agregar un criterio lo
   expect(await scoreDe('Backend Developer')).toBe(10);
 
   await page.goto('/ofertas');
+  // La tarjeta lee el puntaje como «40 puntos» (el «puntos» es solo para lectores de pantalla).
   const tarjetaFrontend = page.getByRole('heading', { name: 'Frontend Developer', level: 3 });
   await expect(tarjetaFrontend).toBeVisible();
-  await expect(page.getByText('40', { exact: true })).toBeVisible();
+  await expect(page.getByText('40 puntos', { exact: true })).toBeVisible();
 
   // --- Agregar un criterio nuevo: Docker = 20 ---
   await page.goto('/mi-perfil');
@@ -46,6 +47,6 @@ test('cambiar un peso recalcula el score de las ofertas y agregar un criterio lo
   expect(count).toBe(1);
 
   await page.goto('/ofertas');
-  await expect(page.getByText('30', { exact: true })).toBeVisible();
-  await expect(page.getByText('40', { exact: true })).toBeVisible();
+  await expect(page.getByText('30 puntos', { exact: true })).toBeVisible();
+  await expect(page.getByText('40 puntos', { exact: true })).toBeVisible();
 });

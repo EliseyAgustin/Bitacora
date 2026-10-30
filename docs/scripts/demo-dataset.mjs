@@ -161,12 +161,30 @@ const RECORDATORIOS = [
 ];
 
 // Mensajes del administrador: los textos de tres plantillas de src/lib/plantillasMensaje.ts (un test vigila que coincidan).
-// [texto, hace N días, leído]. Queda uno sin leer para que el menú muestre el contador.
+// No se usa «Solicitud recibida»: repite casi igual la bienvenida que manda sola la base al registrarse.
+// [texto, hace N días, leído]. Cuentan una conversación en orden y queda uno sin leer para que el menú muestre el contador.
 const MENSAJES = [
-  ['Hola Camila, tu perfil quedó registrado y vamos a tener en cuenta tu solicitud. Gracias por sumarte a Laburin.', 21, true],
-  ['Hola Camila, gracias por completar tu perfil. Ya tenemos todo lo que necesitábamos y vamos a tener en cuenta tu solicitud.', 9, true],
-  ['Hola Camila, revisamos tu perfil y las tecnologías cargadas son pocas. Si manejás otras, sumalas en Mi perfil de búsqueda para que tu solicitud quede más completa.', 1, false],
+  ['Hola Camila, revisamos tu perfil y las tecnologías cargadas son pocas. Si manejás otras, sumalas en Mi perfil de búsqueda para que tu solicitud quede más completa.', 3, true],
+  ['Hola Camila, ¿podés indicarnos tu ciudad y tu país? Con ese dato podemos tener mejor en cuenta tu solicitud. Lo cambiás cuando quieras en Mi perfil de búsqueda.', 2, true],
+  ['Hola Camila, gracias por completar tu perfil. Ya tenemos todo lo que necesitábamos y vamos a tener en cuenta tu solicitud.', 1, false],
 ];
+
+// La bienvenida la escribe el trigger al crearse la cuenta, así que su fecha es la real (no la del dataset). Ningún mensaje del
+// equipo puede ser anterior: se corren, de a una hora, hasta después de la bienvenida, sin pasar de ahora y manteniendo el orden.
+export function fecharDespuesDeLaBienvenida(mensajes, bienvenidaMs, ahoraMs) {
+  const HORA = 60 * 60 * 1000;
+  const MINUTO = 60 * 1000;
+  let anterior = bienvenidaMs;
+  return mensajes.map((m, i) => {
+    const restantes = mensajes.length - i;
+    const tope = ahoraMs - restantes * MINUTO; // deja lugar para los que faltan, todos en el pasado
+    const minimo = anterior + Math.min(HORA, Math.max(MINUTO, Math.floor((ahoraMs - anterior) / (restantes + 1))));
+    const propio = new Date(m.created_at).getTime();
+    const fecha = Math.min(tope, propio > anterior ? propio : minimo);
+    anterior = fecha;
+    return { ...m, created_at: new Date(fecha).toISOString() };
+  });
+}
 
 // Enlaces de ejemplo (example.com está reservado para esto: no lleva a ningún sitio real). Algunas ofertas cargadas a mano no
 // tienen enlace, para mostrar también ese caso.

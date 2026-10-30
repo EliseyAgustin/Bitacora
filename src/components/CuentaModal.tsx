@@ -91,12 +91,12 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
         className="w-full max-w-112 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg flex flex-col max-h-[90vh]"
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant">
-          <h2 id="titulo-cuenta" className="text-lg font-heading font-semibold text-on-surface">Mi cuenta</h2>
+          <h2 id="titulo-cuenta" className="text-xl font-heading font-bold text-on-surface">Mi cuenta</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="w-11 h-11 md:w-8 md:h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer"
+            className="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -104,17 +104,17 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
 
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 shrink-0 rounded-full bg-primary text-on-primary flex items-center justify-center text-lg font-semibold">
+            <div className="w-16 h-16 shrink-0 rounded-full bg-primary text-on-primary flex items-center justify-center text-xl font-bold">
               {iniciales(nombre, email)}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-on-surface truncate">{nombre.trim() || 'Sin nombre'}</p>
-              <p className="text-xs text-on-surface-variant truncate">{email}</p>
+              <p className="text-lg font-semibold text-on-surface truncate">{nombre.trim() || 'Sin nombre'}</p>
+              <p className="text-sm text-on-surface-variant truncate">{email}</p>
             </div>
           </div>
 
           <form onSubmit={handleGuardarNombre} noValidate className="flex flex-col gap-3 pt-4 border-t border-outline-variant">
-            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+            <label className="flex flex-col gap-1.5 text-sm font-semibold text-on-surface-variant">
               Nombre para mostrar
               <input
                 type="text"
@@ -125,16 +125,16 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
                   setOkNombre(false);
                 }}
                 placeholder="Ej: Agustín Elisey"
-                className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                className="w-full bg-surface border border-outline-variant rounded-lg px-3 min-h-11 text-base text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
               />
             </label>
-            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+            <label className="flex flex-col gap-1.5 text-sm font-semibold text-on-surface-variant">
               Email
               <input
                 type="email"
                 value={email}
                 disabled
-                className="w-full bg-surface-container-high border border-outline-variant rounded-lg px-3 py-2 text-on-surface-variant cursor-not-allowed"
+                className="w-full bg-surface-container-high border border-outline-variant rounded-lg px-3 min-h-11 text-base text-on-surface-variant cursor-not-allowed"
               />
             </label>
             <AvisoPrivacidad />
@@ -143,7 +143,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
             <button
               type="submit"
               disabled={guardandoNombre || nombre.trim() === nombreGuardado.trim()}
-              className="self-start bg-primary text-on-primary text-sm font-medium px-4 py-2 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
+              className="self-start bg-primary text-on-primary text-sm font-semibold px-5 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
             >
               {guardandoNombre ? 'Guardando…' : 'Guardar nombre'}
             </button>
@@ -151,7 +151,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
 
           <form onSubmit={handleCambiarPassword} noValidate className="flex flex-col gap-3 pt-4 border-t border-outline-variant">
             <p className="text-sm font-medium text-on-surface">Cambiar contraseña</p>
-            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+            <label className="flex flex-col gap-1.5 text-sm font-semibold text-on-surface-variant">
               Nueva contraseña
               <div className="relative">
                 <input
@@ -163,7 +163,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
                     setPasswordNueva(e.target.value);
                     setOkPassword(false);
                   }}
-                  className="w-full bg-surface border border-outline-variant rounded-lg pl-3 pr-11 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                  className="w-full bg-surface border border-outline-variant rounded-lg pl-3 pr-11 min-h-11 text-base text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                 />
                 <button
                   type="button"
@@ -178,7 +178,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
 
             <MedidorPassword password={passwordNueva} />
 
-            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+            <label className="flex flex-col gap-1.5 text-sm font-semibold text-on-surface-variant">
               Confirmar nueva contraseña
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -189,7 +189,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
                   setPasswordConfirmar(e.target.value);
                   setOkPassword(false);
                 }}
-                className="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                className="w-full bg-surface border border-outline-variant rounded-lg px-3 min-h-11 text-base text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
               />
             </label>
             {errorPassword && <p className="text-sm text-error">{errorPassword}</p>}
@@ -197,7 +197,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
             <button
               type="submit"
               disabled={cambiandoPassword || !passwordNueva || !passwordConfirmar}
-              className="self-start bg-primary text-on-primary text-sm font-medium px-4 py-2 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
+              className="self-start bg-primary text-on-primary text-sm font-semibold px-5 min-h-11 rounded-lg shadow-sm hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
             >
               {cambiandoPassword ? 'Guardando…' : 'Cambiar contraseña'}
             </button>

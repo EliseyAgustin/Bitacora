@@ -53,11 +53,11 @@ function ToggleActivo({
       aria-label={`${activo ? 'Desactivar' : 'Activar'} criterio ${nombre}`}
       title={activo ? 'Activo' : 'Inactivo'}
       className={cn(
-        'p-2.5 md:p-1 -m-2.5 md:-m-1 rounded-md transition-colors disabled:opacity-50 cursor-pointer',
+        'w-11 h-11 -m-1.5 flex items-center justify-center rounded-md transition-colors disabled:opacity-50 cursor-pointer',
         activo ? 'text-primary' : 'text-on-surface-variant'
       )}
     >
-      <Icon className="w-5 h-5" />
+      <Icon className="w-7 h-7" />
     </button>
   );
 }
@@ -303,10 +303,10 @@ export function Settings() {
 
         <section className="flex flex-col gap-3">
           <div>
-            <h2 className="text-2xl font-heading font-semibold text-on-surface">¿Qué estoy buscando?</h2>
-            <p className="text-sm text-on-surface-variant mt-0.5">Elegí cómo y dónde querés trabajar. Las ofertas que coinciden suman puntos.</p>
+            <h2 className="text-2xl font-heading font-bold text-on-surface">¿Qué estoy buscando?</h2>
+            <p className="text-base text-on-surface-variant mt-0.5">Elegí cómo y dónde querés trabajar. Las ofertas que coinciden suman puntos.</p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {/* MODALIDAD */}
               <section className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm">
                 <div className="p-4 border-b border-outline-variant bg-surface rounded-t-xl flex items-center gap-2">
@@ -328,11 +328,11 @@ export function Settings() {
                         !c.activo && 'opacity-50'
                       )}
                     >
-                      <div className="flex items-center gap-2 text-sm font-medium text-on-surface">
+                      <div className="flex items-center gap-2 text-base font-semibold text-on-surface">
                         {MODALIDAD_LABEL[c.valor_comparacion as Modalidad] ?? c.valor_comparacion}
                       </div>
                       <div className="flex items-center gap-1">
-                        <div className="flex items-center gap-1 bg-surface border border-outline-variant rounded-md px-2 py-1 focus-within:border-primary">
+                        <div className="flex items-center gap-1 bg-surface border border-outline-variant rounded-md px-2.5 min-h-11 focus-within:border-primary">
                           <input
                             type="number"
                             min={PESO_MINIMO}
@@ -343,9 +343,9 @@ export function Settings() {
                             onChange={(e) => handlePesoChange(c.id, e.target.value)}
                             onFocus={(e) => e.target.select()}
                             onBlur={() => handlePesoBlur(c)}
-                            className="w-10 text-center text-xs font-medium text-primary bg-transparent border-none p-0 outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-12 text-center text-base font-semibold text-primary bg-transparent border-none p-0 outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
-                          <span className="text-outline text-xs">puntos</span>
+                          <span className="text-on-surface-variant text-sm">puntos</span>
                         </div>
                         <ToggleActivo
                           activo={c.activo}
@@ -358,7 +358,7 @@ export function Settings() {
                           disabled={savingIds.has(c.id)}
                           onClick={() => handleDelete(c)}
                         aria-label={`Eliminar criterio ${etiquetaCriterio(c)}`}
-                          className="text-error hover:bg-error-container p-2.5 md:p-1 -m-2.5 md:-m-1 rounded-md transition-colors cursor-pointer opacity-100 md:opacity-0 md:group-hover:opacity-100 disabled:opacity-50"
+                          className="text-error hover:bg-error-container w-11 h-11 -m-1.5 flex items-center justify-center rounded-md transition-colors cursor-pointer disabled:opacity-50"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -372,7 +372,7 @@ export function Settings() {
                         value={modalidadDraft}
                         aria-label="Modalidad del nuevo criterio"
                         onChange={(e) => setModalidadDraft(e.target.value as Modalidad | '')}
-                        className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-2 text-sm focus:border-primary focus:outline-none cursor-pointer"
+                        className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-3 min-h-11 text-base focus:border-primary focus:outline-none cursor-pointer"
                       >
                         <option value="">Elegir modalidad…</option>
                         {modalidadesDisponibles.map((m) => (
@@ -390,7 +390,7 @@ export function Settings() {
                         onChange={(e) => setModalidadPesoDraft(e.target.value)}
                         onFocus={(e) => e.target.select()}
                         placeholder="Puntos"
-                        className="w-16 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-2 text-sm focus:border-primary focus:outline-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-16 bg-surface-container-lowest border border-outline-variant rounded-lg px-3 min-h-11 text-base focus:border-primary focus:outline-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                       <button
                         type="submit"
@@ -411,7 +411,7 @@ export function Settings() {
                   <h3 className="text-xl font-heading font-semibold text-on-surface">Ubicación</h3>
                 </div>
                 <div className="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
-                  <p className="text-xs text-on-surface-variant">
+                  <p className="text-sm text-on-surface-variant">
                   Ojo: con ofertas remotas la ubicación casi nunca suma puntos, porque muchas dicen «Worldwide» o solo un país.
                 </p>
                 {ubicacionCriterios.length === 0 && (
@@ -428,10 +428,10 @@ export function Settings() {
                         !c.activo && 'opacity-50'
                       )}
                     >
-                      <span className="text-sm text-on-surface">{c.valor_comparacion}</span>
+                      <span className="text-base font-semibold text-on-surface">{c.valor_comparacion}</span>
                       <div className="flex items-center gap-1">
-                        <div className="flex items-center gap-1 bg-surface border border-outline-variant rounded-md px-2 py-1">
-                          <span className="text-outline text-xs">+</span>
+                        <div className="flex items-center gap-1 bg-surface border border-outline-variant rounded-md px-2.5 min-h-11">
+                          <span className="text-outline text-sm">+</span>
                           <input
                             type="number"
                             min={PESO_MINIMO}
@@ -442,9 +442,9 @@ export function Settings() {
                             onChange={(e) => handlePesoChange(c.id, e.target.value)}
                             onFocus={(e) => e.target.select()}
                             onBlur={() => handlePesoBlur(c)}
-                            className="w-10 text-center text-xs font-medium text-on-secondary-container bg-transparent border-none p-0 outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-12 text-center text-base font-semibold text-on-secondary-container bg-transparent border-none p-0 outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
-                          <span className="text-outline text-xs">puntos</span>
+                          <span className="text-on-surface-variant text-sm">puntos</span>
                         </div>
                         <ToggleActivo
                           activo={c.activo}
@@ -457,7 +457,7 @@ export function Settings() {
                           disabled={savingIds.has(c.id)}
                           onClick={() => handleDelete(c)}
                         aria-label={`Eliminar criterio ${etiquetaCriterio(c)}`}
-                          className="text-error hover:bg-error-container p-2.5 md:p-1 -m-2.5 md:-m-1 rounded-md transition-colors cursor-pointer opacity-100 md:opacity-0 md:group-hover:opacity-100 disabled:opacity-50"
+                          className="text-error hover:bg-error-container w-11 h-11 -m-1.5 flex items-center justify-center rounded-md transition-colors cursor-pointer disabled:opacity-50"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -473,7 +473,7 @@ export function Settings() {
                     onChange={(e) => setUbicacionDraft(e.target.value)}
                     aria-label="Nueva ubicación"
                     placeholder="Ej: Buenos Aires, Argentina"
-                    className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-2 text-sm focus:border-primary focus:outline-none"
+                    className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-3 min-h-11 text-base focus:border-primary focus:outline-none"
                   />
                   <input
                     type="number"
@@ -484,7 +484,7 @@ export function Settings() {
                     onChange={(e) => setUbicacionPesoDraft(e.target.value)}
                     onFocus={(e) => e.target.select()}
                     placeholder="Puntos"
-                    className="w-16 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-2 text-sm focus:border-primary focus:outline-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-16 bg-surface-container-lowest border border-outline-variant rounded-lg px-3 min-h-11 text-base focus:border-primary focus:outline-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   <button
                     type="submit"
@@ -500,8 +500,8 @@ export function Settings() {
         </section>
         <section className="flex flex-col gap-3">
           <div>
-            <h2 className="text-2xl font-heading font-semibold text-on-surface">Mis tecnologías y cuánto pesan</h2>
-            <p className="text-sm text-on-surface-variant mt-0.5">Las tecnologías que te interesan. Cuanto más peso tiene una, más arriba aparecen las ofertas que la mencionan.</p>
+            <h2 className="text-2xl font-heading font-bold text-on-surface">Mis tecnologías y cuánto pesan</h2>
+            <p className="text-base text-on-surface-variant mt-0.5">Las tecnologías que te interesan. Cuanto más peso tiene una, más arriba aparecen las ofertas que la mencionan.</p>
           </div>
           {/* STACK: Keywords & Weights */}
           <section className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm flex flex-col h-125">
@@ -510,13 +510,13 @@ export function Settings() {
                 <Terminal className="w-6 h-6 text-primary" />
                 <h3 className="text-xl font-heading font-semibold text-on-surface">Tecnologías</h3>
               </div>
-              <span className="bg-primary-container text-on-primary-container text-[11px] font-semibold px-2 py-1 rounded-full">
+              <span className="bg-primary-container text-on-primary-container text-sm font-semibold px-3 py-1 rounded-full">
                 Más peso, más puntos
               </span>
             </div>
 
             <div className="flex-1 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-2">
-              <div className="grid grid-cols-12 gap-2 px-4 pb-2 border-b border-outline-variant text-xs font-medium text-on-surface-variant">
+              <div className="grid grid-cols-12 gap-2 px-4 pb-2 border-b border-outline-variant text-sm font-medium text-on-surface-variant">
                 <div className="col-span-6">Tecnología</div>
                 <div className="col-span-3 text-center">Peso (puntos)</div>
                 <div className="col-span-1 text-center">Activo</div>
@@ -538,7 +538,7 @@ export function Settings() {
                   )}
                 >
                   <div className="col-span-6">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container border border-outline-variant rounded-md text-xs font-medium text-on-surface">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container border border-outline-variant rounded-md text-base font-semibold text-on-surface">
                       {c.valor_comparacion}
                     </div>
                   </div>
@@ -553,7 +553,7 @@ export function Settings() {
                       onChange={(e) => handlePesoChange(c.id, e.target.value)}
                       onFocus={(e) => e.target.select()}
                       onBlur={() => handlePesoBlur(c)}
-                      className="w-16 text-center text-sm text-on-surface bg-transparent border-b border-outline-variant focus:border-primary focus:outline-none pb-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="w-16 text-center text-base font-semibold text-on-surface bg-transparent border-b border-outline-variant focus:border-primary focus:outline-none pb-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
                   <div className="col-span-1 flex justify-center">
@@ -564,13 +564,13 @@ export function Settings() {
                       onClick={() => handleToggleActivo(c)}
                     />
                   </div>
-                  <div className="col-span-2 flex justify-end opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <div className="col-span-2 flex justify-end">
                     <button
                       type="button"
                       disabled={savingIds.has(c.id)}
                       onClick={() => handleDelete(c)}
                       aria-label={`Eliminar criterio ${etiquetaCriterio(c)}`}
-                      className="text-error hover:bg-error-container p-2.5 md:p-1 -m-2.5 md:-m-1 rounded-md transition-colors cursor-pointer disabled:opacity-50"
+                      className="text-error hover:bg-error-container w-11 h-11 -m-1.5 flex items-center justify-center rounded-md transition-colors cursor-pointer disabled:opacity-50"
                     >
                       <Trash2 className="w-4.5 h-4.5" />
                     </button>
@@ -589,7 +589,7 @@ export function Settings() {
                   onChange={(e) => setStackDraft(e.target.value)}
                   aria-label="Nueva tecnología"
                   placeholder="Ej: React, Python, SQL"
-                  className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                  className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 min-h-11 text-base focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                 />
                 <input
                   type="number"
@@ -600,7 +600,7 @@ export function Settings() {
                   onChange={(e) => setStackPesoDraft(e.target.value)}
                   onFocus={(e) => e.target.select()}
                   placeholder="Peso"
-                  className="w-24 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-24 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 min-h-11 text-base focus:border-primary focus:ring-1 focus:ring-primary outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <button
                   type="submit"
@@ -616,8 +616,8 @@ export function Settings() {
         </section>
         <section className="flex flex-col gap-3">
           <div>
-            <h2 className="text-2xl font-heading font-semibold text-on-surface">Avisos de seguimiento</h2>
-            <p className="text-sm text-on-surface-variant mt-0.5">Cuándo querés que te recordemos una postulación sin novedades.</p>
+            <h2 className="text-2xl font-heading font-bold text-on-surface">Avisos de seguimiento</h2>
+            <p className="text-base text-on-surface-variant mt-0.5">Cuándo querés que te recordemos una postulación sin novedades.</p>
           </div>
         {/* Global Settings Section */}
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
