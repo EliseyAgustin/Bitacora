@@ -60,6 +60,6 @@ test.describe('pantallas de acceso', () => {
   test('«No encontrada» usa el campo naranja con su frase', async ({ page }) => {
     await page.goto('/ruta-que-no-existe');
     await expect(page.getByText('Acá no hay nada, ni cavando.')).toBeVisible();
-    await expect(page.locator('.pub-marco')).toHaveAttribute('data-campo', '2');
+    await expect(page.locator('.pub-marco-panel')).toHaveAttribute('data-campo', '2');
   });
 });

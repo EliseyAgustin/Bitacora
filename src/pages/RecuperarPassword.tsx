@@ -1,6 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { KeyRound, MailCheck } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { EncabezadoAuth } from '@/components/auth/EncabezadoAuth';
@@ -58,45 +57,46 @@ export function RecuperarPassword() {
 
   return (
     <AuthLayout
-      compacto
       pasos={enviado ? 2 : 1}
       frase={enviado ? 'Revisá tu correo: ya salió el enlace.' : 'Te mandamos un enlace y volvés a entrar.'}
     >
 
       {!enviado ? (
         <>
-          <EncabezadoAuth icono={KeyRound} titulo="¿Olvidaste tu contraseña?">
+          <EncabezadoAuth titulo="¿Olvidaste tu contraseña?">
             <p>No pasa nada. Escribí el email con el que te registraste y te enviamos un enlace para elegir una nueva.</p>
           </EncabezadoAuth>
 
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
-              <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
+          <form onSubmit={handleSubmit} noValidate className="pub-form">
+            <div className="pub-campo">
+              <label htmlFor="email-recuperar" className="pub-etiqueta">
                 Email
-                <input
-                  type="email"
-                  maxLength={254}
-                  autoComplete="email"
-                  value={email}
-                  aria-invalid={Boolean(errorEmail)}
-                  aria-describedby={errorEmail ? 'error-email' : undefined}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setErrorEmail(null);
-                  }}
-                  onFocus={scrollFieldIntoView}
-                  className="w-full h-11 bg-surface border border-outline-variant rounded-lg px-3 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all aria-invalid:border-error"
-                />
               </label>
+              <input
+                id="email-recuperar"
+                type="email"
+                maxLength={254}
+                autoComplete="email"
+                placeholder="tu@email.com"
+                value={email}
+                aria-invalid={Boolean(errorEmail)}
+                aria-describedby={errorEmail ? 'error-email' : undefined}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrorEmail(null);
+                }}
+                onFocus={scrollFieldIntoView}
+                className="pub-input"
+              />
               {errorEmail && (
-                <p id="error-email" role="alert" className="text-sm text-error">
+                <p id="error-email" role="alert" className="pub-aviso">
                   {errorEmail}
                 </p>
               )}
             </div>
 
             {errorServicio && (
-              <p role="alert" className="text-sm text-error">
+              <p role="alert" className="pub-aviso">
                 {errorServicio.mensaje}
               </p>
             )}
@@ -104,55 +104,55 @@ export function RecuperarPassword() {
             <button
               type="submit"
               disabled={enviando}
-              className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="pub-btn"
             >
               {enviando ? 'Enviando…' : 'Enviar enlace'}
             </button>
 
-            <Link to="/" className="text-center text-sm text-on-surface-variant hover:text-primary transition-colors">
+            <Link to="/" className="pub-enlace">
               Volver a iniciar sesión
             </Link>
           </form>
         </>
       ) : (
         <>
-          <EncabezadoAuth icono={MailCheck} titulo="Revisá tu correo" tono="exito">
+          <EncabezadoAuth titulo="Revisá tu correo">
             <p role="status">Si el email existe, te enviamos un enlace para cambiar tu contraseña.</p>
             <p>
               Lo pedimos para
-              <strong className="block text-on-surface break-words">{email.trim()}</strong>
+              <strong className="pub-correo">{email.trim()}</strong>
             </p>
           </EncabezadoAuth>
 
-          <ul className="text-xs text-on-surface-variant bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 flex flex-col gap-1.5 list-disc pl-8">
+          <ul className="pub-notas">
             <li>Puede tardar unos minutos en llegar.</li>
             <li>Si no lo ves, mirá también la carpeta de spam o correo no deseado.</li>
             <li>El enlace vence al rato y solo se puede usar una vez.</li>
           </ul>
 
           {errorServicio && (
-            <p role="alert" className="text-sm text-error">
+            <p role="alert" className="pub-aviso">
               {errorServicio.mensaje}
             </p>
           )}
 
-          <div className="flex flex-col gap-3">
+          <div className="pub-form">
             <button
               type="button"
               onClick={() => void enviar()}
               disabled={enviando || espera > 0}
-              className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="pub-btn"
             >
               {enviando ? 'Enviando…' : espera > 0 ? `Podés pedir otro enlace en ${espera} s` : 'Reenviar enlace'}
             </button>
             <button
               type="button"
               onClick={usarOtroEmail}
-              className="h-11 text-sm font-medium text-on-surface-variant hover:text-primary border border-outline-variant rounded-lg transition-colors cursor-pointer"
+              className="pub-enlace-btn"
             >
               Usar otro email
             </button>
-            <Link to="/" className="text-center text-sm text-on-surface-variant hover:text-primary transition-colors">
+            <Link to="/" className="pub-enlace">
               Volver a iniciar sesión
             </Link>
           </div>

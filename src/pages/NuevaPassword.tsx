@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
+import { Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CheckCircle2, Loader2, LockKeyhole, TriangleAlert } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { CampoPassword } from '@/components/auth/CampoPassword';
@@ -60,18 +60,18 @@ export function NuevaPassword() {
   // Sin sesión de recuperación no hay a quién cambiarle la contraseña: el enlace venció, ya se usó o se abrió a mano.
   if (!session || enlaceConError()) {
     return (
-      <AuthLayout compacto pasos={3} frase="Este enlace ya no sirve, pero se arregla rápido.">
-        <EncabezadoAuth icono={TriangleAlert} titulo="No pudimos validar el enlace" tono="alerta">
+      <AuthLayout pasos={3} frase="Este enlace ya no sirve, pero se arregla rápido.">
+        <EncabezadoAuth titulo="No pudimos validar el enlace">
           <p role="alert">{traducirErrorAuth({ code: 'otp_expired' }, 'nueva-password').mensaje}</p>
         </EncabezadoAuth>
-        <div className="flex flex-col gap-3">
+        <div className="pub-form">
           <Link
             to="/recuperar"
-            className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center"
+            className="pub-btn pub-btn-enlace"
           >
             Pedir un enlace nuevo
           </Link>
-          <Link to="/" className="text-center text-sm text-on-surface-variant hover:text-primary transition-colors">
+          <Link to="/" className="pub-enlace">
             Volver a iniciar sesión
           </Link>
         </div>
@@ -81,14 +81,14 @@ export function NuevaPassword() {
 
   if (listo) {
     return (
-      <AuthLayout compacto campo={3} frase="Listo: tu cuenta está otra vez a tu nombre.">
-        <EncabezadoAuth icono={CheckCircle2} titulo="Tu contraseña quedó actualizada" tono="exito">
+      <AuthLayout campo={2} frase="Listo: tu cuenta está otra vez a tu nombre.">
+        <EncabezadoAuth titulo="Tu contraseña quedó actualizada">
           <p role="status">Listo, ya podés usar tu nueva contraseña la próxima vez que inicies sesión.</p>
         </EncabezadoAuth>
         <button
           type="button"
           onClick={() => navigate(RUTAS.postulaciones, { replace: true })}
-          className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity cursor-pointer"
+          className="pub-btn"
         >
           Continuar
         </button>
@@ -97,13 +97,14 @@ export function NuevaPassword() {
   }
 
   return (
-    <AuthLayout compacto pasos={3} frase="Último paso: elegí una clave que solo sepas vos.">
-      <EncabezadoAuth icono={LockKeyhole} titulo="Elegí tu contraseña nueva">
+    <AuthLayout pasos={3} frase="Último paso: elegí una clave que solo sepas vos.">
+      <EncabezadoAuth titulo="Elegí tu contraseña nueva">
         <p>Escribila dos veces para asegurarte de que no hay errores.</p>
       </EncabezadoAuth>
 
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} noValidate className="pub-form">
         <CampoPassword
+          sobreCampo
           etiqueta="Contraseña nueva"
           value={password}
           onChange={(v) => {
@@ -114,9 +115,10 @@ export function NuevaPassword() {
           error={errorPassword}
           idError="error-password-nueva"
         />
-        <MedidorPassword password={password} />
-        <ChecklistPassword password={password} />
+        <MedidorPassword password={password} sobreCampo />
+        <ChecklistPassword password={password} sobreCampo />
         <CampoPassword
+          sobreCampo
           etiqueta="Repetí la contraseña"
           value={confirmacion}
           onChange={(v) => {
@@ -129,7 +131,7 @@ export function NuevaPassword() {
         />
 
         {errorServicio && (
-          <p role="alert" className="text-sm text-error">
+          <p role="alert" className="pub-aviso">
             {errorServicio.mensaje}
           </p>
         )}
@@ -137,7 +139,7 @@ export function NuevaPassword() {
         <button
           type="submit"
           disabled={guardando}
-          className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+          className="pub-btn"
         >
           {guardando ? 'Guardando…' : 'Guardar contraseña nueva'}
         </button>

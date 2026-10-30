@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { SearchX } from 'lucide-react';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { EncabezadoAuth } from '@/components/auth/EncabezadoAuth';
 import { useAuth } from '@/hooks/useAuth';
@@ -14,13 +13,13 @@ export function NoEncontrada() {
   const destino = session ? rutaInicialPorRol(rol ?? 'candidato') : '/';
 
   return (
-    <AuthLayout compacto campo={2} frase="Acá no hay nada, ni cavando.">
-      <EncabezadoAuth icono={SearchX} titulo="No encontramos esa página">
+    <AuthLayout campo={2} frase="Acá no hay nada, ni cavando.">
+      <EncabezadoAuth titulo="No encontramos esa página">
         <p>La dirección no existe o cambió. Volvé al inicio y seguí desde ahí.</p>
       </EncabezadoAuth>
       <Link
         to={destino}
-        className="h-11 bg-cta text-on-cta text-sm font-medium px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center"
+        className="pub-btn pub-btn-enlace"
       >
         {session ? 'Ir a mi inicio' : 'Ir a iniciar sesión'}
       </Link>

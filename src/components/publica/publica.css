@@ -936,3 +936,59 @@
   --color-on-surface-variant: #a7afc7;
   --color-outline: #7d84a0;
 }
+
+/* Recuperar contraseña, nueva contraseña y «no encontrada»: el mismo esqueleto del Login (frase grande, formulario sin tarjeta). */
+.pub-f1 {
+  --campo-fondo: var(--color-capitulo-1);
+  --campo-tinta: var(--color-capitulo-1-tinta);
+}
+.pub-f2 {
+  --campo-fondo: var(--color-capitulo-2);
+  --campo-tinta: var(--color-capitulo-2-tinta);
+}
+.pub-copy .pub-frase {
+  font-size: var(--pub-paso-titulo);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  max-width: 13ch;
+}
+.pub-copy .pub-pasos {
+  margin-top: 40px;
+}
+.pub-panel h1 {
+  font-size: 1.875rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.pub-lead-multi p + p {
+  margin-top: 8px;
+}
+.pub-correo {
+  display: block;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.pub-notas {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 1rem;
+}
+@media (max-width: 900px) {
+  .pub-copy .pub-frase {
+    font-size: clamp(2.25rem, 10vw, 3.25rem);
+    max-width: none;
+  }
+  .pub-copy .pub-pasos {
+    margin-top: 24px;
+  }
+}
+.pub-marco-panel {
+  overflow: hidden;
+  min-height: 100svh;
+}
