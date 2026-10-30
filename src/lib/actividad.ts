@@ -8,10 +8,12 @@ const DIA_MS = 24 * 60 * 60 * 1000;
 export const MOVIMIENTOS_MINIMOS = 3; // con menos movimientos en total, todavía no hay un ritmo que medir
 export const DIAS_HISTORIAL_MINIMO = 7; // el primer movimiento tiene que tener al menos una semana
 export const DIAS_SIN_ACTIVIDAD = 10; // sin ningún movimiento en este tiempo, se invita a retomar
-export const CAIDA_DEL_RITMO = 0.5; // esta semana con la mitad o menos de la anterior es «bajó el ritmo»
+export const MOVIMIENTOS_SEMANA_PREVIA = 4; // para decir que esta semana fue más tranquila, la anterior tiene que haber tenido al menos 4
+export const CAIDA_DEL_RITMO = 0.5; // esta semana con la mitad o menos de la anterior es «más tranquila»
 
-export type EstadoActividad = 'recien-empieza' | 'sin-actividad' | 'bajo-ritmo' | 'vas-bien' | 'parecido';
-export type EstadoAvisable = 'sin-actividad' | 'bajo-ritmo' | 'vas-bien';
+// «parecido» es todo lo que no merece un aviso: el ritmo es similar o mayor.
+export type EstadoActividad = 'recien-empieza' | 'sin-actividad' | 'bajo-ritmo' | 'parecido';
+export type EstadoAvisable = 'sin-actividad' | 'bajo-ritmo';
 
 export interface ResultadoActividad {
   estado: EstadoActividad;
@@ -54,8 +56,7 @@ export function estadoDeActividad(movimientos: Date[], ahora: Date): ResultadoAc
     return resultado('recien-empieza');
   }
   if (ultimo !== null && t - ultimo >= DIAS_SIN_ACTIVIDAD * DIA_MS) return resultado('sin-actividad');
-  if (anterior >= MOVIMIENTOS_MINIMOS && esta <= anterior * CAIDA_DEL_RITMO) return resultado('bajo-ritmo');
-  if (esta >= anterior && esta >= MOVIMIENTOS_MINIMOS) return resultado('vas-bien');
+  if (anterior >= MOVIMIENTOS_SEMANA_PREVIA && esta <= anterior * CAIDA_DEL_RITMO) return resultado('bajo-ritmo');
   return resultado('parecido');
 }
 
@@ -66,26 +67,21 @@ export interface MensajeActividad {
 
 const movimientos = (n: number) => (n === 1 ? '1 movimiento' : `${n} movimientos`);
 
-// Tono cálido y motivador, sin culpar. Solo tres estados tienen aviso: los otros dos no muestran nada.
+// Tono amable, sin reproche ni órdenes: dice qué pasó y deja la puerta abierta («cuando quieras»). Solo dos estados tienen aviso.
 export function mensajeDeActividad(r: ResultadoActividad): MensajeActividad | null {
   switch (r.estado) {
     case 'bajo-ritmo':
       return {
-        titulo: 'Bajó tu ritmo',
+        titulo: 'Esta semana fue más tranquila',
         texto:
           r.esta === 0
-            ? `Esta semana no registraste movimientos y la anterior hiciste ${r.anterior}. Con una postulación más, volvés a tu ritmo.`
-            : `Esta semana hiciste ${movimientos(r.esta)} y la anterior ${r.anterior}. Con una postulación más, volvés a tu ritmo.`,
+            ? `Esta semana no registraste movimientos; la anterior hiciste ${r.anterior}. Cuando quieras, una postulación nueva te ayuda a retomar el ritmo.`
+            : `Hiciste ${movimientos(r.esta)} y la semana anterior ${r.anterior}. Cuando quieras, una postulación nueva te ayuda a retomar el ritmo.`,
       };
     case 'sin-actividad':
       return {
         titulo: '¿Retomamos?',
-        texto: `Hace ${r.diasSinActividad} días que no registrás actividad. Una postulación o una novedad alcanza para volver a arrancar.`,
-      };
-    case 'vas-bien':
-      return {
-        titulo: 'Vas muy bien',
-        texto: `${movimientos(r.esta)} esta semana, y la anterior ${r.anterior}. ¡Seguí así!`,
+        texto: `Hace ${r.diasSinActividad} días que no registrás actividad. Cuando quieras, una postulación o una novedad alcanza para volver a arrancar.`,
       };
     default:
       return null;
@@ -96,8 +92,8 @@ export function mensajeDeActividad(r: ResultadoActividad): MensajeActividad | nu
 
 type Almacen = Pick<Storage, 'getItem' | 'setItem'>;
 
-// «Bajó el ritmo» y «sin actividad» insisten un poco más que «vas muy bien», que es solo una felicitación.
-export const OCULTAR_DIAS: Record<EstadoAvisable, number> = { 'bajo-ritmo': 3, 'sin-actividad': 3, 'vas-bien': 7 };
+// Cerrado un aviso, no vuelve por tres días. La clave incluye el estado, así que pasar de uno a otro es un aviso nuevo.
+export const OCULTAR_DIAS: Record<EstadoAvisable, number> = { 'bajo-ritmo': 3, 'sin-actividad': 3 };
 
 const clave = (userId: string, estado: EstadoAvisable) => `laburin:aviso:${userId}:${estado}`;
 
@@ -130,27 +126,18 @@ export function almacenLocal(): Almacen | null {
 }
 
 export function esAvisable(estado: EstadoActividad): estado is EstadoAvisable {
-  return estado === 'sin-actividad' || estado === 'bajo-ritmo' || estado === 'vas-bien';
+  return estado === 'sin-actividad' || estado === 'bajo-ritmo';
 }
 
-// «Vas muy bien» es solo una felicitación: aparece una vez por semana. En la sesión en que apareció se queda a la vista; en las
-// siguientes, no, hasta que pase una semana. Si la persona la cerró a mano, tampoco vuelve en ese tiempo.
-export function debeFelicitar(userId: string, ahora: Date, local: Almacen | null, sesion: Almacen | null): boolean {
-  if (avisoCerrado(userId, 'vas-bien', ahora, local)) return false;
-
-  const claveVista = `laburin:felicitacion-vista:${userId}`;
-  const claveSesion = `laburin:felicitacion-sesion:${userId}`;
-  try {
-    if (sesion?.getItem(claveSesion)) return true; // ya se mostró en esta sesión: sigue a la vista
-
-    const vista = Number(local?.getItem(claveVista));
-    const pasoUnaSemana = !Number.isFinite(vista) || vista <= 0 || ahora.getTime() - vista >= OCULTAR_DIAS['vas-bien'] * DIA_MS;
-    if (!pasoUnaSemana) return false;
-
-    local?.setItem(claveVista, String(ahora.getTime()));
-    sesion?.setItem(claveSesion, '1');
-  } catch {
-    // sin almacenamiento no se puede recordar: se muestra
-  }
-  return true;
+// Qué aviso se le muestra a la persona: el del estado actual, con su mensaje, salvo que no merezca aviso o lo haya cerrado hace poco.
+export function avisoVisible(
+  resultado: ResultadoActividad | null,
+  userId: string,
+  ahora: Date,
+  almacen: Almacen | null
+): { estado: EstadoAvisable; mensaje: MensajeActividad } | null {
+  if (!resultado || !esAvisable(resultado.estado)) return null;
+  const mensaje = mensajeDeActividad(resultado);
+  if (!mensaje || avisoCerrado(userId, resultado.estado, ahora, almacen)) return null;
+  return { estado: resultado.estado, mensaje };
 }

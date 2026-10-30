@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { PreguntaPostulacion } from '@/components/PreguntaPostulacion';
-import { ActividadProvider } from '@/hooks/useActividad';
 import { almacenDeSesion, marcarVisitada, yaVisitada } from '@/lib/visitas';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
@@ -23,7 +22,6 @@ export function AppLayout() {
   }, [location.pathname]);
 
   return (
-    <ActividadProvider>
     <div className="flex h-screen overflow-hidden bg-background">
       <a
         href="#contenido"
@@ -46,6 +44,5 @@ export function AppLayout() {
         </main>
       </div>
     </div>
-    </ActividadProvider>
   );
 }

@@ -401,7 +401,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
               <>
                 <FilaInterruptor
                   titulo="Aviso de ritmo de búsqueda"
-                  detalle="Te avisa cuando baja tu actividad, y te felicita cuando vas bien."
+                  detalle="Te avisa, con buena onda, si pasaron varios días sin novedades o si una semana fue más tranquila."
                   activo={prefs.avisoActividad}
                   onCambiar={(v) => cambiarPreferencia('avisoActividad', v)}
                 />

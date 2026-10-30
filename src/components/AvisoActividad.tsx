@@ -1,16 +1,15 @@
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { Topo } from '@/components/publica/Topo';
-import { useActividad } from '@/hooks/useActividad';
+import { useAvisoActividad } from '@/hooks/useActividad';
 import { RUTAS } from '@/lib/rutas';
 import { cn } from '@/lib/utils';
 import type { EstadoAvisable, MensajeActividad } from '@/lib/actividad';
 
-// Cada estado usa el color de una etapa para su fondo suave: cálido si hay que retomar, verde si va bien.
+// Cada estado usa el color de una etapa para su fondo suave, cálido y sin alarma.
 const TONOS: Record<EstadoAvisable, string> = {
   'bajo-ritmo': 'bg-etapa-en-proceso-fondo text-etapa-en-proceso-tinta',
   'sin-actividad': 'bg-etapa-aplicado-fondo text-etapa-aplicado-tinta',
-  'vas-bien': 'bg-etapa-oferta-fondo text-etapa-oferta-tinta',
 };
 
 interface VistaProps {
@@ -72,15 +71,13 @@ interface AvisoActividadProps {
 
 // Aviso del sistema sobre el ritmo de la búsqueda: amable, con la mascota, y con un botón que lleva a retomar.
 export function AvisoActividad({ donde }: AvisoActividadProps) {
-  const { aviso, cerrar } = useActividad();
+  const { aviso, cerrar } = useAvisoActividad();
   if (!aviso) return null;
 
   const accion =
-    aviso.estado === 'vas-bien'
-      ? null
-      : donde === 'postulaciones'
-        ? { texto: 'Buscar más ofertas', ruta: RUTAS.ofertas }
-        : { texto: 'Ver Mis postulaciones', ruta: RUTAS.postulaciones };
+    donde === 'postulaciones'
+      ? { texto: 'Buscar más ofertas', ruta: RUTAS.ofertas }
+      : { texto: 'Ver Mis postulaciones', ruta: RUTAS.postulaciones };
 
   return <AvisoActividadVista estado={aviso.estado} mensaje={aviso.mensaje} accion={accion} onCerrar={cerrar} />;
 }

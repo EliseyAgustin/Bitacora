@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   DIAS_SIN_ACTIVIDAD,
+  MOVIMIENTOS_SEMANA_PREVIA,
+  OCULTAR_DIAS,
   avisoCerrado,
+  avisoVisible,
   cerrarAviso,
-  debeFelicitar,
   estadoDeActividad,
   mensajeDeActividad,
   movimientosDe,
@@ -13,6 +15,11 @@ const AHORA = new Date('2026-10-30T15:00:00Z');
 const DIA = 24 * 60 * 60 * 1000;
 const hace = (dias: number) => new Date(AHORA.getTime() - dias * DIA);
 const variosHace = (...dias: number[]) => dias.map(hace);
+
+function almacenFalso() {
+  const datos = new Map<string, string>();
+  return { getItem: (k: string) => datos.get(k) ?? null, setItem: (k: string, v: string) => void datos.set(k, v) };
+}
 
 describe('movimientosDe', () => {
   it('cuenta postulaciones creadas, interacciones registradas y cambios de estado reales', () => {
@@ -36,6 +43,10 @@ describe('movimientosDe', () => {
 });
 
 describe('estadoDeActividad', () => {
+  it('el umbral de la semana previa es de 4 movimientos', () => {
+    expect(MOVIMIENTOS_SEMANA_PREVIA).toBe(4);
+  });
+
   it('recién empieza: menos de 3 movimientos en total', () => {
     expect(estadoDeActividad(variosHace(1, 2), AHORA).estado).toBe('recien-empieza');
     expect(estadoDeActividad([], AHORA).estado).toBe('recien-empieza');
@@ -57,33 +68,30 @@ describe('estadoDeActividad', () => {
     expect(estadoDeActividad(variosHace(30, 25, 20, DIAS_SIN_ACTIVIDAD - 1), AHORA).estado).not.toBe('sin-actividad');
   });
 
-  it('bajó el ritmo: la semana anterior tuvo 3 o más y esta tiene la mitad o menos', () => {
+  it('bajó el ritmo: la semana anterior tuvo 4 o más y esta tiene la mitad o menos', () => {
     // anterior (de 7 a 14 días atrás): 4 movimientos; esta (últimos 7 días): 2
     const r = estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 2), AHORA);
     expect(r).toMatchObject({ estado: 'bajo-ritmo', esta: 2, anterior: 4 });
   });
 
+  it('el borde de la semana previa: con 4 hay aviso; con 3 no, aunque esta semana sea la mitad', () => {
+    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 2), AHORA).estado).toBe('bajo-ritmo'); // 4 anteriores, 2 esta
+    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 5), AHORA).estado).toBe('parecido'); // 3 anteriores, 1 esta: poco para comparar
+  });
+
   it('el borde de la caída: justo la mitad ya es «bajó»; un poco más, no', () => {
     expect(estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 3), AHORA).estado).toBe('bajo-ritmo'); // 4 anteriores, 2 esta (50 %)
-    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 4, 3), AHORA).estado).not.toBe('bajo-ritmo'); // 4 anteriores, 3 esta
+    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 4, 3), AHORA).estado).toBe('parecido'); // 4 anteriores, 3 esta
   });
 
-  it('con menos de 3 la semana anterior no hay caída que contar', () => {
-    expect(estadoDeActividad(variosHace(30, 25, 10, 9, 1), AHORA).estado).toBe('parecido'); // anterior: 2 (el de 10 y el de 9), esta: 1
+  it('una semana sin ningún movimiento tras una semana movida también cuenta', () => {
+    const r = estadoDeActividad(variosHace(30, 13, 12, 10, 9, 8), AHORA); // anterior: 5, esta: 0, el último fue hace 8 días
+    expect(r).toMatchObject({ estado: 'bajo-ritmo', esta: 0, anterior: 5 });
   });
 
-  it('vas muy bien: esta semana igual o mayor que la anterior y al menos 3', () => {
-    const r = estadoDeActividad(variosHace(30, 12, 11, 5, 4, 3, 2), AHORA);
-    expect(r).toMatchObject({ estado: 'vas-bien', esta: 4, anterior: 2 });
-    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 6, 5, 2), AHORA).estado).toBe('vas-bien'); // 3 y 3: igual
-  });
-
-  it('con menos de 3 esta semana no es «vas muy bien» aunque supere la anterior', () => {
-    expect(estadoDeActividad(variosHace(30, 25, 20, 3, 2), AHORA).estado).toBe('parecido');
-  });
-
-  it('ritmo parecido en cualquier otro caso', () => {
-    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 4, 3), AHORA).estado).toBe('parecido'); // 4 anteriores y 3 esta
+  it('si esta semana la actividad es igual o mayor, no hay nada que avisar (ya no existe «vas muy bien»)', () => {
+    expect(estadoDeActividad(variosHace(30, 12, 11, 5, 4, 3, 2), AHORA).estado).toBe('parecido');
+    expect(estadoDeActividad(variosHace(30, 13, 12, 10, 9, 6, 5, 3, 2), AHORA).estado).toBe('parecido');
   });
 
   it('las fechas futuras no cuentan', () => {
@@ -93,27 +101,34 @@ describe('estadoDeActividad', () => {
 });
 
 describe('mensajes del aviso', () => {
-  it('«bajó el ritmo» dice los dos números y no culpa', () => {
+  it('«una semana más tranquila» dice los dos números y propone sin presionar', () => {
     const m = mensajeDeActividad({ estado: 'bajo-ritmo', esta: 2, anterior: 7, diasSinActividad: 1 });
-    expect(m?.titulo).toBe('Bajó tu ritmo');
-    expect(m?.texto).toContain('Esta semana hiciste 2 movimientos y la anterior 7.');
+    expect(m?.titulo).toBe('Esta semana fue más tranquila');
+    expect(m?.texto).toContain('Hiciste 2 movimientos y la semana anterior 7.');
+    expect(m?.texto).toContain('Cuando quieras');
   });
 
   it('concuerda en singular y cuando no hubo ninguno', () => {
-    expect(mensajeDeActividad({ estado: 'bajo-ritmo', esta: 1, anterior: 3, diasSinActividad: 2 })?.texto).toContain('hiciste 1 movimiento ');
-    expect(mensajeDeActividad({ estado: 'bajo-ritmo', esta: 0, anterior: 4, diasSinActividad: 8 })?.texto).toContain('Esta semana no registraste movimientos y la anterior hiciste 4.');
+    expect(mensajeDeActividad({ estado: 'bajo-ritmo', esta: 1, anterior: 4, diasSinActividad: 2 })?.texto).toContain('Hiciste 1 movimiento y');
+    expect(mensajeDeActividad({ estado: 'bajo-ritmo', esta: 0, anterior: 4, diasSinActividad: 8 })?.texto).toContain(
+      'Esta semana no registraste movimientos; la anterior hiciste 4.'
+    );
   });
 
   it('«sin actividad» cuenta los días y propone retomar', () => {
     const m = mensajeDeActividad({ estado: 'sin-actividad', esta: 0, anterior: 0, diasSinActividad: 12 });
     expect(m?.titulo).toBe('¿Retomamos?');
     expect(m?.texto).toContain('Hace 12 días que no registrás actividad.');
+    expect(m?.texto).toContain('Cuando quieras');
   });
 
-  it('«vas muy bien» celebra y no pide nada', () => {
-    const m = mensajeDeActividad({ estado: 'vas-bien', esta: 7, anterior: 5, diasSinActividad: 0 });
-    expect(m?.titulo).toBe('Vas muy bien');
-    expect(m?.texto).toContain('7 movimientos esta semana');
+  it('el tono es amable: ningún mensaje reprocha ni manda', () => {
+    const textos = [
+      mensajeDeActividad({ estado: 'bajo-ritmo', esta: 0, anterior: 6, diasSinActividad: 9 }),
+      mensajeDeActividad({ estado: 'bajo-ritmo', esta: 2, anterior: 6, diasSinActividad: 1 }),
+      mensajeDeActividad({ estado: 'sin-actividad', esta: 0, anterior: 0, diasSinActividad: 14 }),
+    ].map((m) => `${m?.titulo} ${m?.texto}`);
+    for (const t of textos) expect(t).not.toMatch(/deberías|tenés que|no hiciste|culpa|vagancia|abandon|falta de|bajó tu ritmo/i);
   });
 
   it('«recién empieza» y «ritmo parecido» no muestran ningún aviso', () => {
@@ -123,27 +138,20 @@ describe('mensajes del aviso', () => {
 });
 
 describe('cerrar el aviso', () => {
-  function almacenFalso() {
-    const datos = new Map<string, string>();
-    return { getItem: (k: string) => datos.get(k) ?? null, setItem: (k: string, v: string) => void datos.set(k, v) };
-  }
-
   it('no está cerrado hasta que se cierra', () => {
     expect(avisoCerrado('u1', 'bajo-ritmo', AHORA, almacenFalso())).toBe(false);
   });
 
-  it('«bajó el ritmo» y «sin actividad» quedan cerrados 3 días; «vas muy bien», 7', () => {
+  it('los dos avisos quedan cerrados 3 días y no hay más avisos que esos dos', () => {
+    expect(OCULTAR_DIAS).toEqual({ 'bajo-ritmo': 3, 'sin-actividad': 3 });
     const almacen = almacenFalso();
     cerrarAviso('u1', 'bajo-ritmo', AHORA, almacen);
-    cerrarAviso('u1', 'vas-bien', AHORA, almacen);
     const despues = (dias: number) => new Date(AHORA.getTime() + dias * DIA);
     expect(avisoCerrado('u1', 'bajo-ritmo', despues(2.9), almacen)).toBe(true);
     expect(avisoCerrado('u1', 'bajo-ritmo', despues(3.1), almacen)).toBe(false);
-    expect(avisoCerrado('u1', 'vas-bien', despues(6.9), almacen)).toBe(true);
-    expect(avisoCerrado('u1', 'vas-bien', despues(7.1), almacen)).toBe(false);
   });
 
-  it('si el estado cambia, el aviso vuelve a aparecer (por ejemplo de «bajó» a «sin actividad»)', () => {
+  it('si el estado cambia, el aviso vuelve a aparecer (por ejemplo de «más tranquila» a «sin actividad»)', () => {
     const almacen = almacenFalso();
     cerrarAviso('u1', 'bajo-ritmo', AHORA, almacen);
     expect(avisoCerrado('u1', 'sin-actividad', AHORA, almacen)).toBe(false);
@@ -170,37 +178,26 @@ describe('cerrar el aviso', () => {
   });
 });
 
-describe('debeFelicitar («vas muy bien» una vez por semana)', () => {
-  function almacenFalso() {
-    const datos = new Map<string, string>();
-    return { getItem: (k: string) => datos.get(k) ?? null, setItem: (k: string, v: string) => void datos.set(k, v) };
-  }
+describe('avisoVisible: qué se le muestra a la persona', () => {
+  const sinActividad = estadoDeActividad(variosHace(30, 25, 20, 12), AHORA);
+  const masTranquila = estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 2), AHORA);
+  const parecido = estadoDeActividad(variosHace(30, 13, 12, 10, 9, 5, 4, 3), AHORA);
 
-  it('la primera vez se muestra y se queda a la vista durante toda esa sesión', () => {
-    const local = almacenFalso();
-    const sesion = almacenFalso();
-    expect(debeFelicitar('u1', AHORA, local, sesion)).toBe(true);
-    expect(debeFelicitar('u1', new Date(AHORA.getTime() + 60_000), local, sesion)).toBe(true);
+  it('muestra el aviso del estado con su mensaje', () => {
+    expect(avisoVisible(sinActividad, 'u1', AHORA, almacenFalso())).toMatchObject({ estado: 'sin-actividad', mensaje: { titulo: '¿Retomamos?' } });
+    expect(avisoVisible(masTranquila, 'u1', AHORA, almacenFalso())?.estado).toBe('bajo-ritmo');
   });
 
-  it('en otra sesión de la misma semana ya no aparece, y a los 7 días vuelve', () => {
-    const local = almacenFalso();
-    debeFelicitar('u1', AHORA, local, almacenFalso());
-    const otraSesion = (dias: number) => debeFelicitar('u1', new Date(AHORA.getTime() + dias * DIA), local, almacenFalso());
-    expect(otraSesion(2)).toBe(false);
-    expect(otraSesion(6.9)).toBe(false);
-    expect(otraSesion(7.1)).toBe(true);
+  it('no muestra nada si el ritmo es parecido, si recién empieza o si todavía no se calculó', () => {
+    expect(avisoVisible(parecido, 'u1', AHORA, almacenFalso())).toBeNull();
+    expect(avisoVisible(estadoDeActividad([], AHORA), 'u1', AHORA, almacenFalso())).toBeNull();
+    expect(avisoVisible(null, 'u1', AHORA, almacenFalso())).toBeNull();
   });
 
-  it('si la persona la cerró, no vuelve a aparecer en la semana', () => {
-    const local = almacenFalso();
-    const sesion = almacenFalso();
-    expect(debeFelicitar('u1', AHORA, local, sesion)).toBe(true);
-    cerrarAviso('u1', 'vas-bien', AHORA, local);
-    expect(debeFelicitar('u1', new Date(AHORA.getTime() + 60_000), local, sesion)).toBe(false);
-  });
-
-  it('sin almacenamiento en el navegador, se muestra', () => {
-    expect(debeFelicitar('u1', AHORA, null, null)).toBe(true);
+  it('no muestra un aviso que la persona cerró hace menos de 3 días', () => {
+    const almacen = almacenFalso();
+    cerrarAviso('u1', 'sin-actividad', AHORA, almacen);
+    expect(avisoVisible(sinActividad, 'u1', AHORA, almacen)).toBeNull();
+    expect(avisoVisible(sinActividad, 'u1', new Date(AHORA.getTime() + 4 * DIA), almacen)).not.toBeNull();
   });
 });

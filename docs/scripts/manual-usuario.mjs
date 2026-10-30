@@ -89,7 +89,7 @@ const doc = new Document({
       bullet('Seguir el estado de cada postulación en un tablero visual, desde "Por aplicar" hasta "Oferta" o "Rechazado".'),
       bullet('Registrar cada contacto con la empresa (mails, llamados, entrevistas) para no perder el hilo.'),
       bullet('Recibir un recordatorio cuando una postulación lleva mucho tiempo sin novedades. Es solo un aviso: no se borra nada.'),
-      bullet(`Recibir un aviso, con la mascota de ${MARCA.nombre}, cuando bajó tu ritmo de búsqueda (o una felicitación cuando vas bien).`),
+      bullet(`Recibir un aviso, con la mascota de ${MARCA.nombre}, cuando pasaron varios días sin novedades o una semana fue más tranquila que la anterior.`),
       bullet('Ver cómo te va en toda tu búsqueda: cuántas postulaciones activas tenés, cómo avanzan y qué fuentes te traen mejores ofertas.'),
       bullet(`Recibir mensajes del equipo de ${MARCA.nombre}, por ejemplo cuando falta algún dato de tu perfil.`),
       p('Las pantallas principales son: Ofertas, Mis postulaciones, Mi progreso, Mi perfil de búsqueda y Mensajes. Cada una abre con una banda de color (azul, naranja o verde salvia), el mismo de la pantalla de inicio, con su título y, debajo, una línea que explica qué se hace ahí. En el menú lateral, la pantalla en la que estás se marca con el color de su banda.'),
@@ -189,7 +189,7 @@ const doc = new Document({
       p('Tiene seis columnas: Por aplicar, Aplicado, En proceso, Entrevista, Oferta y Rechazado. Cada postulación es una tarjeta que vas moviendo de columna a medida que avanza el proceso. Si todavía no tenés ninguna, la pantalla te lo dice y un botón te lleva a Ofertas.'),
       p('Cada columna tiene su color y una frase debajo del nombre que explica qué significa: "Por aplicar" son las que guardaste pero todavía no te postulaste; "Aplicado", las que ya enviaste; "En proceso", las que te respondieron; "Entrevista", las que tienen una entrevista pendiente o hecha; "Oferta", las que te hicieron una propuesta; y "Rechazado", las que no siguieron adelante (queda como registro).'),
       h2('El aviso de actividad'),
-      p('Si baja el ritmo de tu búsqueda, arriba del tablero aparece una tarjeta con la mascota y un mensaje, por ejemplo "Bajó tu ritmo: esta semana hiciste 2 movimientos y la anterior 7". Un movimiento es una postulación nueva, una interacción registrada o un cambio de estado. El aviso también aparece si pasan 10 días sin actividad ("¿Retomamos?") y, una vez por semana, como felicitación si vas muy bien. En el menú, un punto junto a "Mis postulaciones" te avisa que hay uno. Lo podés cerrar con la ✕ (vuelve a aparecer a los 3 días, y la felicitación a la semana) o apagar en Mi cuenta. Si recién empezás y tenés pocos movimientos, no te avisamos nada.'),
+      p('Arriba del tablero (y de Mi progreso) puede aparecer una tarjeta amable con la mascota, en solo dos casos. Si pasaron 10 días sin ninguna actividad, dice "¿Retomamos?". Si la semana anterior fue movida (al menos 4 movimientos) y esta tuvo la mitad o menos, dice "Esta semana fue más tranquila: hiciste 2 movimientos y la semana anterior 7. Cuando quieras, una postulación nueva te ayuda a retomar el ritmo". Un movimiento es una postulación nueva, una interacción registrada o un cambio de estado. Lo podés cerrar con la ✕ (vuelve a aparecer a los 3 días) o apagar en Mi cuenta. Si recién empezás y tenés pocos movimientos, no te avisamos nada, y tampoco cuando tu ritmo sube o se mantiene.'),
       h2('En computadora'),
       p('Podés arrastrar la tarjeta de una columna a otra con el mouse: hacé clic, mantené presionado y soltá en la columna que corresponda.'),
       h2('En el celular'),
@@ -264,7 +264,7 @@ const doc = new Document({
       bullet('Postulaciones con movimiento: cuántas de las abiertas tuvieron una novedad esta semana.'),
       bullet('Días hasta tu primera entrevista: cuánto tarda, en promedio, una entrevista desde que te postulás.'),
       bullet('Postulaciones sin novedades: las que llevan más días sin movimiento que el límite que configuraste.'),
-      p('Tocá la "i" de cualquier tarjeta para ver la explicación completa. Casi todas muestran además una tendencia contra la semana anterior (por ejemplo "+5 vs. la semana anterior", con una flecha): si no hay datos para comparar, no se muestra. Debajo están el embudo (cuántas postulaciones llegaron a cada etapa, con los colores de las columnas del tablero), la distribución de los puntajes, las interacciones de las últimas ocho semanas y las ofertas por fuente. Si bajó tu ritmo, también ves acá el aviso de actividad.'),
+      p('Tocá la "i" de cualquier tarjeta para ver la explicación completa. Casi todas muestran además una tendencia contra la semana anterior (por ejemplo "+5 vs. la semana anterior", con una flecha): si no hay datos para comparar, no se muestra. Debajo están el embudo (cuántas postulaciones llegaron a cada etapa, con los colores de las columnas del tablero), la distribución de los puntajes, las interacciones de las últimas ocho semanas y las ofertas por fuente. Si pasaron varios días sin novedades, también ves acá el aviso de actividad.'),
 
       ...figure('08-progreso.png', { ...DESKTOP, caption: 'Mi progreso, con el resumen general de la búsqueda.' }),
 
