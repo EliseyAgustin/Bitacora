@@ -635,6 +635,7 @@
   grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 12px 32px;
   margin-top: 96px;
   font-size: 1.0625rem;

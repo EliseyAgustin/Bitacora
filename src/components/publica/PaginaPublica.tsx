@@ -1,4 +1,5 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, MouseEvent, ReactNode } from 'react';
+import { desplazarA } from '@/lib/desplazar';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
 import { CapituloAviso, CapituloEtapas, CapituloPuntaje } from './Capitulos';
@@ -29,8 +30,19 @@ const TITULARES: Record<ModoPublico, { titulo: string; texto: string }> = {
 export function PaginaPublica({ modo, onCrearCuenta, children }: PaginaPublicaProps) {
   const { titulo, texto } = TITULARES[modo];
 
+  // Los enlaces internos (Cómo funciona, Tu puntaje) bajan despacio en vez de saltar.
+  function alHacerClic(e: MouseEvent<HTMLDivElement>) {
+    const enlace = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+    const destino = enlace && document.getElementById(enlace.getAttribute('href')!.slice(1));
+    if (!destino) return;
+    e.preventDefault();
+    if (!destino.hasAttribute('tabindex')) destino.setAttribute('tabindex', '-1');
+    desplazarA(destino);
+    history.replaceState(null, '', `#${destino.id}`);
+  }
+
   return (
-    <div className="pub">
+    <div className="pub" onClick={alHacerClic}>
       <main>
         <section className="pub-capitulo pub-f1" aria-labelledby="titulo-principal">
           <header className="pub-top">
