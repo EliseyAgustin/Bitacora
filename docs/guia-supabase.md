@@ -6,7 +6,7 @@ Lo que hay que dejar configurado **en el panel de Supabase** (no se puede hacer 
 
 ## 1. Qué se necesita
 - Acceso al panel del proyecto de Supabase (https://supabase.com/dashboard).
-- La dirección de producción: `https://laburin.vercel.app`.
+- La dirección de producción: `https://bitacora-empleo.vercel.app`.
 - Un servicio de correo para el punto 4 (ver las opciones ahí).
 
 ## 2. Direcciones permitidas (obligatorio)
@@ -14,8 +14,8 @@ Lo que hay que dejar configurado **en el panel de Supabase** (no se puede hacer 
 
 | Campo | Valor |
 |---|---|
-| **Site URL** | `https://laburin.vercel.app` |
-| **Redirect URLs** | `https://laburin.vercel.app/**` y `http://localhost:3000/**` (para desarrollo) |
+| **Site URL** | `https://bitacora-empleo.vercel.app` |
+| **Redirect URLs** | `https://bitacora-empleo.vercel.app/**` y `http://localhost:3000/**` (para desarrollo) |
 
 Si querés probar versiones de prueba (previews) de Vercel, sumá `https://*-<tu-cuenta>.vercel.app/**`.
 
@@ -76,7 +76,7 @@ on conflict (user_id) do update set rol = 'administrador';
 Para quitarlo: `update public.roles_usuario set rol = 'candidato' where user_id = (select id from auth.users where email = 'EMAIL_DE_LA_CUENTA');`
 
 ## 7. Verificación (hacela con tu email real, en producción)
-1. Entrá a https://laburin.vercel.app → **¿Olvidaste tu contraseña?** → escribí tu email → *Enviar enlace*. Aparece "Revisá tu correo".
+1. Entrá a https://bitacora-empleo.vercel.app → **¿Olvidaste tu contraseña?** → escribí tu email → *Enviar enlace*. Aparece "Revisá tu correo".
 2. **El mail llega** (mirá también el spam), **en español** y con el diseño de Bitácora.
 3. El botón **abre la pantalla "Elegí tu contraseña nueva"** de Bitácora (no la página de inicio ni una de error).
 4. Elegí una contraseña, guardá, cerrá sesión y **entrá con la nueva**.

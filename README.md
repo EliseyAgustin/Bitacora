@@ -6,7 +6,7 @@
 
 Plataforma web para organizar y hacer seguimiento de una búsqueda laboral, con un motor de scoring configurable que puntúa cada oferta según las preferencias de cada usuario. Es el proyecto de la Práctica Profesional Supervisada de la Tecnicatura Universitaria en Tecnologías Web (Universidad Nacional del Oeste).
 
-**Deploy:** https://laburin.vercel.app
+**Deploy:** https://bitacora-empleo.vercel.app
 
 ## Qué hace
 
