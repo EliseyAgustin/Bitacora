@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { RUTAS } from '@/lib/rutas';
 import { useAuth } from '@/hooks/useAuth';
 import { useRol } from '@/hooks/useRol';
+import { useActividad } from '@/hooks/useActividad';
 import { useMensajesNoLeidos } from '@/hooks/useMensajesNoLeidos';
 import { CuentaModal } from '@/components/CuentaModal';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
@@ -29,6 +30,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const { signOut } = useAuth();
   const { rol } = useRol();
   const noLeidos = useMensajesNoLeidos(rol === 'candidato');
+  const { invitaARetomar } = useActividad();
   const navItems = rol === 'administrador' ? NAV_ADMINISTRADOR : rol === 'candidato' ? NAV_CANDIDATO : [];
   const [cuentaAbierta, setCuentaAbierta] = useState(false);
 
@@ -97,6 +99,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             >
               <item.icon strokeWidth={1.75} className="w-5 h-5 shrink-0" />
               <span>{item.label}</span>
+              {item.path === RUTAS.postulaciones && invitaARetomar && (
+                <span
+                  role="img"
+                  aria-label="Hay un aviso de actividad"
+                  className="ml-auto w-2.5 h-2.5 rounded-full bg-etapa-en-proceso"
+                />
+              )}
               {item.path === RUTAS.mensajes && noLeidos > 0 && (
                 <span
                   aria-label={noLeidos === 1 ? '1 mensaje sin leer' : `${noLeidos} mensajes sin leer`}

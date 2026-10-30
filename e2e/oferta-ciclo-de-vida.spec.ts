@@ -37,7 +37,8 @@ test('ciclo de vida de una oferta: crear, score, postular, mover por las 6 colum
 
   // --- Score: React (15) + remoto (10) con los criterios base ---
   await expect(page.getByRole('heading', { name: ROL, level: 3 })).toBeVisible();
-  await expect(page.getByText('25', { exact: true })).toBeVisible();
+  // La tarjeta lee el puntaje como «25 puntos» (el «puntos» es solo para lectores de pantalla).
+  await expect(page.getByRole('article').filter({ has: page.getByRole('heading', { name: ROL }) }).getByText('25 puntos')).toBeVisible();
   await expect(page.getByText('1 oferta', { exact: true })).toBeVisible();
 
   // --- Postularme ---

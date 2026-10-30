@@ -10,3 +10,13 @@ export const ETAPA_CLASES: Record<EstadoPostulacion, { punto: string; chip: stri
   oferta: { punto: 'bg-etapa-oferta', chip: 'bg-etapa-oferta-fondo text-etapa-oferta-tinta' },
   rechazado: { punto: 'bg-etapa-rechazado', chip: 'bg-etapa-rechazado-fondo text-etapa-rechazado-tinta' },
 };
+
+// Qué significa cada columna del tablero, en una frase. «Por aplicar» y «Aplicado» se confundían: la primera es guardar, la segunda es postularse.
+export const DESCRIPCION_ETAPA: Record<EstadoPostulacion, string> = {
+  por_aplicar: 'Las guardaste, todavía no te postulaste.',
+  aplicado: 'Ya te postulaste. Esperá una respuesta.',
+  en_proceso: 'Te respondieron y hay pasos en curso.',
+  entrevista: 'Tenés una entrevista pendiente o ya hecha.',
+  oferta: 'Te hicieron una propuesta.',
+  rechazado: 'No siguieron adelante. Queda como registro.',
+};

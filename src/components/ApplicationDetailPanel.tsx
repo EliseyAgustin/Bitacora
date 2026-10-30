@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { mensajeDeError } from '@/lib/errores';
+import { DESCRIPCION_ETAPA, ETAPA_CLASES } from '@/lib/etapas';
 import { cn, datetimeLocalValue, scoreBandClasses } from '@/lib/utils';
 import { crearInteraccion, eliminarInteraccion, listarInteracciones } from '@/services/interacciones';
 import {
@@ -192,7 +193,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
     <aside className="fixed right-0 top-14 md:top-0 bottom-0 w-130 max-w-full bg-surface-container-lowest border-l border-outline-variant shadow-[0_0_40px_rgba(0,0,0,0.1)] z-50 flex flex-col">
       <div className="px-6 py-6 border-b border-outline-variant flex items-start justify-between bg-surface-bright sticky top-0 z-10">
         <div className="min-w-0">
-          <h2 className="text-2xl font-semibold text-on-surface mb-1">{oferta?.rol ?? 'Cargando…'}</h2>
+          <h2 className="text-2xl font-heading font-bold text-on-surface mb-1">{oferta?.rol ?? 'Cargando…'}</h2>
           {oferta && (
             <div className="flex items-center gap-2 text-on-surface-variant text-sm">
               <Building2 className="w-4.5 h-4.5" />
@@ -223,13 +224,13 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                     <AlertTriangle className="w-4.5 h-4.5 shrink-0" />
                     Sin novedades hace {recordatorio.dias_inactividad} días
                   </div>
-                  <p className="text-xs pl-6.5">Es solo un recordatorio: no se borró ni se cambió nada.</p>
+                  <p className="text-sm pl-6.5">Es solo un recordatorio: no se borró ni se cambió nada.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleResolverRecordatorio}
                   disabled={resolviendo}
-                  className="shrink-0 text-xs font-semibold underline hover:no-underline cursor-pointer disabled:opacity-50"
+                  className="shrink-0 min-h-11 px-2 text-sm font-semibold underline hover:no-underline cursor-pointer disabled:opacity-50"
                 >
                   Marcar como resuelto
                 </button>
@@ -238,7 +239,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
 
             <div className="grid grid-cols-2 gap-4 p-4 bg-surface border border-outline-variant rounded-lg">
               <div>
-                <div className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider mb-1">
+                <div className="text-sm font-semibold text-on-surface-variant mb-1">
                   Puntaje
                 </div>
                 <div
@@ -251,7 +252,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                 </div>
               </div>
               <div>
-                <div className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider mb-1">
+                <div className="text-sm font-semibold text-on-surface-variant mb-1">
                   Fuente
                 </div>
                 <div className="flex items-center gap-2 text-sm text-on-surface h-12">
@@ -266,14 +267,14 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
             </div>
 
             <div>
-              <label htmlFor="ficha-estado" className="block text-xs font-medium text-on-surface-variant mb-2">
+              <label htmlFor="ficha-estado" className="block text-sm font-semibold text-on-surface-variant mb-2">
                 Estado de la postulación
               </label>
               <select
                 id="ficha-estado"
                 value={postulacion.estado}
                 onChange={(e) => handleEstadoChange(e.target.value as EstadoPostulacion)}
-                className="w-full appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface text-sm rounded-lg py-3 pl-4 pr-10 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-outline transition-colors cursor-pointer shadow-sm"
+                className="w-full appearance-none bg-surface-container-lowest border border-outline-variant text-on-surface text-base rounded-lg min-h-12 py-3 pl-4 pr-10 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-outline transition-colors cursor-pointer shadow-sm"
               >
                 {ESTADOS_POSTULACION.map(({ estado, label }) => (
                   <option key={estado} value={estado}>
@@ -281,6 +282,9 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                   </option>
                 ))}
               </select>
+              <p className={cn('mt-2 rounded-lg px-3 py-2 text-sm font-medium', ETAPA_CLASES[postulacion.estado].chip)}>
+                {DESCRIPCION_ETAPA[postulacion.estado]}
+              </p>
             </div>
 
             <div>
@@ -338,7 +342,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                   onSubmit={handleAgregarInteraccion}
                   className="mt-6 bg-surface border border-outline-variant rounded-lg p-4 shadow-sm"
                 >
-                  <h4 className="text-xs font-medium text-on-surface mb-4">Nueva interacción</h4>
+                  <h4 className="text-base font-semibold text-on-surface mb-4">Nueva interacción</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
                     <label className="block text-[11px] font-semibold text-on-surface-variant">
                       Tipo
@@ -380,14 +384,14 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                     <button
                       type="button"
                       onClick={() => setFormAbierto(false)}
-                      className="px-4 py-1.5 rounded-md text-on-surface-variant text-xs font-medium hover:bg-surface-container-highest transition-colors cursor-pointer"
+                      className="px-4 py-1.5 rounded-md text-on-surface-variant text-sm font-semibold min-h-11 hover:bg-surface-container-highest transition-colors cursor-pointer"
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
                       disabled={guardando}
-                      className="px-4 py-1.5 rounded-md bg-primary text-on-primary text-xs font-medium hover:opacity-90 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
+                      className="px-4 py-1.5 rounded-md bg-primary text-on-primary text-sm font-semibold min-h-11 hover:opacity-90 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
                     >
                       {guardando ? 'Guardando…' : 'Guardar'}
                     </button>

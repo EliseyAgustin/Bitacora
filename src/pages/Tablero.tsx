@@ -1,10 +1,12 @@
 import { useEffect, useState, type DragEvent } from 'react';
 import { AlertTriangle, Building2, Clock, Inbox, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AvisoActividad } from '@/components/AvisoActividad';
 import { PageHeader } from '@/components/PageHeader';
 import { PrimerosPasos } from '@/components/PrimerosPasos';
 import { RUTAS } from '@/lib/rutas';
 import { mensajeDeError } from '@/lib/errores';
+import { DESCRIPCION_ETAPA, ETAPA_CLASES } from '@/lib/etapas';
 import { ApplicationDetailPanel } from '@/components/ApplicationDetailPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { cn, scoreBorderClasses } from '@/lib/utils';
@@ -156,6 +158,7 @@ export function Tablero() {
           title="Mis postulaciones"
           help="Seguí en qué etapa está cada postulación. Arrastrá las tarjetas entre columnas, o usá el selector en el celular."
         />
+        <AvisoActividad donde="postulaciones" />
         <PrimerosPasos />
         {Object.keys(recordatorios).length > 0 && (
           <p className="text-sm text-on-surface-variant">
@@ -193,17 +196,23 @@ export function Tablero() {
                 dragOverEstado === estado && 'border-primary bg-primary-container/20'
               )}
             >
-              <div className="px-md py-sm border-b border-outline-variant bg-surface flex justify-between items-center shrink-0">
-                <h3 className="text-xs font-semibold text-on-surface uppercase tracking-wide">{label}</h3>
-                <span className="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full text-xs font-semibold">
-                  {items.length}
-                </span>
+              <div className="px-md pt-md pb-sm border-b border-outline-variant bg-surface shrink-0">
+                <div className="flex justify-between items-center gap-2">
+                  <h3 className="flex items-center gap-2 text-sm font-bold text-on-surface">
+                    <span aria-hidden="true" className={cn('w-2.5 h-2.5 rounded-full', ETAPA_CLASES[estado].punto)} />
+                    {label}
+                  </h3>
+                  <span className={cn('num px-2.5 py-0.5 rounded-full text-xs font-bold', ETAPA_CLASES[estado].chip)}>
+                    {items.length}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-on-surface-variant leading-snug">{DESCRIPCION_ETAPA[estado]}</p>
               </div>
 
               {items.length === 0 ? (
                 <div className="flex-1 overflow-y-auto p-sm space-y-sm flex flex-col items-center justify-center text-outline-variant custom-scrollbar">
                   <Inbox className="w-12 h-12 mb-1" />
-                  <p className="text-xs font-medium text-on-surface-variant">Sin tarjetas</p>
+                  <p className="text-xs font-medium text-on-surface-variant">Sin tarjetas por ahora</p>
                 </div>
               ) : (
                 <div className="flex-1 overflow-y-auto p-sm space-y-sm custom-scrollbar">

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { PreguntaPostulacion } from '@/components/PreguntaPostulacion';
+import { ActividadProvider } from '@/hooks/useActividad';
 import { almacenDeSesion, marcarVisitada, yaVisitada } from '@/lib/visitas';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
@@ -21,6 +23,7 @@ export function AppLayout() {
   }, [location.pathname]);
 
   return (
+    <ActividadProvider>
     <div className="flex h-screen overflow-hidden bg-background">
       <a
         href="#contenido"
@@ -32,15 +35,17 @@ export function AppLayout() {
       <Sidebar open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
       <div className="flex-1 flex flex-col w-full md:ml-60 md:w-[calc(100%-240px)] h-screen overflow-hidden relative">
         <Topbar onMenuClick={() => setMobileNavOpen(true)} />
+        <div className="pt-14 md:pt-0 shrink-0"><PreguntaPostulacion /></div>
         <main
           id="contenido"
           tabIndex={-1}
           data-entradas={primeraVisita ? 'si' : 'no'}
-          className="flex-1 overflow-auto pt-14 md:pt-0 h-full focus:outline-none"
+          className="flex-1 overflow-auto h-full focus:outline-none"
         >
           <Outlet />
         </main>
       </div>
     </div>
+    </ActividadProvider>
   );
 }

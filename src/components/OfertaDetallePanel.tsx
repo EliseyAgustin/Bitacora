@@ -1,5 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { Building2, CalendarDays, Check, Clock, ExternalLink, MapPin, Minus, Send, X } from 'lucide-react';
+import { EVENTO_PENDIENTE } from '@/components/PreguntaPostulacion';
+import { useAuth } from '@/hooks/useAuth';
+import { almacenLocal } from '@/lib/actividad';
+import { agregarPendiente } from '@/lib/pendientes';
 import { MODALIDAD_ETIQUETA } from '@/lib/etiquetas';
 import { ETAPA_CLASES } from '@/lib/etapas';
 import { resumenDeCoincidencias, urlSegura } from '@/lib/ofertaDetalle';
@@ -37,7 +41,15 @@ export function OfertaDetallePanel({
   onEditar,
 }: OfertaDetallePanelProps) {
   const cerrarRef = useRef<HTMLButtonElement>(null);
+  const { user } = useAuth();
   const enlace = urlSegura(oferta.url);
+
+  // Se recuerda que abrió el enlace para preguntarle, al volver, si llegó a postularse.
+  function alAbrirEnlace() {
+    if (!user || postulacion) return;
+    agregarPendiente(user.id, { ofertaId: oferta.id, empresa: oferta.empresa, rol: oferta.rol }, Date.now(), almacenLocal());
+    window.dispatchEvent(new Event(EVENTO_PENDIENTE));
+  }
   const desglose = desglosarScoring({ ...oferta }, criterios);
   const { coinciden, total } = resumenDeCoincidencias(desglose);
   const maximo = puntajeMaximoPosible(criterios);
@@ -198,6 +210,7 @@ export function OfertaDetallePanel({
         {enlace ? (
           <a
             href={enlace}
+            onClick={alAbrirEnlace}
             target="_blank"
             rel="noopener noreferrer"
             className="min-h-11 md:min-h-12 bg-primary text-on-primary text-base font-semibold px-5 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
@@ -246,7 +259,7 @@ export function OfertaDetallePanel({
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm text-on-surface-variant">
             {enlace && !postulacion
-              ? 'Cuando te postules en su sitio, volvé y marcala como aplicada en Mis postulaciones.'
+              ? 'Cuando vuelvas, te preguntamos si llegaste a postularte y la dejamos en Aplicado.'
               : esDeFuenteExterna && enlace
                 ? `La oferta original está publicada en ${oferta.fuente}: ahí se completa la postulación.`
                 : ''}
