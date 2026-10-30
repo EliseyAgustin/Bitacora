@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>Cambiá tu contraseña de %%MARCA%%</title>
+</head>
+<!--
+  PLANTILLA: el nombre sale de src/lib/marca.json (npm run docs:plantillas genera recuperar-contrasena.html).
+  Una tarjeta centrada con los colores del Login y el Registro: cabecera azul con el titular y el botón amarillo, un filete
+  naranja, cuerpo claro con el aviso en verde salvia y pie azul noche. Los mails no pueden llevar imágenes externas ni fuentes
+  propias: todo es texto y color, con la tipografía del sistema.
+-->
+<body style="margin:0; padding:0; background-color:#eef1ec;" bgcolor="#eef1ec">
+  <!-- Texto que se ve en la vista previa de la bandeja de entrada -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent; mso-hide:all;">
+    Pediste cambiar tu contraseña. Tocá el botón para elegir una nueva: el enlace se usa una sola vez.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef1ec" style="background-color:#eef1ec;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <!-- Tarjeta -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; border-radius:20px; overflow:hidden; background-color:#ffffff;" bgcolor="#ffffff">
+
+          <!-- Cabecera azul: marca, titular y botón -->
+          <tr>
+            <td bgcolor="#1b46c9" style="background-color:#1b46c9; padding:36px 40px 40px 40px; font-family:Segoe UI, Helvetica, Arial, sans-serif;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="36" height="36" align="center" valign="middle" bgcolor="#ffffff" style="width:36px; height:36px; background-color:#ffffff; border-radius:18px; color:#1b46c9; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:20px; font-weight:700; line-height:36px;">%%MARCA_INICIAL%%</td>
+                  <td style="padding-left:12px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:22px; font-weight:700; letter-spacing:-0.4px; color:#ffffff;">%%MARCA%%</td>
+                </tr>
+              </table>
+              <h1 style="margin:40px 0 0 0; font-size:36px; line-height:1.08; font-weight:700; letter-spacing:-1.2px; color:#ffffff;">Elegí una contraseña nueva.</h1>
+              <p style="margin:16px 0 0 0; font-size:17px; line-height:1.55; color:#ffffff;">
+                Hola. Recibimos un pedido para cambiar la contraseña de tu cuenta de %%MARCA%%.
+                Tocá el botón y elegila en un minuto.
+              </p>
+
+              <!-- Botón -->
+              <div style="margin-top:28px;">
+                <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ .ConfirmationURL }}" style="height:54px;v-text-anchor:middle;width:520px;" arcsize="15%" stroke="f" fillcolor="#f0ff1c"><w:anchorlock/><center style="color:#0e1330;font-family:Arial,sans-serif;font-size:17px;font-weight:bold;">Elegir una contraseña nueva</center></v:roundrect><![endif]-->
+                <!--[if !mso]><!-- -->
+                <a href="{{ .ConfirmationURL }}" style="display:block; background-color:#f0ff1c; color:#0e1330; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:17px; font-weight:700; line-height:1.2; text-align:center; text-decoration:none; padding:17px 24px; border-radius:10px;">
+                  Elegir una contraseña nueva
+                </a>
+                <!--<![endif]-->
+              </div>
+            </td>
+          </tr>
+
+          <!-- Filete naranja -->
+          <tr>
+            <td height="6" bgcolor="#ff7a45" style="height:6px; line-height:6px; font-size:0; background-color:#ff7a45;">&nbsp;</td>
+          </tr>
+
+          <!-- Cuerpo -->
+          <tr>
+            <td style="padding:32px 40px 8px 40px; font-family:Segoe UI, Helvetica, Arial, sans-serif; color:#101418;">
+              <!-- Aviso de vencimiento -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#e4efe6" style="background-color:#e4efe6; border-radius:12px;">
+                <tr>
+                  <td style="padding:18px 20px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:15px; line-height:1.55; color:#0e1330;">
+                    <strong style="font-size:16px;">El enlace vence al rato y solo se puede usar una vez.</strong><br>
+                    Si ya no sirve, pedí otro desde la pantalla de inicio de sesión, en «¿Olvidaste tu contraseña?».
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Respaldo si el botón no anda -->
+              <p style="margin:28px 0 6px 0; font-size:14px; line-height:1.6; color:#46504a;">
+                Si el botón no funciona, copiá y pegá esta dirección en tu navegador:
+              </p>
+              <p style="margin:0; font-size:13px; line-height:1.5; color:#1b46c9; word-break:break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color:#1b46c9; text-decoration:underline;">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Seguridad -->
+          <tr>
+            <td style="padding:24px 40px 36px 40px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:15px; line-height:1.6; color:#101418;">
+              <strong>Si no fuiste vos</strong>, ignorá este mensaje: tu contraseña actual sigue siendo la misma y nadie puede
+              entrar a tu cuenta con este correo.
+            </td>
+          </tr>
+
+          <!-- Pie azul noche -->
+          <tr>
+            <td bgcolor="#0e1330" style="background-color:#0e1330; padding:24px 40px; font-family:Segoe UI, Helvetica, Arial, sans-serif; font-size:13px; line-height:1.6; color:#d9deee;">
+              <strong style="font-size:15px; color:#ffffff;">%%MARCA%%</strong> · Tu búsqueda de empleo, en un solo lugar
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

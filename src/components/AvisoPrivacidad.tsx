@@ -1,7 +1,8 @@
 import { ShieldCheck } from 'lucide-react';
+import { MARCA } from '@/lib/marca';
 
 export const TEXTO_PRIVACIDAD =
-  'Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de Laburin. Tus ofertas y postulaciones son solo tuyas.';
+  `Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de ${MARCA.nombre}. Tus ofertas y postulaciones son solo tuyas.`;
 
 export function AvisoPrivacidad() {
   return (

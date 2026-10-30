@@ -1,5 +1,6 @@
 import { expect, test } from './fixtures';
 import { arbeitnow, mockearFuentes, remoteok, remotive } from './mocks';
+import { MARCA } from '../src/lib/marca';
 
 // Detalle de una oferta: un clic en la tarjeta abre un panel con el puntaje explicado, la descripción y el enlace para
 // postularse en el sitio de origen. Con los criterios base de la cuenta compartida (React 15 + remoto 10) el máximo es 25.
@@ -112,7 +113,7 @@ test('una oferta sin enlace lo avisa y deja agregarlo desde Editar, validando qu
   await expect(panel(page).getByText('Una descripción cargada a mano.')).toBeVisible();
 });
 
-test('"Buscar en LinkedIn" abre la búsqueda con los datos del perfil, en otra pestaña y sin acceso a Laburin', async ({ page, api }) => {
+test(`"Buscar en LinkedIn" abre la búsqueda con los datos del perfil, en otra pestaña y sin acceso a ${MARCA.nombre}`, async ({ page, api }) => {
   await api.sb
     .from('perfil_usuario')
     .update({ rol_buscado: 'Frontend Developer', ubicacion: 'Buenos Aires, Argentina', modalidad_preferida: 'remoto' })

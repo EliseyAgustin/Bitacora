@@ -7,6 +7,7 @@ import { formatearFechaHora } from '@/lib/etiquetas';
 import { contarNoLeidos, tituloDelMensaje, type Mensaje } from '@/lib/mensajes';
 import { RUTAS } from '@/lib/rutas';
 import { cn } from '@/lib/utils';
+import { MARCA } from '@/lib/marca';
 import {
   borrarMensaje,
   listarMisMensajes,
@@ -76,7 +77,7 @@ export function Mensajes() {
       <div className="max-w-3xl mx-auto flex flex-col gap-6 pb-6">
         <PageHeader
           title="Mensajes"
-          help="Avisos del equipo de Laburin sobre tu perfil. Los que todavía no leíste están resaltados."
+          help={`Avisos del equipo de ${MARCA.nombre} sobre tu perfil. Los que todavía no leíste están resaltados.`}
           action={
             noLeidos > 0 ? (
               <button
@@ -103,7 +104,7 @@ export function Mensajes() {
           <div className="flex flex-col items-center justify-center text-center py-16 gap-2">
             <Topo className="w-44" />
             <p className="text-lg font-semibold text-on-surface">Todavía no tenés mensajes.</p>
-            <p className="text-base text-on-surface-variant">Cuando el equipo de Laburin te escriba, lo vas a ver acá.</p>
+            <p className="text-base text-on-surface-variant">Cuando el equipo de {MARCA.nombre} te escriba, lo vas a ver acá.</p>
             <Link
               to={RUTAS.postulaciones}
               className="mt-3 bg-cta text-on-cta text-sm font-semibold px-5 min-h-11 inline-flex items-center rounded-lg shadow-sm hover:opacity-90 transition-all"

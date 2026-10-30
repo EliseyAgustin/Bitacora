@@ -5,6 +5,7 @@ import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
 import { CapituloAviso, CapituloEtapas, CapituloPuntaje } from './Capitulos';
 import { Topo } from './Topo';
 import './publica.css';
+import { MARCA } from '@/lib/marca';
 
 export type ModoPublico = 'login' | 'registro';
 
@@ -18,11 +19,11 @@ interface PaginaPublicaProps {
 const TITULARES: Record<ModoPublico, { titulo: string; texto: string }> = {
   login: {
     titulo: 'Tu búsqueda de empleo, ordenada',
-    texto: 'Laburin junta las ofertas, calcula cuánto encaja cada una con vos y te avisa cuándo retomar.',
+    texto: MARCA.descripcion,
   },
   registro: {
     titulo: 'Empezá a ordenar tu búsqueda',
-    texto: 'Armás tu perfil en cinco pasos y Laburin te muestra qué ofertas te convienen más.',
+    texto: `Armás tu perfil en cinco pasos y ${MARCA.nombre} te muestra qué ofertas te convienen más.`,
   },
 };
 
@@ -48,7 +49,7 @@ export function PaginaPublica({ modo, onCrearCuenta, children }: PaginaPublicaPr
           <header className="pub-top">
             <span className="pub-marca">
               <img src={logoIcono} alt="" />
-              Laburin
+              {MARCA.nombre}
             </span>
             <nav className="pub-nav" aria-label="Principal">
               <a href="#como-funciona">Cómo funciona</a>

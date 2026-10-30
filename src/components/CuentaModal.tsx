@@ -15,6 +15,7 @@ import { validarConfirmacion, validarPasswordNueva } from '@/lib/validacionAuth'
 import { cn } from '@/lib/utils';
 import { MedidorPassword } from '@/components/auth/MedidorPassword';
 import { borrarMisOfertas, cerrarSesionEnTodosLados, reunirMisDatos } from '@/services/miCuenta';
+import { MARCA } from '@/lib/marca';
 
 function iniciales(nombre: string, email: string): string {
   const base = nombre.trim() || email;
@@ -366,7 +367,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
             <div className="flex flex-col gap-2 rounded-lg border border-outline-variant bg-surface p-4">
               <p className="text-base font-semibold text-on-surface">Sesiones abiertas</p>
               <p className="text-sm text-on-surface-variant">
-                Si usaste Laburin en una computadora ajena o perdiste un dispositivo, cerrá la sesión en todos lados. Vas a tener que volver a
+                Si usaste {MARCA.nombre} en una computadora ajena o perdiste un dispositivo, cerrá la sesión en todos lados. Vas a tener que volver a
                 ingresar también acá.
               </p>
               {!confirmandoSalida ? (
@@ -415,7 +416,7 @@ export function CuentaModal({ onClose }: CuentaModalProps) {
           </Seccion>
 
           {esCandidato && (
-            <Seccion id="cuenta-mis-datos" titulo="Tus datos en Laburin" descripcion="Tus ofertas y postulaciones son solo tuyas: acá las llevás o las borrás.">
+            <Seccion id="cuenta-mis-datos" titulo={`Tus datos en ${MARCA.nombre}`} descripcion="Tus ofertas y postulaciones son solo tuyas: acá las llevás o las borrás.">
               <div className="flex flex-col gap-2">
                 <button type="button" onClick={handleDescargar} disabled={descargando} className={BOTON_SECUNDARIO}>
                   <Download className="w-4 h-4" aria-hidden="true" />

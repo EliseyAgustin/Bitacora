@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { cuentaAdministrador, type Cuenta } from './cuentas';
 import { abrirMenuSiHaceFalta, cerrarMenuSiEstaAbierto, cerrarSesion, completarOnboarding, iniciarSesionPorUI, omitirOnboarding, registrarPorUI } from './ui';
+import { MARCA } from '../src/lib/marca';
 
 // Flujo completo entre un candidato y el administrador. Los candidatos se crean en cada corrida y el teardown les borra
 // los datos (y con ellos los mensajes); la cuenta de administrador de pruebas solo inicia sesión.
@@ -48,7 +49,7 @@ test('candidato se registra y recibe la bienvenida; el administrador lo ve, le e
   await irAMensajes(page);
   const bienvenida = page.getByRole('listitem').filter({ hasText: TEXTO_BIENVENIDA });
   await expect(bienvenida).toHaveAttribute('data-estado', 'no-leido');
-  await expect(bienvenida.getByRole('heading', { name: 'Bienvenida a Laburin' })).toBeVisible();
+  await expect(bienvenida.getByRole('heading', { name: `Bienvenida a ${MARCA.nombre}` })).toBeVisible();
   await cerrarSesion(page);
 
   // --- El administrador cae en Candidatos y ve solo lo que corresponde ---
@@ -100,7 +101,7 @@ test('candidato se registra y recibe la bienvenida; el administrador lo ve, le e
 
   const delEquipo = page.getByRole('listitem').filter({ hasText: texto });
   await expect(delEquipo).toHaveAttribute('data-estado', 'no-leido');
-  await expect(delEquipo.getByRole('heading', { name: 'Mensaje del equipo de Laburin' })).toBeVisible();
+  await expect(delEquipo.getByRole('heading', { name: `Mensaje del equipo de ${MARCA.nombre}` })).toBeVisible();
   await delEquipo.getByRole('button', { name: 'Marcar como leído' }).click();
   await expect(delEquipo).toHaveAttribute('data-estado', 'leido');
   await abrirMenuSiHaceFalta(page);
@@ -127,7 +128,7 @@ test('quien omitió el Onboarding no aparece en Candidatos y su bandeja vacía l
   await omitirOnboarding(page);
   await abrirMenuSiHaceFalta(page);
   await page.getByRole('button', { name: 'Mi cuenta' }).click();
-  await expect(page.getByText(/los puede ver el equipo de Laburin/)).toBeVisible();
+  await expect(page.getByText(`los puede ver el equipo de ${MARCA.nombre}`)).toBeVisible();
   await page.getByLabel('Nombre para mostrar').fill(nombre);
   await page.getByRole('button', { name: 'Guardar nombre' }).click();
   await expect(page.getByText('Nombre guardado.')).toBeVisible();
@@ -136,7 +137,7 @@ test('quien omitió el Onboarding no aparece en Candidatos y su bandeja vacía l
   // No recibió bienvenida (no completó el perfil): su bandeja está vacía y la pantalla guía.
   await irAMensajes(page);
   await expect(page.getByText('Todavía no tenés mensajes.')).toBeVisible();
-  await expect(page.getByText('Cuando el equipo de Laburin te escriba, lo vas a ver acá.')).toBeVisible();
+  await expect(page.getByText(`Cuando el equipo de ${MARCA.nombre} te escriba, lo vas a ver acá.`)).toBeVisible();
   await cerrarSesion(page);
 
   await entrarComoAdministrador(page);

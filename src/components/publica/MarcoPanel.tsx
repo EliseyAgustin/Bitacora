@@ -3,6 +3,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
 import { Topo } from './Topo';
 import './publica.css';
+import { MARCA } from '@/lib/marca';
 
 interface MarcoPanelProps {
   // Qué campo de color ocupa la pantalla (1 azul, 2 naranja), los mismos del Login.
@@ -22,7 +23,7 @@ export function MarcoPanel({ campo = 1, frase, lado, children }: MarcoPanelProps
       <header className="pub-top">
         <span className="pub-marca">
           <img src={logoIcono} alt="" />
-          Laburin
+          {MARCA.nombre}
         </span>
         <ThemeToggle />
       </header>

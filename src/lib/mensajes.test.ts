@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { contarNoLeidos, MENSAJE_MAX, tituloDelMensaje, validarMensaje } from '@/lib/mensajes';
+import { MARCA } from './marca';
 
 describe('validarMensaje', () => {
   it('pide escribir algo cuando está vacío o son solo espacios', () => {
@@ -30,7 +31,7 @@ describe('contarNoLeidos', () => {
 
 describe('tituloDelMensaje', () => {
   it('distingue la bienvenida de un mensaje del equipo', () => {
-    expect(tituloDelMensaje({ tipo: 'bienvenida' })).toBe('Bienvenida a Laburin');
-    expect(tituloDelMensaje({ tipo: 'admin' })).toBe('Mensaje del equipo de Laburin');
+    expect(tituloDelMensaje({ tipo: 'bienvenida' })).toBe(`Bienvenida a ${MARCA.nombre}`);
+    expect(tituloDelMensaje({ tipo: 'admin' })).toBe(`Mensaje del equipo de ${MARCA.nombre}`);
   });
 });

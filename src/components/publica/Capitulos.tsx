@@ -6,6 +6,7 @@ import { mensajeDeActividad } from '@/lib/actividad';
 import { ETAPA_CLASES } from '@/lib/etapas';
 import { cn } from '@/lib/utils';
 import { EMBUDO_EJEMPLO, ETAPAS_EJEMPLO, ETIQUETAS_STACK_EJEMPLO, OFERTA_EJEMPLO, calcularEjemploPuntaje, conversionesDelEmbudo } from '@/lib/capitulos';
+import { MARCA } from '@/lib/marca';
 
 // Aparece al llegar a la pantalla (una sola vez). Sin IntersectionObserver o con "reducir movimiento" se ve desde el principio.
 export function Aparece({
@@ -236,7 +237,7 @@ export function CapituloAviso({ onCrearCuenta }: { onCrearCuenta: () => void }) 
             <span id="titulo-aviso">Si bajás el ritmo, el topo te avisa</span>
           </Aparece>
           <Aparece como="p" orden={1}>
-            Cuando pasan días sin novedades, Laburin te lo cuenta con buena onda y te lleva a donde retomar.
+            Cuando pasan días sin novedades, {MARCA.nombre} te lo cuenta con buena onda y te lleva a donde retomar.
           </Aparece>
         </div>
         <Aparece className="pub-der" orden={2}>
@@ -279,7 +280,7 @@ export function CapituloAviso({ onCrearCuenta }: { onCrearCuenta: () => void }) 
           <span>Hecho en Argentina para quienes buscan laburo</span>
         </nav>
         <p className="pub-nombre" aria-hidden="true">
-          Laburin
+          {MARCA.nombre}
         </p>
       </div>
     </section>

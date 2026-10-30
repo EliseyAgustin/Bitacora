@@ -4,6 +4,7 @@ import {
 } from 'docx';
 import fs from 'node:fs';
 import path from 'node:path';
+import MARCA from '../../src/lib/marca.json' with { type: 'json' };
 
 // Rutas relativas a este archivo: se puede correr desde cualquier carpeta (npm run docs:generar).
 // Las capturas se hacen con cuentas de prueba de nombres ficticios (npm run docs:capturas): no hay datos reales.
@@ -69,7 +70,7 @@ const doc = new Document({
     properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1440, bottom: 1440, left: 1440, right: 1440 } } },
     children: [
       // Portada
-      new Paragraph({ spacing: { before: 2400 }, alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Laburin', bold: true, size: 72, color: '1E4FD8' })] }),
+      new Paragraph({ spacing: { before: 2400 }, alignment: AlignmentType.CENTER, children: [new TextRun({ text: `${MARCA.nombre}`, bold: true, size: 72, color: '1E4FD8' })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 2000 }, children: [new TextRun({ text: 'Manual de Usuario', size: 36, color: '333333' })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Organizá tu búsqueda laboral en un solo lugar', italics: true, size: 24, color: '666666' })] }),
       new Paragraph({ children: [new PageBreak()] }),
@@ -80,36 +81,36 @@ const doc = new Document({
       new Paragraph({ children: [new PageBreak()] }),
 
       // 1. Qué es Laburin
-      h1('1. Qué es Laburin'),
-      p('Laburin es una aplicación web pensada para organizar tu búsqueda laboral en un solo lugar. En vez de tener las ofertas que te interesan dispersas en pestañas del navegador, planillas sueltas o notas, Laburin te permite guardar cada oferta, hacerle seguimiento a tu postulación paso a paso, y calcular automáticamente qué tan bien encaja cada oferta con lo que buscás.'),
-      p('Con Laburin podés:'),
+      h1(`1. Qué es ${MARCA.nombre}`),
+      p(`${MARCA.nombre} es una aplicación web pensada para organizar tu búsqueda laboral en un solo lugar. En vez de tener las ofertas que te interesan dispersas en pestañas del navegador, planillas sueltas o notas, ${MARCA.nombre} te permite guardar cada oferta, hacerle seguimiento a tu postulación paso a paso, y calcular automáticamente qué tan bien encaja cada oferta con lo que buscás.`),
+      p(`Con ${MARCA.nombre} podés:`),
       bullet('Guardar ofertas de trabajo que encontraste vos, o importar automáticamente ofertas publicadas en portales de empleo remoto.'),
       bullet('Ver de un vistazo qué tan afín es cada oferta a tu perfil, gracias a un puntaje que vos mismo podés ajustar.'),
       bullet('Seguir el estado de cada postulación en un tablero visual, desde "Por aplicar" hasta "Oferta" o "Rechazado".'),
       bullet('Registrar cada contacto con la empresa (mails, llamados, entrevistas) para no perder el hilo.'),
       bullet('Recibir un recordatorio cuando una postulación lleva mucho tiempo sin novedades. Es solo un aviso: no se borra nada.'),
-      bullet('Recibir un aviso, con la mascota de Laburin, cuando bajó tu ritmo de búsqueda (o una felicitación cuando vas bien).'),
+      bullet(`Recibir un aviso, con la mascota de ${MARCA.nombre}, cuando bajó tu ritmo de búsqueda (o una felicitación cuando vas bien).`),
       bullet('Ver cómo te va en toda tu búsqueda: cuántas postulaciones activas tenés, cómo avanzan y qué fuentes te traen mejores ofertas.'),
-      bullet('Recibir mensajes del equipo de Laburin, por ejemplo cuando falta algún dato de tu perfil.'),
+      bullet(`Recibir mensajes del equipo de ${MARCA.nombre}, por ejemplo cuando falta algún dato de tu perfil.`),
       p('Las pantallas principales son: Ofertas, Mis postulaciones, Mi progreso, Mi perfil de búsqueda y Mensajes. Cada una abre con una banda de color (azul, naranja o verde salvia), el mismo de la pantalla de inicio, con su título y, debajo, una línea que explica qué se hace ahí. En el menú lateral, la pantalla en la que estás se marca con el color de su banda.'),
 
 
-      h2('Ver Laburin con datos de ejemplo'),
-      p('Si querés conocer la aplicación antes de cargar tus propios datos, el equipo de Laburin puede darte una cuenta de demostración. Es la de alguien que usa Laburin hace unas ocho semanas, con todo ya cargado: ofertas con distintos puntajes, postulaciones en todas las columnas del tablero, interacciones, dos recordatorios de «Sin novedades», un mensaje del equipo sin leer y los gráficos de Mi progreso completos. Los datos son ficticios. Nada de lo que hagas ahí afecta a otras cuentas.'),
+      h2(`Ver ${MARCA.nombre} con datos de ejemplo`),
+      p(`Si querés conocer la aplicación antes de cargar tus propios datos, el equipo de ${MARCA.nombre} puede darte una cuenta de demostración. Es la de alguien que usa ${MARCA.nombre} hace unas ocho semanas, con todo ya cargado: ofertas con distintos puntajes, postulaciones en todas las columnas del tablero, interacciones, dos recordatorios de «Sin novedades», un mensaje del equipo sin leer y los gráficos de Mi progreso completos. Los datos son ficticios. Nada de lo que hagas ahí afecta a otras cuentas.`),
 
       // 2. Registro, inicio de sesión y contraseña
       h1('2. Registro, inicio de sesión y contraseña'),
-      p('Para usar Laburin necesitás una cuenta. Podés crear una con tu email y una contraseña.'),
+      p(`Para usar ${MARCA.nombre} necesitás una cuenta. Podés crear una con tu email y una contraseña.`),
       h2('Crear una cuenta'),
       p('En la pantalla de inicio, hacé clic en "¿No tenés cuenta? Registrate". Completá tu email y elegí una contraseña de al menos 8 caracteres.'),
       p('Mientras escribís la contraseña, vas a ver un indicador que te muestra qué tan segura es (débil, media o fuerte). Usar una contraseña fuerte, con mayúsculas, números y algún símbolo, ayuda a proteger tu cuenta. Podés tocar el ícono del ojo, al lado del campo, para mostrarla u ocultarla mientras la escribís.'),
       ...figure('02-registro.png', { width: 560, height: 450, caption: 'Pantalla de registro, con el indicador de fortaleza de la contraseña.' }),
       h2('Si algo está mal, te lo decimos en español'),
-      p('Laburin revisa lo que escribís antes de enviarlo y te avisa junto al campo qué corregir: por ejemplo, "Escribí un email válido, por ejemplo nombre@correo.com" si falta la arroba, o "Escribí tu contraseña." si la dejaste vacía.'),
+      p(`${MARCA.nombre} revisa lo que escribís antes de enviarlo y te avisa junto al campo qué corregir: por ejemplo, "Escribí un email válido, por ejemplo nombre@correo.com" si falta la arroba, o "Escribí tu contraseña." si la dejaste vacía.`),
       p('Si el email y la contraseña no coinciden, el mensaje es "El email y la contraseña no coinciden. Revisalos o recuperá tu contraseña." Por seguridad, no te decimos cuál de los dos datos es el incorrecto. Si intentás registrarte con un email que ya tiene cuenta, te lo avisamos y te ofrecemos iniciar sesión o recuperar tu contraseña.'),
       ...figure('01-login-errores.png', { ...DESKTOP, caption: 'Los errores se explican junto a cada campo, siempre en español.' }),
       h2('Iniciar sesión'),
-      p('Si ya tenés cuenta, ingresá tu email y contraseña y hacé clic en "Ingresar". Laburin recuerda tu sesión, así que no vas a tener que volver a loguearte cada vez que abras la aplicación en el mismo dispositivo.'),
+      p(`Si ya tenés cuenta, ingresá tu email y contraseña y hacé clic en "Ingresar". ${MARCA.nombre} recuerda tu sesión, así que no vas a tener que volver a loguearte cada vez que abras la aplicación en el mismo dispositivo.`),
       h2('Olvidé mi contraseña'),
       p('En la pantalla de inicio, tocá "¿Olvidaste tu contraseña?". Son tres pasos y la pantalla te los muestra a la izquierda, con una frase grande: pedí el enlace, revisá tu correo y elegí tu contraseña. El formulario está a la derecha, directo sobre el color, igual que el de inicio de sesión.'),
 
@@ -117,17 +118,17 @@ const doc = new Document({
       ...figure('02b-recuperar-contrasena.png', { ...DESKTOP, caption: 'Paso 1: pedir el enlace con tu email.' }),
       p('Paso 2: aparece "Revisá tu correo", con el mensaje "Si el email existe, te enviamos un enlace para cambiar tu contraseña" (es el mismo exista o no una cuenta con ese email) y el email al que lo pediste. Puede tardar unos minutos y, si no lo ves, mirá la carpeta de spam. El enlace vence al rato y solo se puede usar una vez. Podés pedir otro recién pasado un minuto (el botón muestra cuánto falta), o tocar "Usar otro email" si te equivocaste de dirección.'),
       ...figure('02c-recuperar-enviado.png', { ...DESKTOP, caption: 'Paso 2: revisá tu correo. Se puede reenviar pasado un minuto o probar con otro email.' }),
-      p('Paso 3: el botón del mail te trae a Laburin para elegir tu contraseña nueva, escrita dos veces. Mientras la escribís, una lista de requisitos se va tildando: al menos 8 caracteres (obligatorio) y, como recomendación, mayúsculas y minúsculas, un número y un símbolo. Debajo está el mismo indicador de fortaleza que en el registro. Al guardar ves "Tu contraseña quedó actualizada" y seguís usando la aplicación.'),
+      p(`Paso 3: el botón del mail te trae a ${MARCA.nombre} para elegir tu contraseña nueva, escrita dos veces. Mientras la escribís, una lista de requisitos se va tildando: al menos 8 caracteres (obligatorio) y, como recomendación, mayúsculas y minúsculas, un número y un símbolo. Debajo está el mismo indicador de fortaleza que en el registro. Al guardar ves "Tu contraseña quedó actualizada" y seguís usando la aplicación.`),
       ...figure('02d-nueva-contrasena.png', { ...DESKTOP, caption: 'Paso 3: contraseña nueva, con los requisitos que se tildan en vivo.' }),
       p('Si el enlace venció o ya se usó, la pantalla te lo explica ("No pudimos validar el enlace") y te deja pedir uno nuevo.'),
       h2('Si la dirección no existe'),
-      p('Si abrís una dirección que no existe (un enlace viejo o un error al escribirla), Laburin muestra "No encontramos esa página" y un botón que te lleva al inicio: a iniciar sesión si no tenías la sesión abierta, o a tu pantalla principal si la tenías.'),
+      p(`Si abrís una dirección que no existe (un enlace viejo o un error al escribirla), ${MARCA.nombre} muestra "No encontramos esa página" y un botón que te lleva al inicio: a iniciar sesión si no tenías la sesión abierta, o a tu pantalla principal si la tenías.`),
       ...figure('14-no-encontrada.png', { width: 360, height: 210, caption: 'Página que se muestra cuando la dirección no existe.' }),
 
       // 3. Primeros pasos: configuración inicial
       h1('3. Configuración inicial de tu perfil'),
-      p('La primera vez que entrás a Laburin, antes de ver tus ofertas, te hacemos algunas preguntas cortas sobre tu búsqueda, de a una por vez y con el botón "Continuar". Esto sirve para calcular, desde el primer momento, qué tan afín es cada oferta a lo que estás buscando. Arriba de cada paso ves en cuál estás ("Paso 2 de 5").'),
-      numberedStep('Tu nombre y el rol que buscás (por ejemplo, "QA Automation" o "Frontend Developer"). Junto al nombre ves un aviso de qué datos puede ver el equipo de Laburin (ver la sección 11).'),
+      p(`La primera vez que entrás a ${MARCA.nombre}, antes de ver tus ofertas, te hacemos algunas preguntas cortas sobre tu búsqueda, de a una por vez y con el botón "Continuar". Esto sirve para calcular, desde el primer momento, qué tan afín es cada oferta a lo que estás buscando. Arriba de cada paso ves en cuál estás ("Paso 2 de 5").`),
+      numberedStep(`Tu nombre y el rol que buscás (por ejemplo, "QA Automation" o "Frontend Developer"). Junto al nombre ves un aviso de qué datos puede ver el equipo de ${MARCA.nombre} (ver la sección 11).`),
       numberedStep('Tecnologías: elegí las que te interesen, o escribí otras. Las que elegís se muestran en una lista, "Tus tecnologías", y cada una se quita con la ✕. Si escribiste una tecnología y te olvidaste de apretar "Agregar", la sumamos sola cuando tocás "Continuar". "SQL" y "sql" cuentan como la misma.'),
       numberedStep('Modalidad y ubicación: remoto, híbrido o presencial, y en qué ciudad o país buscás.'),
       numberedStep('Nivel de experiencia: junior, semi senior o senior. Este paso es opcional.'),
@@ -136,15 +137,15 @@ const doc = new Document({
       ...figure('03a-onboarding-rol.png', { ...CENTRADA, caption: 'Paso 1: tu nombre, el rol que buscás y el aviso de privacidad.' }),
       ...figure('03b-onboarding-stack.png', { ...CENTRADA, caption: 'Paso 2: tecnologías elegidas, con opción de quitar cada una.' }),
       ...figure('03c-onboarding-resumen.png', { width: 250, height: 512, caption: 'Paso 5: resumen editable. Dice dónde se guardan tus datos: podés cambiarlos cuando quieras en Mi perfil de búsqueda.' }),
-      p('Al terminar ves una pantalla de confirmación, "Tu perfil quedó listo", y recibís un mensaje de bienvenida en la sección Mensajes. Cada respuesta se convierte en un criterio de afinidad: Laburin le suma puntos a las ofertas que mencionan tu rol, tus tecnologías, tu modalidad y tu ubicación. Más adelante, en Mi perfil de búsqueda, podés ajustar, agregar o quitar estos criterios cuando quieras.'),
+      p(`Al terminar ves una pantalla de confirmación, "Tu perfil quedó listo", y recibís un mensaje de bienvenida en la sección Mensajes. Cada respuesta se convierte en un criterio de afinidad: ${MARCA.nombre} le suma puntos a las ofertas que mencionan tu rol, tus tecnologías, tu modalidad y tu ubicación. Más adelante, en Mi perfil de búsqueda, podés ajustar, agregar o quitar estos criterios cuando quieras.`),
       ...figure('03d-onboarding-listo.png', { ...LISTO, caption: 'Confirmación al terminar la configuración inicial.' }),
-      p('Si no querés completar la configuración en este momento, podés tocar "Omitir por ahora". En ese caso Laburin te recuerda, en Ofertas y en "Primeros pasos", que todavía no armaste tu perfil de búsqueda, y podés completarlo cuando quieras desde Mi perfil de búsqueda.'),
+      p(`Si no querés completar la configuración en este momento, podés tocar "Omitir por ahora". En ese caso ${MARCA.nombre} te recuerda, en Ofertas y en "Primeros pasos", que todavía no armaste tu perfil de búsqueda, y podés completarlo cuando quieras desde Mi perfil de búsqueda.`),
 
       // 4. Ofertas
       h1('4. Ofertas'),
       p('La sección "Ofertas" es donde ves todas las ofertas de trabajo que guardaste, con su puntaje calculado automáticamente según tu perfil de búsqueda.'),
       h2('Primeros pasos'),
-      p('Mientras no tengas ninguna postulación, arriba de Ofertas y de Mis postulaciones ves una tarjeta "Primeros pasos" con cuatro pasos: revisá tu perfil de búsqueda, importá o cargá ofertas, postulate a una y seguí su avance en Mis postulaciones. Cada paso tiene un enlace que te lleva ahí. Si todavía no armaste tu perfil, ese paso aparece destacado como "Pendiente". Podés cerrar la tarjeta con la ✕ y Laburin recuerda que la cerraste.'),
+      p(`Mientras no tengas ninguna postulación, arriba de Ofertas y de Mis postulaciones ves una tarjeta "Primeros pasos" con cuatro pasos: revisá tu perfil de búsqueda, importá o cargá ofertas, postulate a una y seguí su avance en Mis postulaciones. Cada paso tiene un enlace que te lleva ahí. Si todavía no armaste tu perfil, ese paso aparece destacado como "Pendiente". Podés cerrar la tarjeta con la ✕ y ${MARCA.nombre} recuerda que la cerraste.`),
       p('Si todavía no hay ofertas cargadas, la pantalla te lo dice y te ofrece dos botones: importar ofertas remotas o cargar una a mano.'),
       ...figure('04f-ofertas-vacio.png', { ...DESKTOP, caption: 'Sin ofertas cargadas: la pantalla explica qué hacer y ofrece los botones para empezar.' }),
       ...figure('04a-ofertas.png', { ...DESKTOP, caption: 'Listado de ofertas, con "Primeros pasos", los filtros y el puntaje de cada oferta.' }),
@@ -157,29 +158,29 @@ const doc = new Document({
       p('Los filtros se aplican con el botón "Aplicar", abajo a la derecha de la tarjeta (en el celular, a todo el ancho). Mientras haya un filtro aplicado aparece también "Quitar filtros". Si los filtros no devuelven ninguna oferta, el mensaje te sugiere aflojar alguno y el botón "Quitar todos los filtros" los limpia de una vez.'),
       ...figure('04e-ofertas-sin-resultados.png', { ...DESKTOP, caption: 'Un filtro que no coincide con nada: el mensaje sugiere aflojarlo y hay un botón para quitarlos todos.' }),
       h2('Ver el detalle de una oferta'),
-      p('Tocá una tarjeta (o el botón "Ver detalle") y se abre un panel a la derecha con todo lo que Laburin sabe de esa oferta. En el celular ocupa toda la pantalla.'),
+      p(`Tocá una tarjeta (o el botón "Ver detalle") y se abre un panel a la derecha con todo lo que ${MARCA.nombre} sabe de esa oferta. En el celular ocupa toda la pantalla.`),
       bullet('Por qué tiene ese puntaje: la lista de los criterios de tu perfil, con cuáles coinciden con la oferta y cuánto suma cada uno. Lo que coincide suma exactamente el puntaje del círculo.'),
       bullet('La descripción de la oferta, como texto, y sus tecnologías, ubicación, modalidad, fecha y fuente.'),
-      bullet('"Ver oferta y postularme": abre la oferta original en otra pestaña, en el sitio donde se publicó, para que te postules ahí. Laburin no se postula por vos en esos sitios.'),
+      bullet(`"Ver oferta y postularme": abre la oferta original en otra pestaña, en el sitio donde se publicó, para que te postules ahí. ${MARCA.nombre} no se postula por vos en esos sitios.`),
       bullet('"Guardar en Mis postulaciones": la agrega al tablero para que le hagas seguimiento. Si ya la guardaste, el botón muestra su estado y te lleva a la ficha.'),
-      p('Se cierra con la ✕ o con la tecla Escape. Las ofertas importadas antes de esta mejora no tenían enlace: la próxima vez que importes, Laburin se lo agrega a las que ya tenías. Si una oferta cargada a mano no tiene enlace, el panel te lo avisa y te deja agregarlo con "Agregar enlace".'),
+      p(`Se cierra con la ✕ o con la tecla Escape. Las ofertas importadas antes de esta mejora no tenían enlace: la próxima vez que importes, ${MARCA.nombre} se lo agrega a las que ya tenías. Si una oferta cargada a mano no tiene enlace, el panel te lo avisa y te deja agregarlo con "Agregar enlace".`),
       ...figure('04g-oferta-detalle.png', { ...DESKTOP, caption: 'Detalle de una oferta: el puntaje explicado, la descripción y el enlace para postularte en el sitio de origen.' }),
       h2('Moverte entre páginas'),
       p('Las ofertas se muestran de a 30 por página. Al final de la lista vas a ver cuántas ofertas tenés en total (con los filtros que estés usando) y en qué página estás, por ejemplo "37 ofertas · Página 1 de 2", junto con los botones "Anterior" y "Siguiente".'),
       ...figure('04c-ofertas-paginacion.png', { ...DESKTOP, caption: 'Al final del listado: el total de ofertas, la página actual y los botones para cambiar de página.' }),
       h2('Importar ofertas automáticamente'),
-      p('Tocando "Importar ofertas remotas", Laburin busca ofertas nuevas en tres portales de empleo remoto (Remotive, Arbeitnow y RemoteOK) y las agrega a tu lista, calculando el puntaje de cada una según tu perfil y guardando el enlace a la oferta original. Si una oferta ya la tenías cargada, no se duplica: te avisamos cuántas se importaron y cuántas se omitieron por estar repetidas.'),
+      p(`Tocando "Importar ofertas remotas", ${MARCA.nombre} busca ofertas nuevas en tres portales de empleo remoto (Remotive, Arbeitnow y RemoteOK) y las agrega a tu lista, calculando el puntaje de cada una según tu perfil y guardando el enlace a la oferta original. Si una oferta ya la tenías cargada, no se duplica: te avisamos cuántas se importaron y cuántas se omitieron por estar repetidas.`),
       ...figure('04b-ofertas-import.png', { ...DESKTOP, caption: 'Resultado de una importación: cuántas ofertas nuevas entraron.' }),
       h2('Buscar en LinkedIn'),
-      p('LinkedIn no permite que otras aplicaciones lean sus ofertas, así que Laburin no puede importarlas. Lo que sí hace el botón "Buscar en LinkedIn" (arriba de la lista) es abrir el buscador de empleos de LinkedIn, en otra pestaña, con el rol, la ubicación y la modalidad de tu perfil de búsqueda ya cargados. Si encontrás algo ahí, cargalo con "Nueva oferta" y Laburin lo puntúa como a las demás. El botón solo aparece si tu perfil tiene un rol o una ubicación.'),
+      p(`LinkedIn no permite que otras aplicaciones lean sus ofertas, así que ${MARCA.nombre} no puede importarlas. Lo que sí hace el botón "Buscar en LinkedIn" (arriba de la lista) es abrir el buscador de empleos de LinkedIn, en otra pestaña, con el rol, la ubicación y la modalidad de tu perfil de búsqueda ya cargados. Si encontrás algo ahí, cargalo con "Nueva oferta" y ${MARCA.nombre} lo puntúa como a las demás. El botón solo aparece si tu perfil tiene un rol o una ubicación.`),
       h2('Cargar una oferta manualmente'),
       p('Si encontraste una oferta por tu cuenta (en LinkedIn, en la web de una empresa, por referencia de alguien), podés cargarla vos mismo con "Nueva oferta", completando empresa, puesto, modalidad, ubicación y tecnologías. Podés sumar también el enlace a la oferta (tiene que empezar con http:// o https://) y pegar su descripción: después los ves en el detalle.'),
       h2('Editar o borrar una oferta'),
       p('Desde la tarjeta de cada oferta podés editarla (ícono de lápiz) o borrarla (ícono de tacho) individualmente.'),
-      p('Si querés borrar varias a la vez, marcá las casillas de las ofertas que querés eliminar y usá "Eliminar seleccionadas" en la barra que aparece arriba de la lista. La casilla "Seleccionar esta página" marca las ofertas que estás viendo; si tenés más de una página, aparece además el enlace "Seleccionar las N ofertas que coinciden", que marca todas las que cumplen los filtros, estén en la página que estén. El botón "Eliminar seleccionadas" siempre te dice cuántas vas a borrar, y antes de hacerlo Laburin te pide confirmación.'),
+      p(`Si querés borrar varias a la vez, marcá las casillas de las ofertas que querés eliminar y usá "Eliminar seleccionadas" en la barra que aparece arriba de la lista. La casilla "Seleccionar esta página" marca las ofertas que estás viendo; si tenés más de una página, aparece además el enlace "Seleccionar las N ofertas que coinciden", que marca todas las que cumplen los filtros, estén en la página que estén. El botón "Eliminar seleccionadas" siempre te dice cuántas vas a borrar, y antes de hacerlo ${MARCA.nombre} te pide confirmación.`),
       h2('Postularte'),
       p('Cuando encontrás una oferta a la que querés postularte, tocá "Postularme" (o "Guardar en Mis postulaciones" en el detalle). Esto la mueve a Mis postulaciones, en la columna "Por aplicar", para que empieces a hacerle seguimiento. Para postularte de verdad, abrí la oferta original con "Ver oferta y postularme".'),
-      p('Cuando abrís el enlace de una oferta con "Ver oferta y postularme" y volvés a Laburin, aparece arriba la pregunta "¿Ya te postulaste a [puesto]?". Si tocás "Sí, ya apliqué", la postulación queda en la columna "Aplicado" (se crea si no la tenías). Si tocás "Todavía no", no se guarda nada y te volvemos a preguntar al día siguiente. Laburin no puede ver qué hacés en el sitio de la empresa: por eso te lo pregunta. Si preferís que no lo haga, podés apagarlo en Mi cuenta, en Preferencias.'),
+      p(`Cuando abrís el enlace de una oferta con "Ver oferta y postularme" y volvés a ${MARCA.nombre}, aparece arriba la pregunta "¿Ya te postulaste a [puesto]?". Si tocás "Sí, ya apliqué", la postulación queda en la columna "Aplicado" (se crea si no la tenías). Si tocás "Todavía no", no se guarda nada y te volvemos a preguntar al día siguiente. ${MARCA.nombre} no puede ver qué hacés en el sitio de la empresa: por eso te lo pregunta. Si preferís que no lo haga, podés apagarlo en Mi cuenta, en Preferencias.`),
 
       // 5. Mis postulaciones
       h1('5. Mis postulaciones'),
@@ -194,7 +195,7 @@ const doc = new Document({
       h2('En el celular'),
       p('Como arrastrar con el dedo en una pantalla chica puede ser poco preciso, en el celular cada tarjeta tiene un selector "Mover a...": elegís la columna de destino en la lista, y listo.'),
       ...figure('05b-tablero-mobile.png', { ...MOBILE, caption: 'En el celular, un selector reemplaza al arrastre para cambiar de columna.' }),
-      p('Laburin guarda el historial de cada cambio de estado, así que siempre queda registro de cuándo pasó cada postulación de una etapa a otra.'),
+      p(`${MARCA.nombre} guarda el historial de cada cambio de estado, así que siempre queda registro de cuándo pasó cada postulación de una etapa a otra.`),
 
       // 6. Ficha de Postulación
       h1('6. Ficha de postulación'),
@@ -207,7 +208,7 @@ const doc = new Document({
 
       // 7. Mi perfil de búsqueda
       h1('7. Mi perfil de búsqueda'),
-      p('En "Mi perfil de búsqueda" está todo lo que le dice a Laburin qué buscás. Con estos datos calculamos el puntaje de cada oferta, y los cambios se guardan solos. La pantalla tiene tres bloques, en el orden en que se usan.'),
+      p(`En "Mi perfil de búsqueda" está todo lo que le dice a ${MARCA.nombre} qué buscás. Con estos datos calculamos el puntaje de cada oferta, y los cambios se guardan solos. La pantalla tiene tres bloques, en el orden en que se usan.`),
       ...figure('07-perfil.png', { ...DESKTOP, caption: 'Mi perfil de búsqueda: "¿Qué estoy buscando?" y "Mis tecnologías y cuánto pesan".' }),
       h2('¿Qué estoy buscando?'),
       p('Acá elegís cómo y dónde querés trabajar: la modalidad (remoto, híbrido o presencial) y la ubicación. Las ofertas que coinciden suman puntos. Una aclaración: con ofertas remotas, la ubicación casi nunca suma puntos, porque muchas dicen "Worldwide" o solo un país.'),
@@ -215,23 +216,23 @@ const doc = new Document({
       p('Las tecnologías que te interesan. Cada una tiene un peso, que es la cantidad de puntos que suma cuando una oferta la menciona: cuanto más peso, más arriba aparecen las ofertas con esa tecnología. Si el trabajo remoto es innegociable para vos, dale más peso a la modalidad que a una tecnología secundaria. Podés agregar tecnologías nuevas, cambiarles el peso, desactivarlas sin borrarlas o eliminarlas.'),
       p('El peso inicial es 15 puntos por tecnología, 10 por modalidad y 5 por ubicación, y es el mismo si cargaste el dato en la configuración inicial o lo agregás después acá.'),
       h2('Avisos de seguimiento'),
-      p('En la tarjeta "Recordatorio por falta de novedades" elegís después de cuántos días sin novedades querés que Laburin te avise sobre una postulación. Por defecto son 7 días, y podés poner cualquier número entero entre 1 y 90. El texto lo aclara: solo te mostramos un recordatorio en Mis postulaciones; no se borra nada.'),
+      p(`En la tarjeta "Recordatorio por falta de novedades" elegís después de cuántos días sin novedades querés que ${MARCA.nombre} te avise sobre una postulación. Por defecto son 7 días, y podés poner cualquier número entero entre 1 y 90. El texto lo aclara: solo te mostramos un recordatorio en Mis postulaciones; no se borra nada.`),
       ...figure('07b-avisos.png', { ...DESKTOP, caption: 'Avisos de seguimiento: el umbral de días y la aclaración de que solo es un recordatorio.' }),
-      p('Escribí el número y salí del campo (o apretá Enter): el valor se guarda solo y se mantiene aunque cierres la sesión. Si ponés un valor que no corresponde, por ejemplo 0 o 100, Laburin te avisa y vuelve al último valor válido.'),
+      p(`Escribí el número y salí del campo (o apretá Enter): el valor se guarda solo y se mantiene aunque cierres la sesión. Si ponés un valor que no corresponde, por ejemplo 0 o 100, ${MARCA.nombre} te avisa y vuelve al último valor válido.`),
       p('El cambio vale hacia adelante: los avisos que ya tenías no desaparecen ni se recalculan. Si bajás el umbral, las postulaciones que ya llevan más días que el nuevo valor van a mostrar su aviso la próxima vez que abras Mis postulaciones; si lo subís, los avisos que ya estaban siguen hasta que los resuelvas.'),
       h2('Qué pasa con las ofertas que ya tenías cargadas'),
-      p('Cada vez que agregás, editás, desactivás o borrás un criterio, Laburin recalcula automáticamente el puntaje de todas las ofertas que ya tenías guardadas: no hace falta que hagas nada más. Si entrás a Ofertas después de cambiar un criterio, vas a ver los puntajes actualizados.'),
+      p(`Cada vez que agregás, editás, desactivás o borrás un criterio, ${MARCA.nombre} recalcula automáticamente el puntaje de todas las ofertas que ya tenías guardadas: no hace falta que hagas nada más. Si entrás a Ofertas después de cambiar un criterio, vas a ver los puntajes actualizados.`),
 
       // 8. Mi cuenta
       h1('8. Mi cuenta'),
-      p('Además del perfil de búsqueda, tenés una sección aparte para los datos de tu propia cuenta. Para acceder, tocá "Mi cuenta" en el menú lateral, arriba de "Cerrar Sesión". La ventana tiene cuatro partes: tus datos, seguridad, preferencias y tus datos en Laburin.'),
+      p(`Además del perfil de búsqueda, tenés una sección aparte para los datos de tu propia cuenta. Para acceder, tocá "Mi cuenta" en el menú lateral, arriba de "Cerrar Sesión". La ventana tiene cuatro partes: tus datos, seguridad, preferencias y tus datos en ${MARCA.nombre}.`),
 
-      ...figure('10-mi-cuenta.png', { ...DESKTOP, caption: 'Ventana de "Mi cuenta": tus datos, seguridad, preferencias y tus datos en Laburin.' }),
+      ...figure('10-mi-cuenta.png', { ...DESKTOP, caption: `Ventana de "Mi cuenta": tus datos, seguridad, preferencias y tus datos en ${MARCA.nombre}.` }),
       p('Ahí podés:'),
-      bullet('Cambiar tu nombre para mostrar (se usa junto con tus iniciales, que aparecen como tu avatar). El equipo de Laburin lo ve junto a tu perfil de búsqueda.'),
+      bullet(`Cambiar tu nombre para mostrar (se usa junto con tus iniciales, que aparecen como tu avatar). El equipo de ${MARCA.nombre} lo ve junto a tu perfil de búsqueda.`),
       bullet('Ver el email con el que te registraste (no se puede editar desde acá).'),
       bullet('Cambiar tu contraseña (al menos 8 caracteres), con el mismo indicador de fortaleza que viste al registrarte.'),
-      bullet('Cerrar la sesión en todos los dispositivos (por ejemplo, si usaste Laburin en una computadora ajena). Pide confirmación y también cierra la sesión actual.'),
+      bullet(`Cerrar la sesión en todos los dispositivos (por ejemplo, si usaste ${MARCA.nombre} en una computadora ajena). Pide confirmación y también cierra la sesión actual.`),
       bullet('Elegir el tema claro u oscuro de toda la aplicación, y apagar el aviso de ritmo de búsqueda o la pregunta "¿Ya te postulaste?" si no los querés. Estas preferencias se guardan en este navegador.'),
       bullet('Descargar todos tus datos: un archivo con tu perfil, criterios, ofertas, postulaciones, novedades, historial y mensajes. Se arma en tu navegador y no sale a ningún lado.'),
       bullet('Borrar tus ofertas y postulaciones: elimina todas tus ofertas y, con ellas, tus postulaciones, novedades y avisos. Tu cuenta y tu perfil de búsqueda se conservan. Para confirmar hay que escribir BORRAR, y no se puede deshacer.'),
@@ -239,7 +240,7 @@ const doc = new Document({
 
       // 9. Mensajes
       h1('9. Mensajes'),
-      p('En "Mensajes" aparecen los avisos del equipo de Laburin sobre tu perfil. El primero es el de bienvenida, que recibís al terminar la configuración inicial: "Tu perfil quedó registrado y vamos a tener en cuenta tu solicitud." Más adelante el equipo puede escribirte, por ejemplo, para pedirte un dato que falta.'),
+      p(`En "Mensajes" aparecen los avisos del equipo de ${MARCA.nombre} sobre tu perfil. El primero es el de bienvenida, que recibís al terminar la configuración inicial: "Tu perfil quedó registrado y vamos a tener en cuenta tu solicitud." Más adelante el equipo puede escribirte, por ejemplo, para pedirte un dato que falta.`),
       ...figure('11-mensajes.png', { ...DESKTOP, caption: 'Mensajes: los que todavía no leíste están resaltados y el menú muestra cuántos son.' }),
       p('En el menú lateral, "Mensajes" muestra un número cuando tenés mensajes sin leer. Los no leídos están resaltados y marcados como "Nuevo". En cada mensaje podés:'),
       bullet('"Marcar como leído": el mensaje deja de estar resaltado y baja el número del menú. Con "Marcar todos como leídos" lo hacés de una vez.'),
@@ -249,7 +250,7 @@ const doc = new Document({
 
       // 10. Recordatorios por inactividad
       h1('10. Recordatorios por inactividad'),
-      p('Cuando una postulación lleva varios días sin ninguna novedad, sin que hayas registrado una interacción ni cambiado su estado, Laburin te lo marca con un recordatorio, para que no se te pase hacer un seguimiento. Es solo un aviso: no se borra ni se cambia nada de la postulación.'),
+      p(`Cuando una postulación lleva varios días sin ninguna novedad, sin que hayas registrado una interacción ni cambiado su estado, ${MARCA.nombre} te lo marca con un recordatorio, para que no se te pase hacer un seguimiento. Es solo un aviso: no se borra ni se cambia nada de la postulación.`),
       p('Vos elegís después de cuántos días se avisa: es el aviso de seguimiento que ajustás en Mi perfil de búsqueda (por defecto, 7 días; ver la sección 7). Si lo cambiás, el nuevo plazo se aplica de ahí en adelante y los avisos que ya tenías no se modifican.'),
       p('Vas a ver el recordatorio en Mis postulaciones, en la tarjeta de la postulación correspondiente ("Sin novedades hace N días", como se ve en la imagen de la sección 5), y también arriba de la ficha, con la aclaración de que es solo un recordatorio. Alcanza con registrar una interacción nueva, mover la tarjeta de estado o tocar "Marcar como resuelto" para que el recordatorio se resuelva.'),
 
@@ -269,15 +270,15 @@ const doc = new Document({
 
       // 12. Privacidad
       h1('12. Tu privacidad'),
-      p('Estos son los datos que puede ver el equipo de Laburin, y los que no:'),
+      p(`Estos son los datos que puede ver el equipo de ${MARCA.nombre}, y los que no:`),
       bullet('Lo ve el equipo: tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel de experiencia).'),
       bullet('No lo ve nadie más que vos: tus ofertas, tus postulaciones, tus interacciones, tus recordatorios, tu historial y tu email.'),
-      p('Verás este aviso en el primer paso de la configuración inicial, en el resumen final y en Mi cuenta: "Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de Laburin. Tus ofertas y postulaciones son solo tuyas."'),
+      p(`Verás este aviso en el primer paso de la configuración inicial, en el resumen final y en Mi cuenta: "Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de ${MARCA.nombre}. Tus ofertas y postulaciones son solo tuyas."`),
       p('Los mensajes que recibís son solo tuyos: nadie más los puede leer, y vos podés borrarlos cuando quieras.'),
 
       // 13. Para el equipo de Laburin
-      h1('13. Para el equipo de Laburin: Candidatos'),
-      p('Esta sección es solo para quienes administran Laburin y no la ve ninguna otra persona. El rol de administrador no se puede pedir ni obtener desde la aplicación: lo asigna una persona del equipo directamente en la base de datos.'),
+      h1(`13. Para el equipo de ${MARCA.nombre}: Candidatos`),
+      p(`Esta sección es solo para quienes administran ${MARCA.nombre} y no la ve ninguna otra persona. El rol de administrador no se puede pedir ni obtener desde la aplicación: lo asigna una persona del equipo directamente en la base de datos.`),
       p('Al iniciar sesión, el administrador entra directo a "Candidatos", y su menú solo tiene esa sección (más "Mi cuenta" y "Cerrar Sesión"). Una persona que no es administradora no puede entrar a esa pantalla, ni siquiera escribiendo la dirección a mano: la aplicación la devuelve a su inicio, y la base de datos tampoco le devolvería ningún dato.'),
       h2('Ver a los candidatos'),
       p('La pantalla lista a las personas que se registraron y completaron su perfil de búsqueda. Quienes omitieron la configuración inicial no aparecen, para no mostrar filas vacías. Cada tarjeta muestra el nombre, el rol que busca, la ubicación, la modalidad, el nivel, las tecnologías y la fecha de registro. El buscador filtra por nombre, rol, tecnología o ubicación, sin importar mayúsculas ni tildes.'),
@@ -287,7 +288,7 @@ const doc = new Document({
       ...figure('13-candidato-detalle.png', { width: 600, height: 469, caption: 'Detalle de un candidato: perfil de búsqueda y envío de un mensaje.' }),
       h2('Plantillas de mensaje'),
       p('Arriba del cuadro de texto hay cinco plantillas para los mensajes más comunes: "Solicitud recibida", "Falta un dato", "Pedir la ubicación", "Sumar tecnologías" y "Datos completos". Al tocar una, el mensaje se escribe solo, saludando a la persona por su primer nombre, y podés editarlo antes de enviarlo. Si ya habías escrito algo, aparece "Deshacer" para recuperarlo.'),
-      p('Algunas plantillas dejan un dato entre corchetes para que lo completes (por ejemplo, "[indicá cuál]"): queda seleccionado para escribir encima. Mientras haya corchetes sin completar, Laburin no deja enviar el mensaje y te lo avisa, para que nunca salga con un dato sin reemplazar.'),
+      p(`Algunas plantillas dejan un dato entre corchetes para que lo completes (por ejemplo, "[indicá cuál]"): queda seleccionado para escribir encima. Mientras haya corchetes sin completar, ${MARCA.nombre} no deja enviar el mensaje y te lo avisa, para que nunca salga con un dato sin reemplazar.`),
       h2('Qué no ve el administrador'),
       p('El administrador no ve las ofertas, postulaciones, interacciones, recordatorios ni criterios de los candidatos, ni su email, ni los mensajes que otros recibieron. Esto no depende de la pantalla: lo garantizan los permisos de la base de datos, y se verificó con pruebas de seguridad automáticas.'),
     ],
@@ -295,6 +296,6 @@ const doc = new Document({
 });
 
 Packer.toBuffer(doc).then((buf) => {
-  fs.writeFileSync(path.join(RAIZ, 'Laburin-Manual-de-Usuario.docx'), buf);
-  console.log('Generado: Laburin-Manual-de-Usuario.docx', buf.length, 'bytes');
+  fs.writeFileSync(path.join(RAIZ, `${MARCA.archivo}-Manual-de-Usuario.docx`), buf);
+  console.log(`Generado: ${MARCA.nombre}-Manual-de-Usuario.docx`, buf.length, 'bytes');
 });

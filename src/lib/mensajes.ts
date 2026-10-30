@@ -1,3 +1,5 @@
+import { MARCA } from '@/lib/marca';
+
 export const MENSAJE_MAX = 1000;
 
 export type TipoMensaje = 'admin' | 'bienvenida';
@@ -25,5 +27,5 @@ export function contarNoLeidos(mensajes: Pick<Mensaje, 'leido'>[]): number {
 }
 
 export function tituloDelMensaje(mensaje: Pick<Mensaje, 'tipo'>): string {
-  return mensaje.tipo === 'bienvenida' ? 'Bienvenida a Laburin' : 'Mensaje del equipo de Laburin';
+  return mensaje.tipo === 'bienvenida' ? `Bienvenida a ${MARCA.nombre}` : `Mensaje del equipo de ${MARCA.nombre}`;
 }

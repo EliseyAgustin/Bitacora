@@ -1,3 +1,4 @@
+import MARCA from '../../src/lib/marca.json' with { type: 'json' };
 // Datos de la cuenta DEMO: el recorrido de alguien que usa Laburin hace unas ocho semanas, todo ficticio.
 // Es una función pura (sin red): la usa docs/scripts/demo-datos.mjs para cargarlos y src/lib/demoDataset.test.ts
 // para comprobar que son coherentes con el motor de scoring, los recordatorios y las métricas de la aplicación.
@@ -197,7 +198,7 @@ function descripcionDe({ empresa, rol, ubicacion, modalidad, stack }) {
     `${empresa} busca ${rol} para sumarse a su equipo ${lugar} (${ubicacion}).`,
     `Vas a trabajar con ${stack.join(', ')} en proyectos de producto, junto a diseño y negocio.`,
     '• Experiencia comprobable en el stack\n• Ganas de aprender y de trabajar en equipo\n• Buen nivel de comunicación escrita',
-    'Esta es una oferta de ejemplo, escrita para la demostración de Laburin.',
+    `Esta es una oferta de ejemplo, escrita para la demostración de ${MARCA.nombre}.`,
   ].join('\n\n');
 }
 

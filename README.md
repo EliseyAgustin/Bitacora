@@ -28,6 +28,10 @@ Para el equipo de Laburin (rol administrador, ampliación acordada con la docent
 
 Las URLs anteriores (`/tablero`, `/analytics`, `/configuracion`) redirigen a `/mis-postulaciones`, `/mi-progreso` y `/mi-perfil`. Los datos de cada usuario quedan aislados con RLS; la sección de seguridad de la Memoria Técnica describe el modelo de acceso y el aviso de privacidad que ve cada persona.
 
+## Nombre de la marca
+
+El nombre de la aplicación y la frase que dice qué hace viven en un solo archivo, [`src/lib/marca.json`](src/lib/marca.json). La aplicación, los tests y los scripts de documentación (`docs/scripts`) lo leen de ahí: un test falla si alguien escribe el nombre a mano en el código. Para cambiarlo: editar ese archivo, correr `npm run docs:plantillas` (regenera el mail de recuperación) y `npm run docs:generar` (los documentos). El nombre del repositorio, el dominio y todo lo de Supabase **no** dependen de este archivo.
+
 ## Stack
 
 React 19 · TypeScript 5.8 · Vite 6 · Tailwind CSS 4 · React Router 7 · Recharts · Supabase (Auth, PostgreSQL y RLS) · Vercel · Vitest 4 · Playwright 1.63

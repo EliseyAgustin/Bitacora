@@ -18,6 +18,7 @@ import dotenv from 'dotenv';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import MARCA from '../../src/lib/marca.json' with { type: 'json' };
 
 dotenv.config();
 dotenv.config({ path: '.env.e2e' });
@@ -123,7 +124,7 @@ async function sembrarOfertas(sb, userId) {
       fecha_publicacion: new Date(base - i * 86400000).toISOString().slice(0, 10),
       // example.com está reservado para ejemplos: no lleva a ningún sitio real.
       url: `https://example.com/empleos/oferta-${i + 1}`,
-      descripcion: `${EMPRESAS[(i * 5) % EMPRESAS.length]} busca ${rol} para sumarse a su equipo.\n\nVas a trabajar con ${stack.join(', ')} en proyectos de producto, junto a diseño y negocio.\n\n• Experiencia comprobable en el stack\n• Ganas de aprender y de trabajar en equipo\n• Buen nivel de comunicación escrita\n\nEsta es una oferta de ejemplo, escrita para la documentación de Laburin.`,
+      descripcion: `${EMPRESAS[(i * 5) % EMPRESAS.length]} busca ${rol} para sumarse a su equipo.\n\nVas a trabajar con ${stack.join(', ')} en proyectos de producto, junto a diseño y negocio.\n\n• Experiencia comprobable en el stack\n• Ganas de aprender y de trabajar en equipo\n• Buen nivel de comunicación escrita\n\nEsta es una oferta de ejemplo, escrita para la documentación de ${MARCA.nombre}.`,
       created_at: new Date(base - i * 60000).toISOString(),
     };
     return { ...oferta, puntaje_scoring: puntaje(oferta) };
@@ -285,7 +286,7 @@ try {
 
   // Mi cuenta (nombre, aviso de privacidad, contraseña y tema).
   await page.getByRole('button', { name: 'Mi cuenta' }).click();
-  await page.getByText(/los puede ver el equipo de Laburin/).waitFor();
+  await page.getByText(`los puede ver el equipo de ${MARCA.nombre}`).waitFor();
   // El email de la cuenta de prueba se reemplaza por uno genérico solo en lo que se ve en la captura.
   await page.evaluate((real) => {
     const generico = 'camila.ejemplo@correo.com';

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { conApiDe, esMobile, irA, registrarPorUI } from './ui';
+import { MARCA } from '../src/lib/marca';
 
 // Cuenta nueva, sin la sesión guardada de la cuenta compartida.
 test.use({ storageState: { cookies: [], origins: [] } });
@@ -18,7 +19,7 @@ test('onboarding de 5 pasos: valida cada paso, no pierde lo escrito, resume, con
   await expect(page.getByText('Escribí el rol que buscás, por ejemplo Frontend Developer.')).toBeVisible();
   // El aviso de privacidad se ve desde el primer paso, junto al nombre.
   await expect(
-    page.getByText('Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de Laburin. Tus ofertas y postulaciones son solo tuyas.')
+    page.getByText(`Tu nombre y tu perfil de búsqueda (rol, tecnologías, modalidad, ubicación y nivel) los puede ver el equipo de ${MARCA.nombre}. Tus ofertas y postulaciones son solo tuyas.`)
   ).toBeVisible();
   await expect(page.getByText('Paso 1 de 5')).toBeVisible();
   await page.getByLabel('¿Cómo te llamás?').fill('Ana Gómez');

@@ -3,6 +3,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
 import { Topo } from './Topo';
 import './publica.css';
+import { MARCA } from '@/lib/marca';
 
 export type CampoColor = 1 | 2 | 3 | 4;
 
@@ -25,7 +26,7 @@ export function MarcoCampo({ campo = 1, amplio = false, frase, lado, children }:
       <header className="pub-top">
         <span className="pub-marca">
           <img src={logoIcono} alt="" />
-          Laburin
+          {MARCA.nombre}
         </span>
         <ThemeToggle />
       </header>

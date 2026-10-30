@@ -1,5 +1,6 @@
 import { Menu } from 'lucide-react';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
+import { MARCA } from '@/lib/marca';
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -18,7 +19,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         <Menu className="w-5 h-5" />
       </button>
       <img src={logoIcono} alt="" className="w-8 h-8 rounded-full shrink-0" />
-      <span className="font-heading font-bold text-xl text-primary leading-none">Laburin</span>
+      <span className="font-heading font-bold text-xl text-primary leading-none">{MARCA.nombre}</span>
     </header>
   );
 }

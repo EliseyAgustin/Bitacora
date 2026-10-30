@@ -1,3 +1,5 @@
+import { MARCA } from '@/lib/marca';
+
 export interface PlantillaMensaje {
   id: string;
   titulo: string;
@@ -14,7 +16,7 @@ export const PLANTILLAS_MENSAJE: PlantillaMensaje[] = [
     id: 'solicitud-recibida',
     titulo: 'Solicitud recibida',
     descripcion: 'Confirma que el perfil quedó registrado.',
-    cuerpo: 'tu perfil quedó registrado y vamos a tener en cuenta tu solicitud. Gracias por sumarte a Laburin.',
+    cuerpo: `tu perfil quedó registrado y vamos a tener en cuenta tu solicitud. Gracias por sumarte a ${MARCA.nombre}.`,
   },
   {
     id: 'falta-un-dato',

@@ -6,6 +6,7 @@ import { RUTAS } from '@/lib/rutas';
 import { listarCriterios } from '@/services/criteriosScoring';
 import { contarMisPostulaciones } from '@/services/postulaciones';
 import { cn } from '@/lib/utils';
+import { MARCA } from '@/lib/marca';
 
 const PASOS = [
   { texto: 'Revisá tu perfil de búsqueda', enlace: 'Ir a Mi perfil de búsqueda', ruta: RUTAS.perfil },
@@ -81,7 +82,7 @@ export function PrimerosPasos() {
       <h2 id="primeros-pasos-titulo" className="text-lg font-heading font-semibold pr-8">
         Primeros pasos
       </h2>
-      <p className="text-sm mt-1">Cuatro pasos para empezar a usar Laburin. Esta tarjeta desaparece cuando te postules.</p>
+      <p className="text-sm mt-1">Cuatro pasos para empezar a usar {MARCA.nombre}. Esta tarjeta desaparece cuando te postules.</p>
       <ol className="mt-3 grid gap-2 md:grid-cols-2">
         {PASOS.map((paso, i) => {
           const hecho = i === 0 && tienePerfil === true;

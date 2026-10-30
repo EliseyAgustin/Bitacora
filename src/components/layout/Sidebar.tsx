@@ -9,6 +9,7 @@ import { useActividad } from '@/hooks/useActividad';
 import { useMensajesNoLeidos } from '@/hooks/useMensajesNoLeidos';
 import { CuentaModal } from '@/components/CuentaModal';
 import logoIcono from '@/assets/logo/laburin-logo-icono.svg';
+import { MARCA } from '@/lib/marca';
 
 // Cada pantalla se marca en el menú con el color de su capítulo (el mismo de la banda con que abre).
 const CAMPO_ACTIVO = {
@@ -73,7 +74,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           <div className="flex items-center justify-between gap-sm">
             <div className="flex items-center gap-sm">
               <img src={logoIcono} alt="" className="w-9 h-9 rounded-full shrink-0" />
-              <div className="font-heading font-bold text-2xl leading-tight text-primary">Laburin</div>
+              <div className="font-heading font-bold text-2xl leading-tight text-primary">{MARCA.nombre}</div>
             </div>
             <button
               type="button"

@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { renderizar } from '../../docs/scripts/plantillas-email.mjs';
+import { MARCA } from '@/lib/marca';
 
 // Las plantillas de los mails de Supabase se pegan a mano en el panel (Authentication -> Email Templates).
 // Este test cuida que sigan siendo seguras y que conserven lo que Supabase necesita para que el enlace funcione.
@@ -36,6 +38,20 @@ describe('plantillas de email', () => {
       it('avisa qué hacer si la persona no pidió el cambio', () => {
         expect(html.toLowerCase()).toContain('si no fuiste vos');
       });
+    });
+  }
+
+  // El .html que se pega en Supabase sale de la plantilla con el nombre de src/lib/marca.json: si se cambia el nombre y no se
+  // vuelve a generar (npm run docs:plantillas), estas pruebas fallan.
+  const plantillas = fs.existsSync(carpeta) ? fs.readdirSync(carpeta).filter((f) => f.endsWith('.plantilla.html')) : [];
+  for (const plantilla of plantillas) {
+    it(`${plantilla}: el mail generado está al día y lleva el nombre de la marca`, () => {
+      const generado = fs.readFileSync(path.join(carpeta, plantilla.replace('.plantilla.html', '.html')), 'utf8');
+      const origen = fs.readFileSync(path.join(carpeta, plantilla), 'utf8');
+      const normalizar = (t: string) => t.replace(/\r\n/g, '\n');
+      expect(normalizar(generado)).toBe(normalizar(renderizar(origen)));
+      expect(generado).not.toContain('%%');
+      expect(generado).toContain(MARCA.nombre);
     });
   }
 });

@@ -9,12 +9,13 @@ import { chromium } from '@playwright/test';
 import mammoth from 'mammoth';
 import fs from 'node:fs';
 import path from 'node:path';
+import MARCA from '../../src/lib/marca.json' with { type: 'json' };
 
 const RAIZ = path.resolve(import.meta.dirname, '../..');
 
 const DOCUMENTOS = [
-  { docx: 'Laburin-Memoria-Tecnica.docx', pdf: 'Laburin-Memoria-Tecnica.pdf', titulo: 'Laburin — Memoria Técnica' },
-  { docx: 'Laburin-Manual-de-Usuario.docx', pdf: 'Laburin-Manual-de-Usuario.pdf', titulo: 'Laburin — Manual de Usuario' },
+  { docx: `${MARCA.archivo}-Memoria-Tecnica.docx`, pdf: `${MARCA.archivo}-Memoria-Tecnica.pdf`, titulo: `${MARCA.nombre} — Memoria Técnica` },
+  { docx: `${MARCA.archivo}-Manual-de-Usuario.docx`, pdf: `${MARCA.archivo}-Manual-de-Usuario.pdf`, titulo: `${MARCA.nombre} — Manual de Usuario` },
 ];
 
 const ESTILOS = `
