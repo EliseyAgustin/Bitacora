@@ -27,7 +27,8 @@ test('un clic en la tarjeta abre el detalle: puntaje explicado, descripción y e
   await expect(detalle).toBeVisible();
   await expect(detalle.getByText('Fuente: Remotive')).toBeVisible();
 
-  // Por qué tiene ese puntaje: cada criterio activo, si coincide y cuánto suma.
+  // Por qué tiene ese puntaje: un resumen y cada criterio activo, si coincide y cuánto suma.
+  await expect(detalle.getByText('Coincide con 2 de 2 criterios de tu perfil.')).toBeVisible();
   await expect(detalle.getByText('Suma los pesos de tu perfil que esta oferta cumple, sobre un máximo posible de 25 puntos.')).toBeVisible();
   await expect(detalle.getByRole('listitem').filter({ hasText: 'Stack: React' })).toContainText('Coincide · suma 15');
   await expect(detalle.getByRole('listitem').filter({ hasText: 'Modalidad: remoto' })).toContainText('Coincide · suma 10');
@@ -72,7 +73,7 @@ test('guardar desde el detalle crea la postulación y el panel pasa a mostrar su
   await page.goto('/ofertas');
 
   await page.getByRole('button', { name: 'Ver detalle de React Engineer en Nubia Labs' }).click();
-  await panel(page).getByRole('button', { name: 'Guardar en Mis postulaciones' }).click();
+  await panel(page).getByRole('button', { name: 'Guardar para después' }).click();
   const verFicha = panel(page).getByRole('button', { name: /En seguimiento: Por aplicar · Ver ficha/ });
   await expect(verFicha).toBeVisible();
 
@@ -126,6 +127,24 @@ test('"Buscar en LinkedIn" abre la búsqueda con los datos del perfil, en otra p
   expect(Object.fromEntries(url.searchParams)).toEqual({ keywords: 'Frontend Developer', location: 'Buenos Aires, Argentina', f_WT: '2' });
   await expect(boton).toHaveAttribute('target', '_blank');
   await expect(boton).toHaveAttribute('rel', /noopener/);
+
+  // Y dice, con los datos del perfil, qué búsqueda va a abrir.
+  const frase = page.getByText('Abre LinkedIn con una búsqueda de «Frontend Developer» en Buenos Aires, Argentina, remoto. Se abre en otra pestaña.');
+  await expect(frase).toBeVisible();
+  await expect(boton).toHaveAttribute('aria-describedby', (await frase.getAttribute('id')) ?? '');
+});
+
+test('la tarjeta muestra hasta cinco tecnologías y cuenta el resto', async ({ page, api }) => {
+  await api.sembrarOfertas([{ ...OFERTA, stack_tecnologico: ['React', 'TypeScript', 'Node.js', 'SQL', 'Docker', 'AWS', 'Redis'] }]);
+  await page.goto('/ofertas');
+  const tecnologias = page.getByRole('list', { name: 'Tecnologías de la oferta' });
+  await expect(tecnologias.getByRole('listitem')).toHaveCount(6); // cinco tecnologías y el «+2»
+  await expect(tecnologias.getByText('+2')).toBeVisible();
+  await expect(tecnologias.getByText('AWS')).toHaveCount(0);
+
+  // El detalle sí las muestra todas.
+  await page.getByText('Nubia Labs', { exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'React Engineer' }).getByText('Redis')).toBeVisible();
 });
 
 test('sin datos en el perfil no se ofrece la búsqueda en LinkedIn', async ({ page, api }) => {

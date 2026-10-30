@@ -69,10 +69,8 @@ test('registro con errores, perfil guiado, primeros pasos, postulación, recorda
   await foto(page, info, '03-ofertas-importadas');
 
   // --- Postularse ---
-  // La tarjeta de esa oferta: el ancestro más cercano del título que tiene su botón "Postularme".
-  const tarjeta = page
-    .getByRole('heading', { name: 'React Engineer', level: 3 })
-    .locator('xpath=ancestor::div[.//button[normalize-space()="Postularme"]][1]');
+  // La tarjeta de esa oferta: el artículo que tiene su título (no depende de que todavía tenga el botón "Postularme").
+  const tarjeta = page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'React Engineer', level: 3 }) });
   await tarjeta.getByRole('button', { name: 'Postularme' }).click();
   await expect(tarjeta.getByTitle('Ver ficha de la postulación')).toBeVisible();
 

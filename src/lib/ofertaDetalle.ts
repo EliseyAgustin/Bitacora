@@ -73,3 +73,24 @@ export function urlBusquedaLinkedIn(perfil: {
   const consulta = params.toString();
   return `https://www.linkedin.com/jobs/search/${consulta ? `?${consulta}` : ''}`;
 }
+
+const MODALIDAD_EN_FRASE: Record<Modalidad, string> = { remoto: 'remoto', hibrido: 'híbrido', presencial: 'presencial' };
+
+// La frase que acompaña al botón «Buscar en LinkedIn»: dice, con los datos del perfil, qué búsqueda va a abrir.
+export function descripcionBusquedaLinkedIn(perfil: {
+  rol: string | null | undefined;
+  ubicacion: string | null | undefined;
+  modalidad: Modalidad | null | undefined;
+}): string {
+  const rol = perfil.rol?.trim();
+  const ubicacion = perfil.ubicacion?.trim();
+  const partes = [rol ? `de «${rol}»` : 'de ofertas'];
+  if (ubicacion) partes.push(` en ${ubicacion}`);
+  if (perfil.modalidad) partes.push(`, ${MODALIDAD_EN_FRASE[perfil.modalidad]}`);
+  return `Abre LinkedIn con una búsqueda ${partes.join('')}. Se abre en otra pestaña.`;
+}
+
+// «Coincide con 4 de 6 criterios de tu perfil» en el detalle de una oferta.
+export function resumenDeCoincidencias(filas: { coincide: boolean }[]): { coinciden: number; total: number } {
+  return { coinciden: filas.filter((f) => f.coincide).length, total: filas.length };
+}

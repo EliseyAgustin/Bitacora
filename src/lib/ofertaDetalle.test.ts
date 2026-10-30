@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { textoPlano, urlBusquedaLinkedIn, urlSegura } from '@/lib/ofertaDetalle';
+import { descripcionBusquedaLinkedIn, resumenDeCoincidencias, textoPlano, urlBusquedaLinkedIn, urlSegura } from '@/lib/ofertaDetalle';
 
 describe('urlSegura', () => {
   it('acepta enlaces http y https y los devuelve normalizados', () => {
@@ -91,5 +91,32 @@ describe('urlBusquedaLinkedIn', () => {
     expect(parsear(urlBusquedaLinkedIn({ rol: null, ubicacion: null, modalidad: null })).params).toEqual({});
     const { params } = parsear(urlBusquedaLinkedIn({ rol: 'C++ & .NET "dev"', ubicacion: '  ', modalidad: null }));
     expect(params).toEqual({ keywords: 'C++ & .NET "dev"' });
+  });
+});
+
+describe('descripcionBusquedaLinkedIn', () => {
+  it('cuenta, con los datos del perfil, qué va a buscar LinkedIn', () => {
+    expect(descripcionBusquedaLinkedIn({ rol: 'Frontend Developer', ubicacion: 'Buenos Aires, Argentina', modalidad: 'remoto' })).toBe(
+      'Abre LinkedIn con una búsqueda de «Frontend Developer» en Buenos Aires, Argentina, remoto. Se abre en otra pestaña.'
+    );
+  });
+
+  it('omite lo que el perfil no tiene y nombra bien cada modalidad', () => {
+    expect(descripcionBusquedaLinkedIn({ rol: 'QA', ubicacion: null, modalidad: 'presencial' })).toBe(
+      'Abre LinkedIn con una búsqueda de «QA», presencial. Se abre en otra pestaña.'
+    );
+    expect(descripcionBusquedaLinkedIn({ rol: null, ubicacion: 'Córdoba', modalidad: 'hibrido' })).toBe(
+      'Abre LinkedIn con una búsqueda de ofertas en Córdoba, híbrido. Se abre en otra pestaña.'
+    );
+    expect(descripcionBusquedaLinkedIn({ rol: '  Data Analyst ', ubicacion: '  ', modalidad: null })).toBe(
+      'Abre LinkedIn con una búsqueda de «Data Analyst». Se abre en otra pestaña.'
+    );
+  });
+});
+
+describe('resumenDeCoincidencias', () => {
+  it('cuenta cuántos criterios del perfil cumple la oferta', () => {
+    expect(resumenDeCoincidencias([{ coincide: true }, { coincide: false }, { coincide: true }])).toEqual({ coinciden: 2, total: 3 });
+    expect(resumenDeCoincidencias([])).toEqual({ coinciden: 0, total: 0 });
   });
 });

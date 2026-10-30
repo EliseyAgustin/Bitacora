@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Download, ExternalLink, Filter, MapPin, Clock, Building2, Pencil, Trash2, Plus, Inbox, Send, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, ExternalLink, Filter, MapPin, Trash2, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '@/components/PageHeader';
 import { PrimerosPasos } from '@/components/PrimerosPasos';
@@ -7,13 +7,14 @@ import { mensajeDeError } from '@/lib/errores';
 import { ApplicationDetailPanel } from '@/components/ApplicationDetailPanel';
 import { ConfirmarEliminacionModal } from '@/components/ConfirmarEliminacionModal';
 import { OfertaDetallePanel } from '@/components/OfertaDetallePanel';
+import { TarjetaOferta } from '@/components/TarjetaOferta';
+import { Topo } from '@/components/publica/Topo';
 import { OfertaFormModal } from '@/components/OfertaFormModal';
 import { FUENTES_OFERTA } from '@/lib/fuentes';
 import { paginaDentroDeRango, totalPaginas } from '@/lib/lotes';
-import { urlBusquedaLinkedIn } from '@/lib/ofertaDetalle';
+import { descripcionBusquedaLinkedIn, urlBusquedaLinkedIn } from '@/lib/ofertaDetalle';
 import { alternarId, alternarTodas, estadoSeleccionTodas } from '@/lib/seleccion';
 import { RUTAS } from '@/lib/rutas';
-import { scoreBandClasses, scoreBorderClasses } from '@/lib/utils';
 import { ajustarPuntajeMinimo, listarCriterios, puntajeMaximoPosible } from '@/services/criteriosScoring';
 import {
   actualizarOferta,
@@ -27,19 +28,13 @@ import {
   listarUbicacionesDeOfertas,
   type FiltrosOfertas,
 } from '@/services/ofertas';
-import { crearPostulacion, ESTADO_POSTULACION_LABEL, listarPostulacionesDeOfertas } from '@/services/postulaciones';
+import { crearPostulacion, listarPostulacionesDeOfertas } from '@/services/postulaciones';
 import { importarOfertasRemotas, resumenImportacion } from '@/services/fuentesExternas';
 import { obtenerPerfil } from '@/services/onboarding';
 import type { CriterioScoring } from '@/types/criterioScoring';
 import type { Oferta, OfertaInput } from '@/types/oferta';
 import type { PerfilUsuario } from '@/types/perfilUsuario';
 import type { EstadoPostulacion, Postulacion } from '@/types/postulacion';
-
-const MODALIDAD_LABEL: Record<string, string> = {
-  remoto: 'Remoto',
-  hibrido: 'Híbrido',
-  presencial: 'Presencial',
-};
 
 const TAMANO_PAGINA = 30;
 
@@ -353,11 +348,11 @@ export function Offers() {
         <form
           onSubmit={handleAplicarFiltros}
           aria-label="Filtros de ofertas"
-          className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-3 mb-xl p-4 md:p-5 bg-surface rounded-xl border border-outline-variant shadow-sm"
+          className="entrada grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-3 mb-xl p-4 md:p-5 bg-surface rounded-xl border border-outline-variant"
         >
           {/* Los tres campos comparten la misma estructura (etiqueta, control de 44 px, ayuda) para que queden alineados. */}
           <div className="flex flex-col gap-1.5 min-w-0">
-            <label htmlFor="filtro-fuente" className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">
+            <label htmlFor="filtro-fuente" className="text-sm font-semibold text-on-surface">
               Fuente
             </label>
             <select
@@ -374,13 +369,13 @@ export function Offers() {
                 </option>
               ))}
             </select>
-            <p id="ayuda-fuente" className="text-xs text-on-surface-variant">
+            <p id="ayuda-fuente" className="text-sm text-on-surface-variant">
               De dónde salió la oferta: un portal de empleo o una carga manual.
             </p>
           </div>
 
           <div className="flex flex-col gap-1.5 min-w-0">
-            <label htmlFor="filtro-ubicacion" className="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">
+            <label htmlFor="filtro-ubicacion" className="text-sm font-semibold text-on-surface">
               Ubicación (ciudad o país)
             </label>
             <div className="relative">
@@ -402,15 +397,15 @@ export function Offers() {
                 ))}
               </datalist>
             </div>
-            <p id="ayuda-ubicacion" className="text-xs text-on-surface-variant">
+            <p id="ayuda-ubicacion" className="text-sm text-on-surface-variant">
               Escribí una ciudad o un país. Muchas ofertas remotas figuran solo por país o como «Remoto» o «Worldwide».
             </p>
           </div>
 
           <div className="flex flex-col gap-1.5 min-w-0">
-            <label htmlFor="filtro-score" className="flex items-baseline justify-between text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">
+            <label htmlFor="filtro-score" className="flex items-baseline justify-between text-sm font-semibold text-on-surface">
               <span>Puntaje mínimo</span>
-              <span className="text-primary font-bold text-xs">{scoreDraft}+</span>
+              <span className="num text-primary font-bold">{scoreDraft}+</span>
             </label>
             <div className="h-11 flex items-center">
               <input
@@ -425,7 +420,7 @@ export function Offers() {
                 className="w-full accent-primary cursor-pointer"
               />
             </div>
-            <p id="ayuda-puntaje" className="text-xs text-on-surface-variant">
+            <p id="ayuda-puntaje" className="text-sm text-on-surface-variant">
               Muestra solo las ofertas con este puntaje o más. El puntaje suma los pesos de tu perfil que cada oferta cumple.{' '}
               <span className="font-medium text-on-surface">Máximo posible con tu perfil: {puntajeMaximo} puntos</span>
             </p>
@@ -475,34 +470,44 @@ export function Offers() {
           </div>
         )}
 
-        <div className="flex flex-wrap justify-end gap-3 mb-lg">
-          {hayDatosParaLinkedIn && perfil && (
-            <a
-              href={urlBusquedaLinkedIn({ rol: perfil.rol_buscado, ubicacion: perfil.ubicacion, modalidad: perfil.modalidad_preferida })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-surface-container-high text-on-surface text-sm font-medium px-5 py-2.5 rounded-lg border border-outline-variant shadow-sm hover:bg-surface-variant transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <ExternalLink className="w-4.5 h-4.5" aria-hidden="true" />
-              Buscar en LinkedIn
-              <span className="sr-only"> (se abre en una pestaña nueva, con los datos de tu perfil de búsqueda)</span>
-            </a>
+        <div className="mb-lg flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
+          {hayDatosParaLinkedIn && perfil ? (
+            <div className="flex flex-col gap-2 max-w-[28rem]">
+              <a
+                href={urlBusquedaLinkedIn({ rol: perfil.rol_buscado, ubicacion: perfil.ubicacion, modalidad: perfil.modalidad_preferida })}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-describedby="ayuda-linkedin"
+                className="self-start h-11 bg-surface text-on-surface text-sm font-semibold px-5 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer"
+              >
+                <ExternalLink className="w-4.5 h-4.5" aria-hidden="true" />
+                Buscar en LinkedIn
+                <span className="sr-only"> (se abre en una pestaña nueva)</span>
+              </a>
+              <p id="ayuda-linkedin" className="text-sm text-on-surface-variant">
+                {descripcionBusquedaLinkedIn({ rol: perfil.rol_buscado, ubicacion: perfil.ubicacion, modalidad: perfil.modalidad_preferida })}
+              </p>
+            </div>
+          ) : (
+            <span />
           )}
-          <button
-            onClick={handleImportar}
-            disabled={importing}
-            className="bg-surface-container-high text-on-surface text-sm font-medium px-5 py-2.5 rounded-lg border border-outline-variant shadow-sm hover:bg-surface-variant transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
-          >
-            <Download className="w-4.5 h-4.5" />
-            {importing ? 'Importando…' : 'Importar ofertas remotas'}
-          </button>
-          <button
-            onClick={openCreateForm}
-            className="bg-primary text-on-primary text-sm font-medium px-5 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all flex items-center gap-2 cursor-pointer"
-          >
-            <Plus className="w-4.5 h-4.5" />
-            Nueva oferta
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={openCreateForm}
+              className="h-11 bg-surface text-on-surface text-sm font-semibold px-5 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center gap-2 cursor-pointer"
+            >
+              <Plus className="w-4.5 h-4.5" />
+              Nueva oferta
+            </button>
+            <button
+              onClick={handleImportar}
+              disabled={importing}
+              className="h-11 bg-primary text-on-primary text-sm font-semibold px-5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              <Download className="w-4.5 h-4.5" />
+              {importing ? 'Importando…' : 'Importar ofertas remotas'}
+            </button>
+          </div>
         </div>
 
         {loadError && (
@@ -514,10 +519,10 @@ export function Offers() {
         {loading ? (
           <div className="text-center text-on-surface-variant text-sm py-16">Cargando ofertas…</div>
         ) : total === 0 && !hayFiltros ? (
-          <div className="flex flex-col items-center justify-center text-outline-variant py-24 gap-2">
-            <Inbox className="w-12 h-12" />
-            <p className="text-sm font-medium text-on-surface-variant">Todavía no hay ofertas cargadas.</p>
-            <p className="text-sm text-on-surface-variant">Importá ofertas remotas o cargá una a mano para empezar.</p>
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
+            <Topo className="w-44" />
+            <p className="text-lg font-semibold text-on-surface">Todavía no hay ofertas cargadas.</p>
+            <p className="text-base text-on-surface-variant">Importá ofertas remotas o cargá una a mano para empezar.</p>
             <div className="flex flex-wrap justify-center gap-3 mt-3">
               <button
                 type="button"
@@ -539,10 +544,10 @@ export function Offers() {
             </div>
           </div>
         ) : total === 0 ? (
-          <div className="flex flex-col items-center justify-center text-outline-variant py-24 gap-2">
-            <Inbox className="w-12 h-12" />
-            <p className="text-sm font-medium text-on-surface-variant">Ninguna oferta coincide con los filtros aplicados.</p>
-            <p className="text-sm text-on-surface-variant">Probá aflojar un filtro: bajá el puntaje mínimo o borrá la ubicación.</p>
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
+            <Topo className="w-44" />
+            <p className="text-lg font-semibold text-on-surface">Ninguna oferta coincide con los filtros aplicados.</p>
+            <p className="text-base text-on-surface-variant">Probá aflojar un filtro: bajá el puntaje mínimo o borrá la ubicación.</p>
             <button
               type="button"
               onClick={handleLimpiarFiltros}
@@ -608,122 +613,24 @@ export function Offers() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ofertas.map((oferta) => (
-              <div
+            {ofertas.map((oferta, indice) => (
+              <TarjetaOferta
                 key={oferta.id}
-                onClick={(e) => abrirDetalleDesdeTarjeta(oferta, e.target)}
-                className={`bg-surface-container-lowest border border-outline-variant rounded-xl p-5 hover:shadow-md hover:border-primary transition-all group flex flex-col h-full cursor-pointer border-t-4 ${scoreBorderClasses(oferta.puntaje_scoring)} ${seleccionadas.has(oferta.id) ? 'ring-2 ring-primary' : ''}`}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <input
-                    type="checkbox"
-                    checked={seleccionadas.has(oferta.id)}
-                    onChange={() => setSeleccionadas((prev) => alternarId(prev, oferta.id))}
-                    aria-label={`Seleccionar la oferta ${oferta.rol} en ${oferta.empresa}`}
-                    className="w-4 h-4 mt-1.5 mr-3 shrink-0 accent-primary cursor-pointer"
-                  />
-                  <div className="flex-1 pr-4">
-                    <h3 className="text-lg font-semibold leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFichaPostulacionId(null);
-                          setDetalleId(oferta.id);
-                        }}
-                        className="text-left cursor-pointer"
-                      >
-                        {oferta.rol}
-                      </button>
-                    </h3>
-                    <div className="flex items-center gap-2 text-on-surface-variant text-[13px]">
-                      <Building2 className="w-4 h-4" />
-                      <span>{oferta.empresa}</span>
-                    </div>
-                  </div>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold shrink-0 border ${scoreBandClasses(oferta.puntaje_scoring)}`}>
-                    {oferta.puntaje_scoring !== null ? Math.round(oferta.puntaje_scoring) : '—'}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {oferta.ubicacion && (
-                    <span className="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1 border border-outline-variant">
-                      <MapPin className="w-3.5 h-3.5" /> {oferta.ubicacion}
-                    </span>
-                  )}
-                  {oferta.modalidad && (
-                    <span className="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1 border border-outline-variant">
-                      <Clock className="w-3.5 h-3.5" /> {MODALIDAD_LABEL[oferta.modalidad]}
-                    </span>
-                  )}
-                  {oferta.fuente && (
-                    <span className="bg-surface-container-low text-on-surface-variant px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1 border border-outline-variant">
-                      {oferta.fuente}
-                    </span>
-                  )}
-                  {oferta.stack_tecnologico.map((tech) => (
-                    <span key={tech} className="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-medium border border-transparent">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mb-4 flex flex-wrap items-center gap-2">
-                  {postulacionesPorOferta[oferta.id] ? (
-                    <button
-                      onClick={() => setFichaPostulacionId(postulacionesPorOferta[oferta.id].id)}
-                      title="Ver ficha de la postulación"
-                      className="inline-flex items-center gap-1.5 bg-primary-container text-on-primary-container px-3 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity cursor-pointer"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                      {ESTADO_POSTULACION_LABEL[postulacionesPorOferta[oferta.id].estado]}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handlePostularme(oferta)}
-                      disabled={postulandoId === oferta.id}
-                      className="inline-flex items-center gap-1.5 bg-primary text-on-primary px-3 py-1.5 rounded-lg text-xs font-medium hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                      {postulandoId === oferta.id ? 'Postulando…' : 'Postularme'}
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFichaPostulacionId(null);
-                      setDetalleId(oferta.id);
-                    }}
-                    aria-label={`Ver detalle de ${oferta.rol} en ${oferta.empresa}`}
-                    className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-primary hover:underline cursor-pointer"
-                  >
-                    Ver detalle
-                    <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
-                  </button>
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
-                  <span className="text-on-surface-variant text-[11px] font-semibold">
-                    {oferta.fecha_publicacion ?? 'Sin fecha'}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => openEditForm(oferta)}
-                      className="p-2.5 md:p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
-                      aria-label="Editar oferta"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(oferta)}
-                      className="p-2.5 md:p-2 rounded-lg text-error hover:bg-error-container transition-colors cursor-pointer"
-                      aria-label="Eliminar oferta"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
+                oferta={oferta}
+                indice={indice}
+                seleccionada={seleccionadas.has(oferta.id)}
+                onSeleccionar={() => setSeleccionadas((prev) => alternarId(prev, oferta.id))}
+                postulacion={postulacionesPorOferta[oferta.id]}
+                postulando={postulandoId === oferta.id}
+                onAbrirDetalle={() => {
+                  setFichaPostulacionId(null);
+                  setDetalleId(oferta.id);
+                }}
+                onPostularme={() => handlePostularme(oferta)}
+                onVerFicha={() => setFichaPostulacionId(postulacionesPorOferta[oferta.id].id)}
+                onEditar={() => openEditForm(oferta)}
+                onEliminar={() => handleDelete(oferta)}
+              />
             ))}
           </div>
 

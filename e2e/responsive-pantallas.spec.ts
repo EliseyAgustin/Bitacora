@@ -87,8 +87,12 @@ test.describe('candidato (cuenta compartida)', () => {
       const caja = await detalle.boundingBox();
       expect(caja!.x, `detalle a ${ancho}px: se sale por la izquierda`).toBeGreaterThanOrEqual(0);
       expect(caja!.x + caja!.width, `detalle a ${ancho}px: se sale por la derecha`).toBeLessThanOrEqual(ancho + 1);
-      const desborda = await detalle.evaluate((el) => Array.from(el.querySelectorAll('*')).some((n) => n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).overflowX === 'visible'));
-      expect(desborda, `detalle a ${ancho}px: hay contenido más ancho que su caja`).toBe(false);
+      const desbordan = await detalle.evaluate((el) =>
+        Array.from(el.querySelectorAll('*'))
+          .filter((n) => n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).overflowX === 'visible')
+          .map((n) => `${n.tagName.toLowerCase()}.${String(n.className).slice(0, 60)} "${(n.textContent ?? '').trim().slice(0, 40)}" (${n.scrollWidth} > ${n.clientWidth})`)
+      );
+      expect(desbordan, `detalle a ${ancho}px: hay contenido más ancho que su caja`).toEqual([]);
       await expect(detalle.getByRole('link', { name: /Ver oferta y postularme/ })).toBeVisible();
     }
   });
