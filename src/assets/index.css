@@ -343,3 +343,14 @@
   background-color: var(--color-outline-variant);
   border-radius: 9999px;
 }
+/* Quien pidió menos movimiento no ve ninguna animación ni transición: lo que cambia, cambia de golpe. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -303,7 +303,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                         <div className="absolute -left-4.25 top-0 bg-surface-container-lowest border border-outline-variant rounded-full p-1 text-on-surface-variant shadow-sm">
                           <Icon className="w-4.5 h-4.5" />
                         </div>
-                        <div className="text-[11px] font-semibold text-on-surface-variant mb-0.5">
+                        <div className="text-sm font-semibold text-on-surface-variant mb-0.5">
                           {formatearFechaHora(interaccion.fecha)}
                         </div>
                         <div className="bg-surface border border-outline-variant rounded-lg p-4 shadow-sm">
@@ -344,7 +344,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                 >
                   <h4 className="text-base font-semibold text-on-surface mb-4">Nueva interacción</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
-                    <label className="block text-[11px] font-semibold text-on-surface-variant">
+                    <label className="block text-sm font-semibold text-on-surface-variant">
                       Tipo
                       <select
                         value={tipo}
@@ -358,7 +358,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                         ))}
                       </select>
                     </label>
-                    <label className="block text-[11px] font-semibold text-on-surface-variant">
+                    <label className="block text-sm font-semibold text-on-surface-variant">
                       Fecha y hora
                       <input
                         type="datetime-local"
@@ -369,7 +369,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
                       />
                     </label>
                   </div>
-                  <label className="block text-[11px] font-semibold text-on-surface-variant mb-4">
+                  <label className="block text-sm font-semibold text-on-surface-variant mb-4">
                     Notas
                     <textarea
                       value={notas}

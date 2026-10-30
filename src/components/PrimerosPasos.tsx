@@ -101,7 +101,7 @@ export function PrimerosPasos() {
               <span>
                 {paso.texto}.{' '}
                 {pendiente && (
-                  <span className="inline-block text-[11px] font-semibold uppercase tracking-wide bg-tertiary-container text-on-tertiary-container rounded-full px-2 py-0.5 mr-1">
+                  <span className="inline-block text-sm font-semibold bg-tertiary-container text-on-tertiary-container rounded-full px-2 py-0.5 mr-1">
                     Pendiente
                   </span>
                 )}

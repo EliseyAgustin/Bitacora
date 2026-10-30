@@ -202,17 +202,17 @@ export function Tablero() {
                     <span aria-hidden="true" className={cn('w-2.5 h-2.5 rounded-full', ETAPA_CLASES[estado].punto)} />
                     {label}
                   </h3>
-                  <span className={cn('num px-2.5 py-0.5 rounded-full text-xs font-bold', ETAPA_CLASES[estado].chip)}>
+                  <span className={cn('num px-2.5 py-0.5 rounded-full text-sm font-bold', ETAPA_CLASES[estado].chip)}>
                     {items.length}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-on-surface-variant leading-snug">{DESCRIPCION_ETAPA[estado]}</p>
+                <p className="mt-1 text-sm text-on-surface-variant leading-snug">{DESCRIPCION_ETAPA[estado]}</p>
               </div>
 
               {items.length === 0 ? (
                 <div className="flex-1 overflow-y-auto p-sm space-y-sm flex flex-col items-center justify-center text-outline-variant custom-scrollbar">
                   <Inbox className="w-12 h-12 mb-1" />
-                  <p className="text-xs font-medium text-on-surface-variant">Sin tarjetas por ahora</p>
+                  <p className="text-sm font-medium text-on-surface-variant">Sin tarjetas por ahora</p>
                 </div>
               ) : (
                 <div className="flex-1 overflow-y-auto p-sm space-y-sm custom-scrollbar">
@@ -243,13 +243,13 @@ export function Tablero() {
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                      <p className="text-xs font-medium text-on-surface-variant mb-sm flex items-center gap-1">
+                      <p className="text-sm font-medium text-on-surface-variant mb-sm flex items-center gap-1">
                         <Building2 className="w-3.5 h-3.5" /> {postulacion.oferta.empresa}
                       </p>
                       {recordatorios[postulacion.id] && !estadoEsFinal(postulacion.estado) && (
                         <span
                           title="Recordatorio: no se borra nada. Registrá una novedad o marcalo como resuelto desde la ficha."
-                          className="self-start mb-sm inline-flex items-center gap-1 bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full text-[11px] font-semibold">
+                          className="self-start mb-sm inline-flex items-center gap-1 bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full text-sm font-semibold">
                           <AlertTriangle className="w-3 h-3" />
                           Sin novedades hace {recordatorios[postulacion.id].dias_inactividad} días
                         </span>
@@ -260,7 +260,7 @@ export function Tablero() {
                         onChange={(e) => moverEstado(postulacion, e.target.value as EstadoPostulacion)}
                         onClick={(e) => e.stopPropagation()}
                         aria-label={`Mover "${postulacion.oferta.rol}" a otro estado`}
-                        className="md:hidden mb-sm w-full min-h-11 bg-surface-container-lowest border border-outline-variant rounded-md px-2 text-xs font-medium text-on-surface focus:border-primary outline-none cursor-pointer"
+                        className="md:hidden mb-sm w-full min-h-11 bg-surface-container-lowest border border-outline-variant rounded-md px-2 text-sm font-medium text-on-surface focus:border-primary outline-none cursor-pointer"
                       >
                         {ESTADOS_POSTULACION.map(({ estado, label }) => (
                           <option key={estado} value={estado}>
@@ -271,14 +271,14 @@ export function Tablero() {
                       <div className="flex justify-between items-end mt-auto">
                         <div className="flex items-center gap-1">
                           <span className="w-2 h-2 rounded-full bg-primary"></span>
-                          <span className="text-xs font-semibold text-on-surface-variant">
+                          <span className="text-sm font-semibold text-on-surface-variant">
                             Puntaje: {postulacion.oferta.puntaje_scoring !== null ? Math.round(postulacion.oferta.puntaje_scoring) : '—'}
                           </span>
                         </div>
                         {postulacion.fecha_postulacion && (
                           <div className="flex items-center gap-1 text-on-surface-variant bg-surface-container px-2 py-1 rounded-sm">
                             <Clock className="w-3.5 h-3.5" />
-                            <span className="text-xs font-semibold">{postulacion.fecha_postulacion}</span>
+                            <span className="text-sm font-semibold">{postulacion.fecha_postulacion}</span>
                           </div>
                         )}
                       </div>
