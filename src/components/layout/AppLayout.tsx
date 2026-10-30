@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { almacenDeSesion, marcarVisitada, yaVisitada } from '@/lib/visitas';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 
@@ -12,25 +13,31 @@ export function AppLayout() {
     setMobileNavOpen(false);
   }, [location.pathname]);
 
+  // Las entradas animadas se muestran solo la primera vez que se abre cada pantalla en la sesión.
+  // Se lee al renderizar y se marca al terminar de montar, así no depende de cuántas veces renderice React.
+  const primeraVisita = useMemo(() => !yaVisitada(location.pathname, almacenDeSesion()), [location.pathname]);
+  useEffect(() => {
+    marcarVisitada(location.pathname, almacenDeSesion());
+  }, [location.pathname]);
+
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/*
-        Misma identidad visual que el fondo de Login/Registro, mucho más atenuada (~40% de esa opacidad):
-        acá hay contenido denso (tarjetas, Kanban, gráficos) que no puede competir con el fondo.
-        `fixed` (no `absolute`): no se mueve con el scroll vertical de `main` ni con el horizontal del Tablero.
-        Sin z-index propio: al ser el primer hijo pinta detrás del contenido (`relative`) y del Sidebar (z-50).
-        Las formas van hacia los bordes/esquinas, lejos del centro donde vive el contenido.
-      */}
-      <div aria-hidden="true" className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute -bottom-40 -right-10 w-120 h-120 rounded-full bg-tertiary/6 blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-secondary/4 blur-3xl" />
-      </div>
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-on-primary"
+      >
+        Saltar al contenido
+      </a>
 
       <Sidebar open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
       <div className="flex-1 flex flex-col w-full md:ml-60 md:w-[calc(100%-240px)] h-screen overflow-hidden relative">
         <Topbar onMenuClick={() => setMobileNavOpen(true)} />
-        <main className="flex-1 overflow-auto pt-16 h-full">
+        <main
+          id="contenido"
+          tabIndex={-1}
+          data-entradas={primeraVisita ? 'si' : 'no'}
+          className="flex-1 overflow-auto pt-14 md:pt-0 h-full focus:outline-none"
+        >
           <Outlet />
         </main>
       </div>

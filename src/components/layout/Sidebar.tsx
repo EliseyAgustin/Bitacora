@@ -55,7 +55,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed h-screen w-60 left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-md px-sm z-50 transition-transform duration-200 md:translate-x-0',
+          'fixed h-screen w-60 left-0 top-0 bg-background border-r border-outline-variant flex flex-col py-md px-sm z-50 transition-transform duration-200 md:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >
@@ -63,8 +63,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <div className="px-sm mb-xl flex flex-col gap-sm mt-sm">
           <div className="flex items-center justify-between gap-sm">
             <div className="flex items-center gap-sm">
-              <img src={logoIcono} alt="" className="w-8 h-8 rounded-full shrink-0" />
-              <div className="font-heading font-bold text-xl leading-tight text-primary">Laburin</div>
+              <img src={logoIcono} alt="" className="w-9 h-9 rounded-full shrink-0" />
+              <div className="font-heading font-bold text-2xl leading-tight text-primary">Laburin</div>
             </div>
             <button
               type="button"
@@ -75,7 +75,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               <X className="w-5 h-5" />
             </button>
           </div>
-          <div className="text-xs font-medium text-on-surface-variant">
+          <div className="text-sm font-medium text-on-surface-variant">
             {rol === 'administrador' ? 'Panel de administración' : 'Tu búsqueda de empleo'}
           </div>
         </div>
@@ -88,19 +88,19 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               to={item.path}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all",
+                  "flex items-center gap-3 px-3 min-h-11 rounded-lg text-sm font-medium transition-colors duration-150",
                   isActive
-                    ? "bg-surface-container-low text-primary font-bold border-r-4 border-primary scale-[0.98]"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
+                    ? "bg-primary-container text-on-primary-container font-semibold"
+                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
                 )
               }
             >
-              <item.icon className={cn("w-5 h-5")} />
+              <item.icon strokeWidth={1.75} className="w-5 h-5 shrink-0" />
               <span>{item.label}</span>
               {item.path === RUTAS.mensajes && noLeidos > 0 && (
                 <span
                   aria-label={noLeidos === 1 ? '1 mensaje sin leer' : `${noLeidos} mensajes sin leer`}
-                  className="ml-auto bg-primary text-on-primary text-[11px] font-semibold min-w-5 h-5 px-1.5 rounded-full flex items-center justify-center"
+                  className="num ml-auto bg-primary text-on-primary text-xs font-semibold min-w-6 h-6 px-1.5 rounded-full flex items-center justify-center"
                 >
                   {noLeidos}
                 </span>
@@ -114,17 +114,17 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={() => setCuentaAbierta(true)}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
+            className="w-full flex items-center gap-3 px-3 min-h-11 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 cursor-pointer"
           >
-            <UserCircle className="w-5 h-5" />
+            <UserCircle strokeWidth={1.75} className="w-5 h-5" />
             <span>Mi cuenta</span>
           </button>
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
+            className="w-full flex items-center gap-3 px-3 min-h-11 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 cursor-pointer"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut strokeWidth={1.75} className="w-5 h-5" />
             <span>Cerrar Sesión</span>
           </button>
         </div>

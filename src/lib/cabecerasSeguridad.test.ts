@@ -78,10 +78,17 @@ describe('vercel.json: cabeceras de seguridad', () => {
       }
     });
 
-    it('permite solo lo que la interfaz necesita: Google Fonts, imágenes propias y data:', () => {
-      expect(csp['font-src']).toEqual(expect.arrayContaining(["'self'", 'https://fonts.gstatic.com']));
-      expect(csp['style-src']).toEqual(expect.arrayContaining(["'self'", 'https://fonts.googleapis.com']));
+    it('permite solo lo que la interfaz necesita: tipografía e imágenes propias y data:', () => {
+      expect(csp['font-src']).toEqual(expect.arrayContaining(["'self'"]));
+      expect(csp['style-src']).toEqual(expect.arrayContaining(["'self'"]));
       expect(csp['img-src']).toEqual(expect.arrayContaining(["'self'", 'data:']));
+    });
+
+    it('no carga nada de terceros para estilos ni tipografías (la fuente se aloja en el propio proyecto)', () => {
+      for (const directiva of ['style-src', 'font-src']) {
+        const externos = (csp[directiva] ?? []).filter((v) => /^https?:\/\//.test(v));
+        expect(externos, directiva).toEqual([]);
+      }
     });
   });
 

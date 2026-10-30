@@ -189,7 +189,7 @@ export function ApplicationDetailPanel({ postulacionId, onClose, onEstadoChange,
   const score = oferta?.puntaje_scoring ?? null;
 
   return (
-    <aside className="fixed right-0 top-16 bottom-0 w-130 max-w-full bg-surface-container-lowest border-l border-outline-variant shadow-[0_0_40px_rgba(0,0,0,0.1)] z-50 flex flex-col">
+    <aside className="fixed right-0 top-14 md:top-0 bottom-0 w-130 max-w-full bg-surface-container-lowest border-l border-outline-variant shadow-[0_0_40px_rgba(0,0,0,0.1)] z-50 flex flex-col">
       <div className="px-6 py-6 border-b border-outline-variant flex items-start justify-between bg-surface-bright sticky top-0 z-10">
         <div className="min-w-0">
           <h2 className="text-2xl font-semibold text-on-surface mb-1">{oferta?.rol ?? 'Cargando…'}</h2>

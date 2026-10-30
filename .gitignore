@@ -16,3 +16,6 @@ test-results/
 
 # Demostración (credenciales de las cuentas ficticias, solo para borrar sus datos)
 .demo-cuentas.json
+
+# Maqueta, mediciones y capturas del rediseño (herramientas locales)
+.taste-skill/

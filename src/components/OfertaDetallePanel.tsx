@@ -60,7 +60,7 @@ export function OfertaDetallePanel({
       role="dialog"
       aria-modal="false"
       aria-labelledby="titulo-oferta-detalle"
-      className="fixed right-0 top-16 bottom-0 w-130 max-w-full bg-surface-container-lowest border-l border-outline-variant shadow-[0_0_40px_rgba(0,0,0,0.1)] z-50 flex flex-col"
+      className="fixed right-0 top-14 md:top-0 bottom-0 w-130 max-w-full bg-surface-container-lowest border-l border-outline-variant shadow-[0_0_40px_rgba(0,0,0,0.1)] z-50 flex flex-col"
     >
       <div className="px-6 py-6 border-b border-outline-variant flex items-start justify-between gap-3 bg-surface-bright">
         <div className="min-w-0">

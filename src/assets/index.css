@@ -53,8 +53,8 @@
   --spacing-gutter: 20px;
   --spacing-margin: 24px;
 
-  --font-sans: "Inter", sans-serif;
-  --font-heading: "Lexend", "Inter", sans-serif;
+  --font-sans: "Figtree Variable", system-ui, sans-serif;
+  --font-heading: "Figtree Variable", system-ui, sans-serif;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -159,9 +159,176 @@
   --color-on-error-container: #ffd9d6;
 }
 
+/*
+ * Rediseño: tipografía, tamaños, colores de las etapas y de la página pública, y movimiento.
+ * Una sola tipografía (Figtree), alojada en el propio proyecto. Los tamaños de texto suben un escalón:
+ * lo que antes era 14 px ahora es 15 px, y lo más chico se lee a 13 px (nada por debajo).
+ */
+@theme {
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+
+  /* Etapas de una postulación: la marca (puntos, barras), el fondo suave de las etiquetas y la tinta que va encima. */
+  --color-etapa-por-aplicar: #64708c;
+  --color-etapa-por-aplicar-fondo: #e9ecf4;
+  --color-etapa-por-aplicar-tinta: #3a4258;
+  --color-etapa-aplicado: #1e4fd8;
+  --color-etapa-aplicado-fondo: #dee7ff;
+  --color-etapa-aplicado-tinta: #0e2e86;
+  --color-etapa-en-proceso: #e0630f;
+  --color-etapa-en-proceso-fondo: #ffe6d6;
+  --color-etapa-en-proceso-tinta: #7a3705;
+  --color-etapa-entrevista: #0f766e;
+  --color-etapa-entrevista-fondo: #d3f1ec;
+  --color-etapa-entrevista-tinta: #0b4f4a;
+  --color-etapa-oferta: #157f3c;
+  --color-etapa-oferta-fondo: #e3f6ea;
+  --color-etapa-oferta-tinta: #0b5c2a;
+  --color-etapa-rechazado: #b3261e;
+  --color-etapa-rechazado-fondo: #fbe9e7;
+  --color-etapa-rechazado-tinta: #7e1610;
+
+  /* Capítulos de la página pública (Login y Registro) y el amarillo del botón sobre campos oscuros. */
+  --color-capitulo-1: #1b46c9;
+  --color-capitulo-1-tinta: #ffffff;
+  --color-capitulo-2: #ff7a45;
+  --color-capitulo-2-tinta: #0e1330;
+  --color-capitulo-3: #d4e6d8;
+  --color-capitulo-3-tinta: #0e1330;
+  --color-capitulo-4: #0e1330;
+  --color-capitulo-4-tinta: #f4f6fb;
+  --color-destello: #f0ff1c;
+  --color-destello-tinta: #0e1330;
+
+  --ease-salida: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-etapa-por-aplicar: #9aa4bf;
+    --color-etapa-por-aplicar-fondo: #1d253e;
+    --color-etapa-por-aplicar-tinta: #c4cbe0;
+    --color-etapa-aplicado: #7da2ff;
+    --color-etapa-aplicado-fondo: #1e2f63;
+    --color-etapa-aplicado-tinta: #c7d5ff;
+    --color-etapa-en-proceso: #ff9a5c;
+    --color-etapa-en-proceso-fondo: #3d2410;
+    --color-etapa-en-proceso-tinta: #ffd6b8;
+    --color-etapa-entrevista: #4fd1c5;
+    --color-etapa-entrevista-fondo: #0f3a37;
+    --color-etapa-entrevista-tinta: #b7f0ea;
+    --color-etapa-oferta: #34d399;
+    --color-etapa-oferta-fondo: #113b26;
+    --color-etapa-oferta-tinta: #b9f5d0;
+    --color-etapa-rechazado: #f2726b;
+    --color-etapa-rechazado-fondo: #3b1412;
+    --color-etapa-rechazado-tinta: #ffd9d6;
+    --color-capitulo-1: #14308f;
+    --color-capitulo-2: #f26b33;
+    --color-capitulo-3: #28463a;
+    --color-capitulo-3-tinta: #f1f7f3;
+    --color-capitulo-4: #070a18;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-etapa-por-aplicar: #9aa4bf;
+  --color-etapa-por-aplicar-fondo: #1d253e;
+  --color-etapa-por-aplicar-tinta: #c4cbe0;
+  --color-etapa-aplicado: #7da2ff;
+  --color-etapa-aplicado-fondo: #1e2f63;
+  --color-etapa-aplicado-tinta: #c7d5ff;
+  --color-etapa-en-proceso: #ff9a5c;
+  --color-etapa-en-proceso-fondo: #3d2410;
+  --color-etapa-en-proceso-tinta: #ffd6b8;
+  --color-etapa-entrevista: #4fd1c5;
+  --color-etapa-entrevista-fondo: #0f3a37;
+  --color-etapa-entrevista-tinta: #b7f0ea;
+  --color-etapa-oferta: #34d399;
+  --color-etapa-oferta-fondo: #113b26;
+  --color-etapa-oferta-tinta: #b9f5d0;
+  --color-etapa-rechazado: #f2726b;
+  --color-etapa-rechazado-fondo: #3b1412;
+  --color-etapa-rechazado-tinta: #ffd9d6;
+  --color-capitulo-1: #14308f;
+  --color-capitulo-2: #f26b33;
+  --color-capitulo-3: #28463a;
+  --color-capitulo-3-tinta: #f1f7f3;
+  --color-capitulo-4: #070a18;
+}
+
+/* Cifras alineadas dígito a dígito (tablas, métricas, contadores). Figtree tiene cifras tabulares reales. */
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Movimiento. Las entradas escalonadas solo se activan la primera vez que se abre una pantalla en la sesión
+ * (AppLayout pone data-entradas="si" en <main>); el resto del tiempo solo hay respuesta a lo que la persona toca.
+ * Con "reducir movimiento" no hay recorrido: el contenido aparece quieto.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  [data-entradas="si"] .entrada {
+    animation: entrada-subir 0.6s var(--ease-salida) both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+  @keyframes entrada-subir {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* La mascota: sube del pozo, parpadea de vez en cuando y mueve el papel. */
+  .topo-sube {
+    animation: topo-sube 1s var(--ease-salida) 0.4s both;
+  }
+  @keyframes topo-sube {
+    from {
+      transform: translateY(90px);
+    }
+    to {
+      transform: none;
+    }
+  }
+  .topo-parpadeo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: topo-parpadeo 5.5s infinite 2s;
+  }
+  @keyframes topo-parpadeo {
+    0%,
+    94%,
+    100% {
+      transform: scaleY(1);
+    }
+    97% {
+      transform: scaleY(0.08);
+    }
+  }
+  .topo-papel {
+    transform-box: fill-box;
+    transform-origin: 50% 90%;
+    animation: topo-papel 4s ease-in-out infinite 1.6s;
+  }
+  @keyframes topo-papel {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    50% {
+      transform: rotate(7deg);
+    }
+  }
+}
+
 @layer base {
   body {
-    @apply bg-background text-on-background font-sans text-[14px] leading-[20px];
+    @apply bg-background text-on-background font-sans text-[16px] leading-normal;
   }
 }
 
