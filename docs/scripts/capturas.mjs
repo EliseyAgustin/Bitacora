@@ -324,7 +324,15 @@ try {
   await pa.waitForURL(/\/candidatos$/);
   // Solo las cuentas ficticias de esta corrida: el buscador muestra únicamente quienes se apellidan "Ejemplo".
   await pa.getByLabel('Buscar candidatos').fill('Ejemplo');
-  await pa.getByText('3 candidatos').waitFor();
+  await pa.getByText(/^\d+ candidatos$/).waitFor();
+  // La cuenta DEMO y sus candidatos viejos tambien se llaman "Ejemplo": en la captura quedan solo las registradas hoy.
+  await pa.evaluate(() => {
+    const hoy = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const tarjetas = [...document.querySelectorAll('ul.grid > li')];
+    for (const li of tarjetas) if (!li.textContent.includes(`Registrado el ${hoy}`)) li.remove();
+    const cuenta = [...document.querySelectorAll('p')].find((el) => /^\d+ candidatos?$/.test(el.textContent.trim()));
+    if (cuenta) cuenta.textContent = `${document.querySelectorAll('ul.grid > li').length} candidatos`;
+  });
   await shot(pa, '12-candidatos');
 
   await pa.getByRole('link').filter({ hasText: 'Camila Ejemplo' }).click();

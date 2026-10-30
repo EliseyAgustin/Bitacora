@@ -1,12 +1,12 @@
 # Guion de la demostración (5 a 7 minutos)
 
-Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con lo que conviene decir en cada paso y qué debería verse. Los datos de ejemplo son ficticios.
+Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con lo que conviene decir en cada paso y qué debería verse. Los datos de ejemplo son ficticios. Todas las pantallas comparten la identidad del Login y el Registro: cada una abre con un capítulo de color y la mascota.
 
 ## Antes de empezar (10 minutos antes)
 - [ ] **Producción al día:** https://laburin.vercel.app abre y el último commit está desplegado.
 - [ ] **Supabase configurado** según [`guia-supabase.md`](guia-supabase.md): sobre todo el correo propio, para que la recuperación de contraseña funcione con el email de quien la pruebe.
 - [ ] **Cuenta DEMO al día:** `npm run demo:datos` deja a **Camila Ejemplo** como alguien que usa Laburin hace ocho semanas y suma a Tomás y Lucía Ejemplo para la vista del administrador. Conviene correrlo **el mismo día**: las fechas se arman respecto de hoy, y es repetible (reinicia la cuenta). Necesita `DEMO_EMAIL` y `DEMO_PASSWORD` en `.env.e2e`; los mensajes del administrador usan `E2E_ADMIN_EMAIL` y `E2E_ADMIN_PASSWORD`. Al terminar: `npm run demo:borrar`.
-- [ ] **Qué trae la cuenta DEMO:** 36 ofertas (Remotive, Arbeitnow, RemoteOK y carga manual) con puntajes altos, medios y bajos, y con enlace y descripción (los enlaces son de example.com: no llevan a ningún sitio real, algunas ofertas manuales no tienen); 15 postulaciones en los seis estados, con su historial; 33 interacciones de los cuatro tipos; **2 recordatorios activos** («Sin novedades hace 15 y 9 días») y 2 resueltos; un criterio de scoring apagado; y 4 mensajes (la bienvenida y tres del administrador, **uno sin leer**: el menú muestra el 1). Mi progreso entra con datos en todas las tarjetas y gráficos.
+- [ ] **Qué trae la cuenta DEMO:** 36 ofertas (Remotive, Arbeitnow, RemoteOK y carga manual) con puntajes altos, medios y bajos, y con enlace y descripción (los enlaces son de example.com: no llevan a ningún sitio real, algunas ofertas manuales no tienen); 15 postulaciones en los seis estados, con su historial; 33 interacciones de los cuatro tipos; **2 recordatorios activos** («Sin novedades hace 15 y 9 días») y 2 resueltos; un criterio de scoring apagado; y 4 mensajes (la bienvenida y tres del administrador, **uno sin leer**: el menú muestra el 1). Mi progreso entra con datos en todas las tarjetas y gráficos. Los mensajes del administrador se fechan siempre después de la bienvenida de la cuenta.
 - [ ] **Dos ventanas listas:** una con la cuenta de candidato (Camila) y otra con la de administrador, ya con la sesión iniciada. Una más en un celular o en el modo móvil del navegador.
 - [ ] **Plan B si falla internet:** el [Manual de Usuario](../Laburin-Manual-de-Usuario.pdf) y las capturas de [`docs/scripts/capturas/`](scripts/capturas/).
 
@@ -22,16 +22,16 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 
 ### 3. Ofertas y puntaje (1 min 30 s)
 - **Ofertas**: la línea de ayuda bajo el título. *Importar ofertas remotas*. La tarjeta **Primeros pasos** solo se ve en una cuenta nueva: con la cuenta DEMO ya no aparece, porque ya se postuló. Mostrarla registrando una persona nueva (paso 2).
-- Cada oferta trae un **puntaje** según el perfil. Filtrar: **Ubicación** (las sugerencias son las que existen en las ofertas) y **Puntaje mínimo** (el control llega hasta el máximo posible del perfil). Probar un filtro que no devuelve nada y mostrar el mensaje que sugiere aflojarlo.
+- Cada oferta trae un **puntaje** según el perfil (el círculo de la tarjeta, con color por franja). Filtrar: **Ubicación** (las sugerencias son las que existen en las ofertas) y **Puntaje mínimo** (el control llega hasta el máximo posible del perfil). Probar un filtro que no devuelve nada y mostrar el mensaje que sugiere aflojarlo.
 - **Abrir el detalle** de una oferta (un clic en la tarjeta): el panel explica **por qué tiene ese puntaje**, criterio por criterio, muestra la descripción y trae **"Ver oferta y postularme"**, que abre la publicación original en otra pestaña (con la cuenta DEMO el destino es de ejemplo). Escape lo cierra.
 - **Buscar en LinkedIn** (arriba de la lista): abre el buscador de LinkedIn con el rol, la ubicación y la modalidad del perfil. Aclarar que LinkedIn no ofrece una API pública de búsqueda, por eso no se importan sus ofertas.
-- **Postularme** en una oferta (o "Guardar en Mis postulaciones" desde el detalle).
+- **Postularme** en una oferta (o "Guardar para después" desde el detalle). Si se abre "Ver oferta y postularme" y se vuelve a la aplicación, aparece arriba la pregunta **«¿Ya te postulaste?»**: "Sí, ya apliqué" deja la postulación en Aplicado y "Todavía no" vuelve a preguntar al día siguiente.
 
 ### 4. Seguimiento (1 min)
-- **Mis postulaciones**: las seis columnas. Arrastrar una tarjeta (en el celular, el selector "Mover a…").
+- **Mis postulaciones**: las seis columnas, cada una con su color y la frase que explica qué significa (la diferencia entre "Por aplicar" y "Aplicado" queda a la vista). Arrastrar una tarjeta (en el celular, el selector "Mover a…"). Si bajó el ritmo de la búsqueda aparece el **aviso de actividad** con la mascota, y un punto en el menú.
 - Abrir la **ficha**: la línea de tiempo de interacciones. Mostrar el **recordatorio** "Sin novedades hace N días" y aclarar: *"es solo un aviso, no se borra nada"*.
 - **Mi perfil de búsqueda**: cambiar el peso de una tecnología y volver a Ofertas: los puntajes se recalcularon solos. Mostrar los **Avisos de seguimiento** (los días del recordatorio).
-- **Mi progreso**: ya viene con datos: tasa de respuesta (67%), el embudo (15 → 12 → 7 → 4 → 1), la distribución de puntajes, las ofertas por fuente, la actividad de las últimas 8 semanas y los recordatorios activos y resueltos.
+- **Mi progreso**: ya viene con datos y siete tarjetas con nombres claros: «Postulaciones con respuesta» (67%, 8 de 12 enviadas), «Postulaciones en curso» (11 de 15), «Ofertas guardadas» (36) y las demás. Tocar la **ⓘ** de una tarjeta muestra qué mide, y cada una muestra su **tendencia contra la semana anterior**. Debajo, el embudo (15 → 12 → 7 → 4 → 1, con los colores de etapa), la distribución de puntajes, las ofertas por fuente y la actividad de las últimas 8 semanas.
 
 ### 5. El lado del administrador (1 min 30 s)
 - En la otra ventana: iniciar sesión como administrador → **cae directo en Candidatos**. Buscar por nombre, rol o tecnología.
@@ -40,7 +40,8 @@ Un recorrido pensado para mostrarle Laburin a la docente de principio a fin, con
 - Volver al candidato: el menú muestra el **contador de mensajes sin leer**. Abrir **Mensajes**, leer la bienvenida y el mensaje nuevo, **marcar como leído**.
 
 ### 6. Si hay tiempo
-- **¿Olvidaste tu contraseña?**: los tres pasos, el mail en español que llega de verdad y la pantalla de nueva contraseña.
+- **¿Olvidaste tu contraseña?**: la pantalla con la frase grande y los tres pasos a la vista, el mail con la misma identidad visual que llega de verdad y la pantalla de nueva contraseña.
+- **Mi cuenta**: cerrar sesión en todos los dispositivos, apagar los avisos, **descargar todos mis datos** en un archivo y el borrado con confirmación (no hace falta mostrarlo con la cuenta DEMO).
 - La aplicación en el **celular**: se acomoda sin recortes ni scroll lateral.
 - Un candidato **no puede entrar a Candidatos ni escribiendo la dirección**.
 

@@ -172,3 +172,26 @@ El esquema de base de datos se diseña con `user_id` y RLS desde el Modelado (Se
 ## 9. Próximos pasos
 
 Semana 2 (Modelado): diseñar el DER sobre las entidades de §2 — `usuarios`, `ofertas`, `postulaciones`, `interacciones`, `criterios_scoring` — con las relaciones y RLS descriptas en RNF-02 y §7.3, e implementarlo en Supabase.
+
+## 10. Ampliaciones posteriores: rediseño de la interfaz (octubre de 2026)
+
+Después de la demostración del 29/10/2026 la docente pidió una interfaz más clara y motivadora. Los cambios se hicieron **solo sobre la interfaz**: no tocan el motor de scoring, la lógica de recordatorios, las reglas de acceso (RLS) ni el esquema de la base. Los requerimientos de esta sección son nuevos y no estaban en la especificación original.
+
+### 10.1 Requerimientos funcionales
+
+- **RF-18 (Estados explicados)**: cada columna del tablero debe indicar con una frase qué significa (por ejemplo, «Por aplicar»: las guardaste, todavía no te postulaste) y distinguirse por un color de etapa propio, que se repite en la ficha, el embudo y las tarjetas.
+- **RF-19 (Confirmar la postulación)**: al abrir el enlace de una oferta para postularse en el sitio de origen, el sistema debe recordarlo y, al volver, preguntar «¿Ya te postulaste?»: con «Sí, ya apliqué» la postulación queda en *Aplicado*; con «Todavía no» no se guarda nada y se vuelve a preguntar al día siguiente. Laburín no puede saber lo que ocurre en el sitio de la empresa: la pregunta evita que la persona tenga que acordarse de marcarla.
+- **RF-20 (Aviso de actividad)**: el sistema debe avisar con buen tono, dentro de la aplicación, cuando baja el ritmo de la búsqueda (esta semana con la mitad o menos de movimientos que la anterior), cuando pasan 10 días sin actividad y, como felicitación semanal, cuando va bien. Un *movimiento* es una postulación creada, una interacción registrada o un cambio de estado real. Se calcula en el navegador con datos que ya existen, se puede cerrar (reaparece a los 3 días; la felicitación, a los 7) y se puede apagar. No hay notificación por email (RF-16 sigue fuera del alcance).
+- **RF-21 (Mi progreso legible)**: cada indicador de RF-17 debe tener un nombre que diga qué mide, una ayuda que lo explique y su tendencia contra la semana anterior (las fórmulas no cambian).
+- **RF-22 (Mi cuenta completa)**: la persona debe poder cambiar su nombre y su contraseña, cerrar sesión en todos los dispositivos, elegir el tema, apagar los avisos de RF-19 y RF-20, **descargar todos sus datos** en un archivo y **borrar sus ofertas y postulaciones** con una confirmación explícita.
+- **RF-23 (Mensajes de la demo coherentes)**: los mensajes de la cuenta de demostración deben fecharse después del mensaje de bienvenida y no repetirlo.
+
+### 10.2 Requerimientos no funcionales
+
+- **RNF-06 (Identidad visual única)**: la aplicación, el Login, el Registro, las pantallas de recuperación de contraseña y el mail de recuperación comparten una paleta (azul, naranja, salvia, azul noche y el amarillo del botón principal), una sola tipografía servida desde la propia aplicación y la mascota como elemento de marca. Cada pantalla abre con un capítulo de color.
+- **RNF-07 (Accesibilidad)**: contraste AA en modo claro y oscuro, foco visible, uso completo con teclado, objetivos táctiles de al menos 44 px, nada de texto menor a 14 px y ninguna animación con «reducir movimiento» activado (verificado con pruebas automáticas de axe-core, de ancho de pantalla y de movimiento).
+- **RNF-08 (Seguridad de la presentación)**: la tipografía y los recursos se sirven desde el mismo origen, sin fuentes ni imágenes externas, para no ampliar la política de contenido (`vercel.json`); la plantilla del mail no usa imágenes externas.
+
+### 10.3 Límites declarados
+
+Las preferencias de avisos y la pregunta pendiente de RF-19 se guardan en el navegador de cada persona (no se sincronizan entre dispositivos, porque guardarlas en la cuenta exigiría una tabla nueva); el mail de recuperación depende de la plantilla pegada en el panel de Supabase; y el mail no lleva la mascota, porque los clientes de correo bloquean las imágenes externas.

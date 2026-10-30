@@ -88,9 +88,11 @@ const doc = new Document({
       bullet('Seguir el estado de cada postulación en un tablero visual, desde "Por aplicar" hasta "Oferta" o "Rechazado".'),
       bullet('Registrar cada contacto con la empresa (mails, llamados, entrevistas) para no perder el hilo.'),
       bullet('Recibir un recordatorio cuando una postulación lleva mucho tiempo sin novedades. Es solo un aviso: no se borra nada.'),
+      bullet('Recibir un aviso, con la mascota de Laburin, cuando bajó tu ritmo de búsqueda (o una felicitación cuando vas bien).'),
       bullet('Ver cómo te va en toda tu búsqueda: cuántas postulaciones activas tenés, cómo avanzan y qué fuentes te traen mejores ofertas.'),
       bullet('Recibir mensajes del equipo de Laburin, por ejemplo cuando falta algún dato de tu perfil.'),
-      p('Las pantallas principales son: Ofertas, Mis postulaciones, Mi progreso, Mi perfil de búsqueda y Mensajes. Cada una tiene, debajo del título, una línea que explica qué se hace ahí.'),
+      p('Las pantallas principales son: Ofertas, Mis postulaciones, Mi progreso, Mi perfil de búsqueda y Mensajes. Cada una abre con una banda de color (azul, naranja o verde salvia), el mismo de la pantalla de inicio, con su título y, debajo, una línea que explica qué se hace ahí. En el menú lateral, la pantalla en la que estás se marca con el color de su banda.'),
+
 
       h2('Ver Laburin con datos de ejemplo'),
       p('Si querés conocer la aplicación antes de cargar tus propios datos, el equipo de Laburin puede darte una cuenta de demostración. Es la de alguien que usa Laburin hace unas ocho semanas, con todo ya cargado: ofertas con distintos puntajes, postulaciones en todas las columnas del tablero, interacciones, dos recordatorios de «Sin novedades», un mensaje del equipo sin leer y los gráficos de Mi progreso completos. Los datos son ficticios. Nada de lo que hagas ahí afecta a otras cuentas.'),
@@ -109,7 +111,8 @@ const doc = new Document({
       h2('Iniciar sesión'),
       p('Si ya tenés cuenta, ingresá tu email y contraseña y hacé clic en "Ingresar". Laburin recuerda tu sesión, así que no vas a tener que volver a loguearte cada vez que abras la aplicación en el mismo dispositivo.'),
       h2('Olvidé mi contraseña'),
-      p('En la pantalla de inicio, tocá "¿Olvidaste tu contraseña?". Son tres pasos y la pantalla te muestra en cuál estás: pedí el enlace, revisá tu correo y elegí tu contraseña.'),
+      p('En la pantalla de inicio, tocá "¿Olvidaste tu contraseña?". Son tres pasos y la pantalla te los muestra a la izquierda, con una frase grande: pedí el enlace, revisá tu correo y elegí tu contraseña. El formulario está a la derecha, directo sobre el color, igual que el de inicio de sesión.'),
+
       p('Paso 1: escribí el email con el que te registraste y apretá "Enviar enlace". Si ya lo habías escrito en el inicio de sesión, aparece cargado.'),
       ...figure('02b-recuperar-contrasena.png', { ...DESKTOP, caption: 'Paso 1: pedir el enlace con tu email.' }),
       p('Paso 2: aparece "Revisá tu correo", con el mensaje "Si el email existe, te enviamos un enlace para cambiar tu contraseña" (es el mismo exista o no una cuenta con ese email) y el email al que lo pediste. Puede tardar unos minutos y, si no lo ves, mirá la carpeta de spam. El enlace vence al rato y solo se puede usar una vez. Podés pedir otro recién pasado un minuto (el botón muestra cuánto falta), o tocar "Usar otro email" si te equivocaste de dirección.'),
@@ -176,12 +179,16 @@ const doc = new Document({
       p('Si querés borrar varias a la vez, marcá las casillas de las ofertas que querés eliminar y usá "Eliminar seleccionadas" en la barra que aparece arriba de la lista. La casilla "Seleccionar esta página" marca las ofertas que estás viendo; si tenés más de una página, aparece además el enlace "Seleccionar las N ofertas que coinciden", que marca todas las que cumplen los filtros, estén en la página que estén. El botón "Eliminar seleccionadas" siempre te dice cuántas vas a borrar, y antes de hacerlo Laburin te pide confirmación.'),
       h2('Postularte'),
       p('Cuando encontrás una oferta a la que querés postularte, tocá "Postularme" (o "Guardar en Mis postulaciones" en el detalle). Esto la mueve a Mis postulaciones, en la columna "Por aplicar", para que empieces a hacerle seguimiento. Para postularte de verdad, abrí la oferta original con "Ver oferta y postularme".'),
+      p('Cuando abrís el enlace de una oferta con "Ver oferta y postularme" y volvés a Laburin, aparece arriba la pregunta "¿Ya te postulaste a [puesto]?". Si tocás "Sí, ya apliqué", la postulación queda en la columna "Aplicado" (se crea si no la tenías). Si tocás "Todavía no", no se guarda nada y te volvemos a preguntar al día siguiente. Laburin no puede ver qué hacés en el sitio de la empresa: por eso te lo pregunta. Si preferís que no lo haga, podés apagarlo en Mi cuenta, en Preferencias.'),
 
       // 5. Mis postulaciones
       h1('5. Mis postulaciones'),
       p('"Mis postulaciones" es el tablero donde seguís el estado de cada postulación, desde que decidís postularte hasta que termina el proceso.'),
       ...figure('05-tablero.png', { ...DESKTOP, caption: 'Mis postulaciones en computadora, con las seis columnas del proceso y un recordatorio en una tarjeta.' }),
       p('Tiene seis columnas: Por aplicar, Aplicado, En proceso, Entrevista, Oferta y Rechazado. Cada postulación es una tarjeta que vas moviendo de columna a medida que avanza el proceso. Si todavía no tenés ninguna, la pantalla te lo dice y un botón te lleva a Ofertas.'),
+      p('Cada columna tiene su color y una frase debajo del nombre que explica qué significa: "Por aplicar" son las que guardaste pero todavía no te postulaste; "Aplicado", las que ya enviaste; "En proceso", las que te respondieron; "Entrevista", las que tienen una entrevista pendiente o hecha; "Oferta", las que te hicieron una propuesta; y "Rechazado", las que no siguieron adelante (queda como registro).'),
+      h2('El aviso de actividad'),
+      p('Si baja el ritmo de tu búsqueda, arriba del tablero aparece una tarjeta con la mascota y un mensaje, por ejemplo "Bajó tu ritmo: esta semana hiciste 2 movimientos y la anterior 7". Un movimiento es una postulación nueva, una interacción registrada o un cambio de estado. El aviso también aparece si pasan 10 días sin actividad ("¿Retomamos?") y, una vez por semana, como felicitación si vas muy bien. En el menú, un punto junto a "Mis postulaciones" te avisa que hay uno. Lo podés cerrar con la ✕ (vuelve a aparecer a los 3 días, y la felicitación a la semana) o apagar en Mi cuenta. Si recién empezás y tenés pocos movimientos, no te avisamos nada.'),
       h2('En computadora'),
       p('Podés arrastrar la tarjeta de una columna a otra con el mouse: hacé clic, mantené presionado y soltá en la columna que corresponda.'),
       h2('En el celular'),
@@ -217,13 +224,18 @@ const doc = new Document({
 
       // 8. Mi cuenta
       h1('8. Mi cuenta'),
-      p('Además del perfil de búsqueda, tenés una sección aparte para los datos de tu propia cuenta: tu nombre, tu contraseña y el tema de la aplicación. Para acceder, tocá "Mi cuenta" en el menú lateral, arriba de "Cerrar Sesión".'),
-      ...figure('10-mi-cuenta.png', { ...DESKTOP, caption: 'Ventana de "Mi cuenta": nombre, email, aviso de privacidad, cambio de contraseña y tema.' }),
+      p('Además del perfil de búsqueda, tenés una sección aparte para los datos de tu propia cuenta. Para acceder, tocá "Mi cuenta" en el menú lateral, arriba de "Cerrar Sesión". La ventana tiene cuatro partes: tus datos, seguridad, preferencias y tus datos en Laburin.'),
+
+      ...figure('10-mi-cuenta.png', { ...DESKTOP, caption: 'Ventana de "Mi cuenta": tus datos, seguridad, preferencias y tus datos en Laburin.' }),
       p('Ahí podés:'),
       bullet('Cambiar tu nombre para mostrar (se usa junto con tus iniciales, que aparecen como tu avatar). El equipo de Laburin lo ve junto a tu perfil de búsqueda.'),
       bullet('Ver el email con el que te registraste (no se puede editar desde acá).'),
       bullet('Cambiar tu contraseña (al menos 8 caracteres), con el mismo indicador de fortaleza que viste al registrarte.'),
-      bullet('Elegir el tema claro u oscuro de toda la aplicación.'),
+      bullet('Cerrar la sesión en todos los dispositivos (por ejemplo, si usaste Laburin en una computadora ajena). Pide confirmación y también cierra la sesión actual.'),
+      bullet('Elegir el tema claro u oscuro de toda la aplicación, y apagar el aviso de ritmo de búsqueda o la pregunta "¿Ya te postulaste?" si no los querés. Estas preferencias se guardan en este navegador.'),
+      bullet('Descargar todos tus datos: un archivo con tu perfil, criterios, ofertas, postulaciones, novedades, historial y mensajes. Se arma en tu navegador y no sale a ningún lado.'),
+      bullet('Borrar tus ofertas y postulaciones: elimina todas tus ofertas y, con ellas, tus postulaciones, novedades y avisos. Tu cuenta y tu perfil de búsqueda se conservan. Para confirmar hay que escribir BORRAR, y no se puede deshacer.'),
+
 
       // 9. Mensajes
       h1('9. Mensajes'),
@@ -243,7 +255,16 @@ const doc = new Document({
 
       // 11. Mi progreso
       h1('11. Mi progreso'),
-      p('La sección "Mi progreso" te muestra cómo viene tu búsqueda laboral: cuántas postulaciones tenés activas, cómo se reparten entre las etapas del proceso, cuál es tu puntaje promedio y qué fuentes te traen mejores ofertas. Te sirve para tomar una foto rápida sin tener que repasar oferta por oferta.'),
+      p('La sección "Mi progreso" te muestra cómo viene tu búsqueda laboral. Arriba hay siete tarjetas con un número grande, y cada una dice con claridad qué mide:'),
+      bullet('Postulaciones en curso: las que siguen abiertas (todas menos las que terminaron en oferta o en rechazo).'),
+      bullet('Postulaciones con respuesta: de las que enviaste, cuántas ya tuvieron respuesta, incluidos los rechazos.'),
+      bullet('Ofertas guardadas: todas las que cargaste o importaste.'),
+      bullet('Qué tanto encajan tus ofertas: el promedio de los puntajes, contra el máximo que podría sumar una oferta con tu perfil.'),
+      bullet('Postulaciones con movimiento: cuántas de las abiertas tuvieron una novedad esta semana.'),
+      bullet('Días hasta tu primera entrevista: cuánto tarda, en promedio, una entrevista desde que te postulás.'),
+      bullet('Postulaciones sin novedades: las que llevan más días sin movimiento que el límite que configuraste.'),
+      p('Tocá la "i" de cualquier tarjeta para ver la explicación completa. Casi todas muestran además una tendencia contra la semana anterior (por ejemplo "+5 vs. la semana anterior", con una flecha): si no hay datos para comparar, no se muestra. Debajo están el embudo (cuántas postulaciones llegaron a cada etapa, con los colores de las columnas del tablero), la distribución de los puntajes, las interacciones de las últimas ocho semanas y las ofertas por fuente. Si bajó tu ritmo, también ves acá el aviso de actividad.'),
+
       ...figure('08-progreso.png', { ...DESKTOP, caption: 'Mi progreso, con el resumen general de la búsqueda.' }),
 
       // 12. Privacidad

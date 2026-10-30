@@ -22,6 +22,8 @@ Si querés probar versiones de prueba (previews) de Vercel, sumá `https://*-<tu
 **Por qué importa:** la aplicación le pide a Supabase que el enlace del mail lleve a `/nueva-contrasena`. Si esa dirección no está en la lista, Supabase la rechaza o manda a la persona a la página de inicio, y la recuperación parece "rota".
 
 ## 3. Plantilla del mail de recuperación (recomendado)
+
+> **Actualizada (octubre de 2026):** la plantilla tiene un diseño nuevo, con la misma identidad visual que el Login (franjas azul, naranja, salvia y azul noche, titular grande y botón amarillo). Si ya habías pegado la anterior, hay que pegar esta de nuevo: los cambios del repositorio no llegan solos al panel de Supabase.
 **Authentication → Email Templates → Reset Password** (en versiones nuevas: *Authentication → Emails → Templates*)
 
 1. **Subject (asunto):** `Cambiá tu contraseña de Laburin`
