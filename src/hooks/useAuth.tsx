@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { traducirErrorAuth, type ErrorAuthTraducido } from '@/lib/authErrores';
+import { leerIngresoDemo } from '@/lib/ingresoDemo';
 
 interface AuthContextValue {
   session: Session | null;
@@ -35,7 +36,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    // Enlace de ingreso directo a la cuenta DEMO (#demo=…): se saca el código de la barra y se inicia sesión antes de leerla.
+    const demo = leerIngresoDemo(window.location.hash);
+    if (demo) window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    const ingreso = demo
+      ? supabase.auth.signInWithPassword(demo).catch(() => undefined)
+      : Promise.resolve();
+
+    ingreso.then(() => supabase.auth.getSession()).then(({ data }) => {
       setSession(data.session);
       setLoading(false);
     });

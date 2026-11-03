@@ -17,7 +17,8 @@
     "docs:plantillas": "node docs/scripts/plantillas-email.mjs",
     "docs:pdf": "node docs/scripts/docx-a-pdf.mjs",
     "demo:datos": "node docs/scripts/demo-datos.mjs",
-    "demo:borrar": "node docs/scripts/demo-datos.mjs --borrar"
+    "demo:borrar": "node docs/scripts/demo-datos.mjs --borrar",
+    "demo:enlace": "node docs/scripts/enlace-demo.mjs"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "^5.3.0",
