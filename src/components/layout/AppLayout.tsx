@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import { PreguntaPostulacion } from '@/components/PreguntaPostulacion';
 import { almacenDeSesion, marcarVisitada, yaVisitada } from '@/lib/visitas';
 import { Sidebar } from './Sidebar';
@@ -40,7 +41,16 @@ export function AppLayout() {
           data-entradas={primeraVisita ? 'si' : 'no'}
           className="flex-1 overflow-auto h-full focus:outline-none"
         >
-          <Outlet />
+          {/* La espera de una pantalla que todavía se está bajando queda acá adentro: el menú no se reinicia. */}
+          <Suspense
+            fallback={
+              <div className="flex justify-center py-24">
+                <Loader2 className="w-8 h-8 text-primary animate-spin" aria-label="Cargando…" />
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>
